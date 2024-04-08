@@ -12,9 +12,8 @@
         android:icon="@drawable/ic_baseline_account_balance_wallet_24"/>
 
     <item
-        android:id="@+id/fab"
         android:title=""
-        android:enabled="false"/>
+        />
 
     <item
         android:id="@+id/charts"
