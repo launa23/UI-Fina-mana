@@ -59,9 +59,9 @@ public class MainActivity extends AppCompatActivity {
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
             dialog.setContentView(R.layout.bottomsheet_layout);
 
-        ImageView imageView = dialog.findViewById(R.id.cancelButton);
+        ImageView cancelBtn = dialog.findViewById(R.id.cancelButton);
 
-        imageView.setOnClickListener(new View.OnClickListener() {
+        cancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
