@@ -1,7 +1,6 @@
 package com.project.financemanager;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -32,8 +31,8 @@ public class MainActivity extends AppCompatActivity {
         binding.bottomNavigationView.setOnItemSelectedListener(item -> {
             if (item.getItemId() == R.id.home) {
                 replaceFragment(new HomeFragment());
-            } else if (item.getItemId() == R.id.wallets) {
-                replaceFragment(new WalletFragment());
+            } else if (item.getItemId() == R.id.categorys) {
+                replaceFragment(new CategoryFragment());
             } else if (item.getItemId() == R.id.charts) {
                 replaceFragment(new ChartFragment());
             } else if (item.getItemId() == R.id.account) {
