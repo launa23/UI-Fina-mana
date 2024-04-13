@@ -1,0 +1,49 @@
+package com.project.financemanager.models;
+
+import com.google.gson.annotations.SerializedName;
+
+public class Wallet {
+    private int id;
+    private String name;
+    private String icon;
+    private String money;
+
+    public Wallet(int id, String name, String icon, String money) {
+        this.id = id;
+        this.name = name;
+        this.icon = icon;
+        this.money = money;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
+    }
+
+    public String getMoney() {
+        return money;
+    }
+
+    public void setMoney(String money) {
+        this.money = money;
+    }
+}

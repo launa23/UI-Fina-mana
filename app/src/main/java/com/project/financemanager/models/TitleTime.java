@@ -1,42 +1,26 @@
 package com.project.financemanager.models;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.List;
 
-public class TitleTime {
-    private String date;
-    private String day;
-    private String monthAndYear;
+public class TitleTime{
+    @SerializedName("time")
+    private String time;
+    @SerializedName("transactionResponseList")
     private List<Transaction> transactionList;
 
-    public TitleTime(String date, String day, String monthAndYear, List<Transaction> transactionList) {
-        this.date = date;
-        this.day = day;
-        this.monthAndYear = monthAndYear;
+    public TitleTime(String time, List<Transaction> transactionList) {
+        this.time = time;
         this.transactionList = transactionList;
     }
 
-    public String getDate() {
-        return date;
+    public String getTime() {
+        return time;
     }
 
-    public void setDate(String date) {
-        this.date = date;
-    }
-
-    public String getDay() {
-        return day;
-    }
-
-    public void setDay(String day) {
-        this.day = day;
-    }
-
-    public String getMonthAndYear() {
-        return monthAndYear;
-    }
-
-    public void setMonthAndYear(String monthAndYear) {
-        this.monthAndYear = monthAndYear;
+    public void setTime(String time) {
+        this.time = time;
     }
 
     public List<Transaction> getTransactionList() {

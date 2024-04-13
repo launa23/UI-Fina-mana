@@ -46,8 +46,19 @@
                         android:layout_marginTop="10dp"
                         android:layout_marginLeft="25dp"
                         android:src="@mipmap/dontknow"/>
-
                     <TextView
+                        android:id="@+id/txtWalletId"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="14dp"
+                        android:text=""
+                        android:textColor="@color/black"
+                        android:textSize="18sp"
+                        android:visibility="gone"
+                        android:layout_toRightOf="@id/txtWalletName"/>
+                    <TextView
+                        android:id="@+id/txtWalletName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
@@ -75,6 +86,7 @@
                         android:layout_below="@id/imageWallet"
                         android:layout_marginLeft="6dp"
                         android:text="đ"
+                        android:textStyle="bold"
                         android:textSize="28sp"
                         android:textColor="@color/blue_white"/>
                 </RelativeLayout>

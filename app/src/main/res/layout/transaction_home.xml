@@ -53,11 +53,12 @@
             app:layout_constraintVertical_bias="0.186" />
 
         <TextView
+            android:id="@+id/moneyUnit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:layout_marginRight="40dp"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="6dp"
             android:text="đ"
             android:textColor="@color/black"
             android:textSize="16sp"

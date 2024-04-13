@@ -13,12 +13,23 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.project.financemanager.R;
 import com.project.financemanager.models.TitleTime;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class TitleAdapter extends RecyclerView.Adapter<TitleAdapter.TitleViewHolder>{
 
     final private List<TitleTime> titleTimeList;
     final private Activity activity;
+    private int day;
+
+    private int month;
+    private int year;
+
+    private String dayOfWeekString;
 
     public TitleAdapter(List<TitleTime> titleTimeList, Activity activity) {
         this.titleTimeList = titleTimeList;
@@ -35,13 +46,55 @@ public class TitleAdapter extends RecyclerView.Adapter<TitleAdapter.TitleViewHol
     @Override
     public void onBindViewHolder(@NonNull TitleViewHolder holder, int position) {
         TitleTime titleTime = titleTimeList.get(position);
-        holder.txtDateTitle.setText(titleTime.getDate());
-        holder.txtDayTitle.setText(titleTime.getDay());
-        holder.txtMonthAndYear.setText(titleTime.getMonthAndYear());
 
-        TransactionAdapter transactionAdapter = new TransactionAdapter(titleTime.getTransactionList());
-        holder.rcvTransactions.setLayoutManager(new LinearLayoutManager(activity));
-        holder.rcvTransactions.setAdapter(transactionAdapter);
+        SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+        try {
+            Date date = inputFormat.parse(titleTime.getTime());
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+
+            day = calendar.get(Calendar.DAY_OF_MONTH);
+            month = calendar.get(Calendar.MONTH) + 1;
+            year = calendar.get(Calendar.YEAR);
+            int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+            dayOfWeekString = "";
+            switch (dayOfWeek){
+                case 1:
+                    dayOfWeekString = "Chủ nhật";
+                    break;
+                case 2:
+                    dayOfWeekString = "Thứ Hai";
+                    break;
+                case 3:
+                    dayOfWeekString = "Thứ Ba";
+                    break;
+                case 4:
+                    dayOfWeekString = "Thứ Tư";
+                    break;
+                case 5:
+                    dayOfWeekString = "Thứ Năm";
+                    break;
+                case 6:
+                    dayOfWeekString = "Thứ Sáu";
+                    break;
+                case 7:
+                    dayOfWeekString = "Thứ Bảy";
+                    break;
+//                default:
+//                    throw new IllegalStateException("Unexpected value: " + dayOfWeek);
+            }
+            holder.txtDateTitle.setText(String.valueOf(day));
+            holder.txtDayTitle.setText(String.valueOf(dayOfWeekString));
+            holder.txtMonthAndYear.setText(String.format("Tháng %d/%d", month, year));
+
+            TransactionAdapter transactionAdapter = new TransactionAdapter(titleTime.getTransactionList());
+            holder.rcvTransactions.setLayoutManager(new LinearLayoutManager(activity));
+            holder.rcvTransactions.setAdapter(transactionAdapter);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
 
     }
 
