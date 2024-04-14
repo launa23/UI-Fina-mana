@@ -1,14 +1,20 @@
 package com.project.financemanager;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,7 +36,7 @@ import retrofit2.Response;
 
 
 public class HomeFragment extends Fragment {
-
+    private SharedPreferences sharedPreferences;
     private RecyclerView recyclerView;
     private TextView txtWalletName;
     private TextView txtWalletMoney;
@@ -38,12 +44,16 @@ public class HomeFragment extends Fragment {
     private TextView amountTotalIncome;
     private TextView amountTotalOutcome;
     private TextView amountTotal;
+    private TextView txtChoosenMonth;
+    private RelativeLayout chooseTime;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_home, container, false);
+        chooseTime = rootView.findViewById(R.id.choosenMonth);
+        txtChoosenMonth = rootView.findViewById(R.id.txtChoosenMonth);
 
         ApiService.apiService.getWalletById().enqueue(new Callback<Wallet>() {
             @Override
@@ -66,6 +76,25 @@ public class HomeFragment extends Fragment {
             }
             @Override
             public void onFailure(Call<Wallet> call, Throwable throwable) {
+
+            }
+        });
+
+        ActivityResultLauncher<Intent> launcher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == getActivity().RESULT_OK) {
+                        Intent data = result.getData();
+                        String selectedMonthYear = data.getStringExtra("selectedMonthYear");
+                        txtChoosenMonth.setText(selectedMonthYear);
+                    }
+                }
+        );
+        chooseTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(v.getContext(), ChooseTimeActivity.class);
+                launcher.launch(intent);
 
             }
         });
@@ -114,5 +143,14 @@ public class HomeFragment extends Fragment {
 
             }
         });
+    }
+
+    private void loadRecyclerView(View rootView, List<TitleTime> titleTimeList){
+        recyclerView = rootView.findViewById(R.id.rcvTransactions);
+
+        TitleAdapter titleAdapter = new TitleAdapter(titleTimeList, getActivity());
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView.setNestedScrollingEnabled(false);
+        recyclerView.setAdapter(titleAdapter);
     }
 }

@@ -25,10 +25,8 @@ public class TitleAdapter extends RecyclerView.Adapter<TitleAdapter.TitleViewHol
     final private List<TitleTime> titleTimeList;
     final private Activity activity;
     private int day;
-
     private int month;
     private int year;
-
     private String dayOfWeekString;
 
     public TitleAdapter(List<TitleTime> titleTimeList, Activity activity) {
@@ -87,8 +85,10 @@ public class TitleAdapter extends RecyclerView.Adapter<TitleAdapter.TitleViewHol
             holder.txtDateTitle.setText(String.valueOf(day));
             holder.txtDayTitle.setText(String.valueOf(dayOfWeekString));
             holder.txtMonthAndYear.setText(String.format("Tháng %d/%d", month, year));
-
-            TransactionAdapter transactionAdapter = new TransactionAdapter(titleTime.getTransactionList());
+//            if(titleTime.getTransactionList().isEmpty()){
+//                holder.rcvTransactions.setVisibility(View.GONE);
+//            }
+            TransactionAdapter transactionAdapter = new TransactionAdapter(titleTime.getTransactionList(), activity);
             holder.rcvTransactions.setLayoutManager(new LinearLayoutManager(activity));
             holder.rcvTransactions.setAdapter(transactionAdapter);
         } catch (Exception e) {

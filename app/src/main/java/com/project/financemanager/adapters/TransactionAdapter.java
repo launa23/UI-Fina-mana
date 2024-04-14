@@ -1,6 +1,9 @@
 package com.project.financemanager.adapters;
 
+import android.app.Activity;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.DrawableContainer;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,9 +23,11 @@ import java.util.Locale;
 public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.TransactionViewHolder>{
 
     final private List<Transaction> transactionList;
+    private Activity activity;
 
-    public TransactionAdapter(List<Transaction> transactionList) {
+    public TransactionAdapter(List<Transaction> transactionList, Activity activity) {
         this.transactionList = transactionList;
+        this.activity = activity;
     }
 
     @NonNull
@@ -35,19 +40,19 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
     @Override
     public void onBindViewHolder(@NonNull TransactionViewHolder holder, int position) {
         Transaction transaction = transactionList.get(position);
-//        holder.imageView.setImageResource(transaction.getImage());
         NumberFormat numberFormatComma = NumberFormat.getNumberInstance(Locale.getDefault());
         String formattedNumberComma = numberFormatComma.format(Integer.parseInt(transaction.getAmount()));
         if (transaction.getType().equals("Income")){
             holder.txtAmount.setTextColor(Color.parseColor("#1BB639"));
             holder.moneyUnit.setTextColor(Color.parseColor("#1BB639"));
-
         }
         else{
             holder.txtAmount.setTextColor(Color.RED);
             holder.moneyUnit.setTextColor(Color.RED);
 
         }
+        int resourceId = activity.getResources().getIdentifier(transaction.getImage(), "drawable", activity.getPackageName());
+        holder.imageView.setImageResource(resourceId);
         holder.txtCategoryName.setText(transaction.getCategoryName());
         holder.txtAmount.setText(formattedNumberComma);
     }

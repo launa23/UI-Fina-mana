@@ -63,7 +63,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
                         android:layout_marginTop="14dp"
-                        android:text="Ví tiền"
+                        android:text="Ví"
                         android:textColor="@color/black"
                         android:textSize="18sp"
                         android:layout_toRightOf="@id/imageWallet"/>
@@ -71,7 +71,7 @@
                         android:id="@+id/moneyInWallet"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="23.000.000"
+                        android:text="0"
                         android:layout_below="@id/imageWallet"
                         android:textSize="28sp"
                         android:textColor="@color/blue_white"
@@ -107,7 +107,7 @@
                     android:id="@+id/txtChoosenMonth"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="4/2024"
+                    android:text="Tháng này"
                     android:paddingTop="10dp"
                     android:paddingBottom="10dp"
                     android:textSize="18sp"
@@ -167,7 +167,7 @@
                         android:id="@+id/amountTotalIncome"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="15.000.000"
+                        android:text="0"
                         android:layout_marginRight="12dp"
                         android:textSize="15sp"
                         android:textColor="@color/green"
@@ -178,7 +178,7 @@
                         android:id="@+id/amountTotalOutcome"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="5.060.000"
+                        android:text="0"
                         android:layout_marginRight="12dp"
                         android:layout_marginTop="12dp"
                         android:textSize="15sp"
@@ -187,14 +187,13 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/amountTotalIncome"/>
 
-                    <androidx.cardview.widget.CardView
+                    <View
                         android:id="@+id/dividerDA"
                         android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        app:cardBackgroundColor="@color/gray"
+                        android:layout_height="0.5dp"
                         android:layout_marginTop="60dp"
+                        android:background="@android:color/darker_gray"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
                     <TextView
@@ -212,7 +211,7 @@
                         android:id="@+id/amountTotal"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="9.060.000"
+                        android:text="0"
                         android:layout_marginRight="12dp"
                         android:layout_marginTop="12dp"
                         android:textSize="18sp"
@@ -226,7 +225,6 @@
             </androidx.cardview.widget.CardView>
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rcvTransactions"
-
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@+id/cardViewDiff"

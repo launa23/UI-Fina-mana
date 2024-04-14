@@ -43,7 +43,7 @@ public interface ApiService {
     @GET("api/v1/transaction/monthandyear")
     Call<List<TitleTime>> getTransByMonthAndYear(@Query("month") int month, @Query("year") int year, @Query("walletId") long walletId);
 
-    @GET("api/v1/wallet/8")
+    @GET("api/v1/wallet/1")
     Call<Wallet> getWalletById();
 
     @GET("api/v1/transaction/total")

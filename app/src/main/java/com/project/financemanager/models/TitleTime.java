@@ -2,9 +2,10 @@ package com.project.financemanager.models;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class TitleTime{
+public class TitleTime implements Serializable{
     @SerializedName("time")
     private String time;
     @SerializedName("transactionResponseList")
