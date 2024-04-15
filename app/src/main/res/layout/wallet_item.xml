@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp"
+    >
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/imgWalletInWallet"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginLeft="16dp"
+        android:src="@drawable/diet"/>
+    <TextView
+        android:id="@+id/txtWalletNameInWallet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Ví tiền mặt"
+        android:layout_toRightOf="@id/imgWalletInWallet"
+        android:padding="8dp"
+        android:textSize="20sp"
+        android:textColor="@color/black"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+
+        android:background="@android:color/darker_gray"
+        android:layout_below="@id/txtWalletNameInWallet"/>
+</RelativeLayout>

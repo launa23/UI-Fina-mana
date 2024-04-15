@@ -46,6 +46,9 @@ public interface ApiService {
     @GET("api/v1/wallet/1")
     Call<Wallet> getWalletById();
 
+    @GET("api/v1/wallet/mine")
+    Call<List<Wallet>> getAllMyWallet();
+
     @GET("api/v1/transaction/total")
     Call<Total> getTotalIncomeAndOutcome(@Query("month") int month, @Query("year") int year, @Query("walletId") long walletId);
 }

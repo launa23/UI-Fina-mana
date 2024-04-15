@@ -46,6 +46,8 @@ public class HomeFragment extends Fragment {
     private TextView amountTotal;
     private TextView txtChoosenMonth;
     private RelativeLayout chooseTime;
+    private TextView idWallet;
+    private RelativeLayout chooseWallet;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -54,7 +56,7 @@ public class HomeFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_home, container, false);
         chooseTime = rootView.findViewById(R.id.choosenMonth);
         txtChoosenMonth = rootView.findViewById(R.id.txtChoosenMonth);
-
+        chooseWallet = rootView.findViewById(R.id.chooseWallet);
         ApiService.apiService.getWalletById().enqueue(new Callback<Wallet>() {
             @Override
             public void onResponse(Call<Wallet> call, Response<Wallet> response) {
@@ -85,19 +87,41 @@ public class HomeFragment extends Fragment {
                 result -> {
                     if (result.getResultCode() == getActivity().RESULT_OK) {
                         Intent data = result.getData();
-                        String selectedMonthYear = data.getStringExtra("selectedMonthYear");
+                        Bundle bundle = data.getExtras();
+
+                        List<TitleTime> objectList = (List<TitleTime>) bundle.getSerializable("objectList");
+                        loadRecyclerView(rootView, objectList);
+                        String selectedMonthYear = data.getStringExtra("month");
                         txtChoosenMonth.setText(selectedMonthYear);
                     }
                 }
         );
+
+        // Bắt sự kiện click chọn thời gian
         chooseTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+
+                String data = txtWalletId.getText().toString();
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString("idWallet", data);
+                editor.apply();
                 Intent intent = new Intent(v.getContext(), ChooseTimeActivity.class);
                 launcher.launch(intent);
 
             }
         });
+
+        // Bắt sự kiện click chọn ví
+        chooseWallet.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(v.getContext(), WalletActivity.class);
+                startActivity(intent);
+            }
+        });
+
         return rootView;
     }
 

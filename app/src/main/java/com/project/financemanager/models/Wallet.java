@@ -2,10 +2,16 @@ package com.project.financemanager.models;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Wallet {
+import java.io.Serializable;
+
+public class Wallet implements Serializable {
+    @SerializedName("id")
     private int id;
+    @SerializedName("name")
     private String name;
+    @SerializedName("icon")
     private String icon;
+    @SerializedName("money")
     private String money;
 
     public Wallet(int id, String name, String icon, String money) {

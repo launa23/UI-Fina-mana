@@ -2,7 +2,9 @@ package com.project.financemanager.models;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Transaction {
+import java.io.Serializable;
+
+public class Transaction implements Serializable {
     @SerializedName("id")
     private int id;
     @SerializedName("amount")

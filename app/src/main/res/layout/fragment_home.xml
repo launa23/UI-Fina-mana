@@ -11,10 +11,6 @@
     android:background="@color/gray"
     tools:context=".HomeFragment">
 
-<!--        <androidx.constraintlayout.widget.ConstraintLayout-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="match_parent">-->
-
             <androidx.cardview.widget.CardView
                 android:id="@+id/headerCard"
                 android:layout_width="match_parent"
@@ -36,6 +32,7 @@
                     >
 
                 <RelativeLayout
+                    android:id="@+id/chooseWallet"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
@@ -67,6 +64,13 @@
                         android:textColor="@color/black"
                         android:textSize="18sp"
                         android:layout_toRightOf="@id/imageWallet"/>
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginLeft="6dp"
+                        android:src="@drawable/ic_baseline_chevron_right_24"
+                        android:layout_toRightOf="@id/txtWalletName"/>
                     <TextView
                         android:id="@+id/moneyInWallet"
                         android:layout_width="wrap_content"
