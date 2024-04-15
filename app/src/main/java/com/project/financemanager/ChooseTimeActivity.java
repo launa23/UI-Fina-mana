@@ -88,7 +88,6 @@ public class ChooseTimeActivity extends AppCompatActivity {
         allTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 Calendar calendar = Calendar.getInstance();
                 callApiMonthAndYear("Toàn bộ thời gian", 0, 0);
             }
@@ -98,8 +97,8 @@ public class ChooseTimeActivity extends AppCompatActivity {
     private void callApiMonthAndYear(String title, int month, int year){
         // Lấy id của ví dưới sharedPreferences
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        String idWallet = sharedPreferences.getString("idWallet", "");
-        ApiService.apiService.getTransByMonthAndYear(month, year, Integer.parseInt(idWallet)).enqueue(new Callback<List<TitleTime>>() {
+        long idWallet = sharedPreferences.getLong("idWallet", 0);
+        ApiService.apiService.getTransByMonthAndYear(month, year, idWallet).enqueue(new Callback<List<TitleTime>>() {
             @Override
             public void onResponse(Call<List<TitleTime>> call, Response<List<TitleTime>> response) {
                 List<TitleTime> titleTimeList = response.body();

@@ -19,6 +19,8 @@ import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.GET;
+import retrofit2.http.Part;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface ApiService {
@@ -43,8 +45,8 @@ public interface ApiService {
     @GET("api/v1/transaction/monthandyear")
     Call<List<TitleTime>> getTransByMonthAndYear(@Query("month") int month, @Query("year") int year, @Query("walletId") long walletId);
 
-    @GET("api/v1/wallet/1")
-    Call<Wallet> getWalletById();
+    @GET("api/v1/wallet/{id}")
+    Call<Wallet> getWalletById(@Path("id") long walletId);
 
     @GET("api/v1/wallet/mine")
     Call<List<Wallet>> getAllMyWallet();

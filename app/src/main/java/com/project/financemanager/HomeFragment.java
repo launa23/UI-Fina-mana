@@ -57,30 +57,8 @@ public class HomeFragment extends Fragment {
         chooseTime = rootView.findViewById(R.id.choosenMonth);
         txtChoosenMonth = rootView.findViewById(R.id.txtChoosenMonth);
         chooseWallet = rootView.findViewById(R.id.chooseWallet);
-        ApiService.apiService.getWalletById().enqueue(new Callback<Wallet>() {
-            @Override
-            public void onResponse(Call<Wallet> call, Response<Wallet> response) {
-                Wallet wallet = response.body();
-                NumberFormat numberFormatComma = NumberFormat.getNumberInstance(Locale.getDefault());
-                String formattedNumberComma = numberFormatComma.format(Integer.parseInt(wallet.getMoney()));
-                txtWalletName = rootView.findViewById(R.id.txtWalletName);
-                txtWalletMoney = rootView.findViewById(R.id.moneyInWallet);
-                txtWalletId = rootView.findViewById(R.id.txtWalletId);
-                txtWalletMoney.setText(formattedNumberComma);
-                txtWalletName.setText(wallet.getName());
-                txtWalletId.setText(String.valueOf(wallet.getId()));
 
-                // Chưa xử lý bất đồng bộ nên hơi cùi
-                long walletId = Long.parseLong(txtWalletId.getText().toString());
-                loadDataTransaction(rootView, walletId);
-                loadDateTotal(rootView, walletId);
-
-            }
-            @Override
-            public void onFailure(Call<Wallet> call, Throwable throwable) {
-
-            }
-        });
+        loadDataWallet(rootView);
 
         ActivityResultLauncher<Intent> launcher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
@@ -97,16 +75,31 @@ public class HomeFragment extends Fragment {
                 }
         );
 
+        ActivityResultLauncher<Intent> launcherWallet = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == getActivity().RESULT_OK) {
+                        Intent data = result.getData();
+                        String nameWallet = data.getStringExtra("nameWallet");
+                        long idWallet1 = data.getIntExtra("idWallet", 0);
+                        txtWalletName.setText(nameWallet);
+                        txtWalletId.setText(String.valueOf(idWallet1));
+                        loadDataWallet(rootView);
+
+                    }
+                }
+        );
+
         // Bắt sự kiện click chọn thời gian
         chooseTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
-
-                String data = txtWalletId.getText().toString();
+                long data = Long.parseLong(txtWalletId.getText().toString());
                 SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putString("idWallet", data);
+                editor.putLong("idWallet", data);
                 editor.apply();
+
                 Intent intent = new Intent(v.getContext(), ChooseTimeActivity.class);
                 launcher.launch(intent);
 
@@ -118,11 +111,68 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(v.getContext(), WalletActivity.class);
-                startActivity(intent);
+                launcherWallet.launch(intent);
             }
         });
 
         return rootView;
+    }
+
+    private void loadDataWallet(View rootView){
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        long idWallet = sharedPreferences.getLong("idWallet", 0);
+        if (idWallet != 0){
+            ApiService.apiService.getWalletById(idWallet).enqueue(new Callback<Wallet>() {
+                @Override
+                public void onResponse(Call<Wallet> call, Response<Wallet> response) {
+                    Wallet wallet = response.body();
+                    NumberFormat numberFormatComma = NumberFormat.getNumberInstance(Locale.getDefault());
+                    String formattedNumberComma = numberFormatComma.format(Integer.parseInt(wallet.getMoney()));
+                    txtWalletName = rootView.findViewById(R.id.txtWalletName);
+                    txtWalletMoney = rootView.findViewById(R.id.moneyInWallet);
+                    txtWalletId = rootView.findViewById(R.id.txtWalletId);
+                    txtWalletMoney.setText(formattedNumberComma);
+                    txtWalletName.setText(wallet.getName());
+                    txtWalletId.setText(String.valueOf(wallet.getId()));
+
+                    // Chưa xử lý bất đồng bộ nên hơi cùi
+                    long walletId = Long.parseLong(txtWalletId.getText().toString());
+                    loadDataTransaction(rootView, walletId);
+                    loadDateTotal(rootView, walletId);
+
+                }
+                @Override
+                public void onFailure(Call<Wallet> call, Throwable throwable) {
+
+                }
+            });
+        }
+        else {
+            ApiService.apiService.getWalletById(1).enqueue(new Callback<Wallet>() {
+                @Override
+                public void onResponse(Call<Wallet> call, Response<Wallet> response) {
+                    Wallet wallet = response.body();
+                    NumberFormat numberFormatComma = NumberFormat.getNumberInstance(Locale.getDefault());
+                    String formattedNumberComma = numberFormatComma.format(Integer.parseInt(wallet.getMoney()));
+                    txtWalletName = rootView.findViewById(R.id.txtWalletName);
+                    txtWalletMoney = rootView.findViewById(R.id.moneyInWallet);
+                    txtWalletId = rootView.findViewById(R.id.txtWalletId);
+                    txtWalletMoney.setText(formattedNumberComma);
+                    txtWalletName.setText(wallet.getName());
+                    txtWalletId.setText(String.valueOf(wallet.getId()));
+
+                    // Chưa xử lý bất đồng bộ nên hơi cùi
+                    long walletId = Long.parseLong(txtWalletId.getText().toString());
+                    loadDataTransaction(rootView, walletId);
+                    loadDateTotal(rootView, walletId);
+
+                }
+                @Override
+                public void onFailure(Call<Wallet> call, Throwable throwable) {
+
+                }
+            });
+        }
     }
 
     private void loadDataTransaction(View rootView, long walletId){

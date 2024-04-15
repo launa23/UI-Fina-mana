@@ -1,9 +1,12 @@
 package com.project.financemanager.adapters;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -16,9 +19,10 @@ import java.util.List;
 
 public class WalletAdapter extends RecyclerView.Adapter<WalletAdapter.WalletViewHolder>{
     private List<Wallet> walletList;
-
-    public WalletAdapter(List<Wallet> walletList) {
+    private HandleClick handleClick;
+    public WalletAdapter(List<Wallet> walletList, HandleClick handleClick) {
         this.walletList = walletList;
+        this.handleClick = handleClick;
     }
 
     @NonNull
@@ -43,10 +47,19 @@ public class WalletAdapter extends RecyclerView.Adapter<WalletAdapter.WalletView
     class WalletViewHolder extends RecyclerView.ViewHolder{
         private ImageView imgWallet;
         private TextView txtWalletName;
+
+        private RelativeLayout relativeLayout;
         public WalletViewHolder(@NonNull View itemView) {
             super(itemView);
             imgWallet = itemView.findViewById(R.id.imgWalletInWallet);
             txtWalletName = itemView.findViewById(R.id.txtWalletNameInWallet);
+            relativeLayout = itemView.findViewById(R.id.rltWalletItem);
+            itemView.setOnClickListener(v -> {
+                handleClick.onItemClick(getAdapterPosition());
+            });
         }
+    }
+    public interface HandleClick{
+        void onItemClick(int position);
     }
 }
