@@ -36,21 +36,21 @@ public interface ApiService {
     OkHttpClient.Builder okBuilder = new OkHttpClient.Builder().addInterceptor(interceptor);
 
     ApiService apiService = new Retrofit.Builder()
-            .baseUrl("http://192.168.1.7:8081/")
+            .baseUrl("http://192.168.1.7:8081/api/v1/")
             .addConverterFactory(GsonConverterFactory.create(gson))
             .client(okBuilder.build())
             .build()
             .create(ApiService.class);
 
-    @GET("api/v1/transaction/monthandyear")
+    @GET("transaction/monthandyear")
     Call<List<TitleTime>> getTransByMonthAndYear(@Query("month") int month, @Query("year") int year, @Query("walletId") long walletId);
 
-    @GET("api/v1/wallet/{id}")
+    @GET("wallet/{id}")
     Call<Wallet> getWalletById(@Path("id") long walletId);
 
-    @GET("api/v1/wallet/mine")
+    @GET("wallet/mine")
     Call<List<Wallet>> getAllMyWallet();
 
-    @GET("api/v1/transaction/total")
+    @GET("transaction/total")
     Call<Total> getTotalIncomeAndOutcome(@Query("month") int month, @Query("year") int year, @Query("walletId") long walletId);
 }

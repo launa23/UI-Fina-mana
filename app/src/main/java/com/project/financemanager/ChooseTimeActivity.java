@@ -98,6 +98,12 @@ public class ChooseTimeActivity extends AppCompatActivity {
         // Lấy id của ví dưới sharedPreferences
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         long idWallet = sharedPreferences.getLong("idWallet", 0);
+
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt("month", month);
+        editor.putInt("year", year);
+        editor.putString("titleMonthAndYear", title);
+        editor.apply();
         ApiService.apiService.getTransByMonthAndYear(month, year, idWallet).enqueue(new Callback<List<TitleTime>>() {
             @Override
             public void onResponse(Call<List<TitleTime>> call, Response<List<TitleTime>> response) {

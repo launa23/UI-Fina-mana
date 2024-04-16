@@ -71,6 +71,13 @@ public class HomeFragment extends Fragment {
                         loadRecyclerView(rootView, objectList);
                         String selectedMonthYear = data.getStringExtra("month");
                         txtChoosenMonth.setText(selectedMonthYear);
+
+                        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+                        long idWallet = sharedPreferences.getLong("idWallet", 0);
+                        int month = sharedPreferences.getInt("month", 0);
+                        int year = sharedPreferences.getInt("year", 0);
+
+                        loadDateTotal(rootView, idWallet, month, year);
                     }
                 }
         );
@@ -121,6 +128,10 @@ public class HomeFragment extends Fragment {
     private void loadDataWallet(View rootView){
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
         long idWallet = sharedPreferences.getLong("idWallet", 0);
+        int month = sharedPreferences.getInt("month", 0);
+        int year = sharedPreferences.getInt("year", 0);
+        String titleMonthAndYear = sharedPreferences.getString("titleMonthAndYear", "");
+        txtChoosenMonth.setText(titleMonthAndYear);
         if (idWallet != 0){
             ApiService.apiService.getWalletById(idWallet).enqueue(new Callback<Wallet>() {
                 @Override
@@ -137,8 +148,8 @@ public class HomeFragment extends Fragment {
 
                     // Chưa xử lý bất đồng bộ nên hơi cùi
                     long walletId = Long.parseLong(txtWalletId.getText().toString());
-                    loadDataTransaction(rootView, walletId);
-                    loadDateTotal(rootView, walletId);
+                    loadDataTransaction(rootView, walletId, month, year);
+                    loadDateTotal(rootView, walletId, month, year);
 
                 }
                 @Override
@@ -163,8 +174,8 @@ public class HomeFragment extends Fragment {
 
                     // Chưa xử lý bất đồng bộ nên hơi cùi
                     long walletId = Long.parseLong(txtWalletId.getText().toString());
-                    loadDataTransaction(rootView, walletId);
-                    loadDateTotal(rootView, walletId);
+                    loadDataTransaction(rootView, walletId, month, year);
+                    loadDateTotal(rootView, walletId, month, year);
 
                 }
                 @Override
@@ -175,8 +186,8 @@ public class HomeFragment extends Fragment {
         }
     }
 
-    private void loadDataTransaction(View rootView, long walletId){
-        ApiService.apiService.getTransByMonthAndYear(9, 2014, walletId).enqueue(new Callback<List<TitleTime>>() {
+    private void loadDataTransaction(View rootView, long walletId, int month, int year){
+        ApiService.apiService.getTransByMonthAndYear(month, year, walletId).enqueue(new Callback<List<TitleTime>>() {
             @Override
             public void onResponse(Call<List<TitleTime>> call, Response<List<TitleTime>> response) {
                 List<TitleTime> titleTimeList = response.body();
@@ -190,13 +201,13 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void onFailure(Call<List<TitleTime>> call, Throwable throwable) {
-                Toast.makeText(getActivity(), "Thất bại", Toast.LENGTH_SHORT);
+                Toast.makeText(getActivity(), "Thất bại", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    private void loadDateTotal(View rootView, long walletId){
-        ApiService.apiService.getTotalIncomeAndOutcome(9, 2014, walletId).enqueue(new Callback<Total>() {
+    private void loadDateTotal(View rootView, long walletId, int month, int year){
+        ApiService.apiService.getTotalIncomeAndOutcome(month, year, walletId).enqueue(new Callback<Total>() {
             @Override
             public void onResponse(Call<Total> call, Response<Total> response) {
                 Total total = response.body();
@@ -221,7 +232,6 @@ public class HomeFragment extends Fragment {
 
     private void loadRecyclerView(View rootView, List<TitleTime> titleTimeList){
         recyclerView = rootView.findViewById(R.id.rcvTransactions);
-
         TitleAdapter titleAdapter = new TitleAdapter(titleTimeList, getActivity());
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setNestedScrollingEnabled(false);
