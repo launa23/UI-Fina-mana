@@ -18,6 +18,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.project.financemanager.adapters.RvItemClickListener;
 import com.project.financemanager.adapters.TitleAdapter;
 import com.project.financemanager.api.ApiService;
 import com.project.financemanager.models.TitleTime;
@@ -191,17 +192,14 @@ public class HomeFragment extends Fragment {
             @Override
             public void onResponse(Call<List<TitleTime>> call, Response<List<TitleTime>> response) {
                 List<TitleTime> titleTimeList = response.body();
-                recyclerView = rootView.findViewById(R.id.rcvTransactions);
+                loadRecyclerView(rootView, titleTimeList);
 
-                TitleAdapter titleAdapter = new TitleAdapter(titleTimeList, getActivity());
-                recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-                recyclerView.setNestedScrollingEnabled(false);
-                recyclerView.setAdapter(titleAdapter);
             }
 
             @Override
             public void onFailure(Call<List<TitleTime>> call, Throwable throwable) {
                 Toast.makeText(getActivity(), "Thất bại", Toast.LENGTH_SHORT).show();
+
             }
         });
     }
@@ -236,5 +234,14 @@ public class HomeFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setNestedScrollingEnabled(false);
         recyclerView.setAdapter(titleAdapter);
+        titleAdapter.setRvItemClickListener(new RvItemClickListener() {
+            @Override
+            public void onChildItemClick(int parentPosition, int childPosition, Transaction item) {
+                Toast.makeText(getActivity().getApplicationContext(), item.getCategoryName(), Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(rootView.getContext(), InsertAndUpdateTransaction.class);
+                intent.putExtra("transaction", item);
+                startActivity(intent);
+            }
+        });
     }
 }

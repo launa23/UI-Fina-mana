@@ -24,12 +24,20 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
 
     final private List<Transaction> transactionList;
     private Activity activity;
+    private HandleClick handleClick;
+    public TransactionAdapter(List<Transaction> transactionList, Activity activity, HandleClick handleClick) {
+        this.transactionList = transactionList;
+        this.activity = activity;
+        this.handleClick = handleClick;
+    }
 
+    public void setHandleClick(HandleClick handleClick){
+        this.handleClick = handleClick;
+    }
     public TransactionAdapter(List<Transaction> transactionList, Activity activity) {
         this.transactionList = transactionList;
         this.activity = activity;
     }
-
     @NonNull
     @Override
     public TransactionViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -74,6 +82,13 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
             txtCategoryName = itemView.findViewById(R.id.cateChildName);
             txtAmount = itemView.findViewById(R.id.cateChildAmount);
             moneyUnit = itemView.findViewById(R.id.moneyUnit);
+            itemView.setOnClickListener(v -> {
+                handleClick.onItemClick(getAdapterPosition());
+            });
         }
+    }
+
+    public interface HandleClick{
+        void onItemClick(int position);
     }
 }

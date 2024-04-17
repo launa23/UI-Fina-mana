@@ -47,7 +47,6 @@ public class WalletAdapter extends RecyclerView.Adapter<WalletAdapter.WalletView
     class WalletViewHolder extends RecyclerView.ViewHolder{
         private ImageView imgWallet;
         private TextView txtWalletName;
-
         private RelativeLayout relativeLayout;
         public WalletViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -60,6 +59,6 @@ public class WalletAdapter extends RecyclerView.Adapter<WalletAdapter.WalletView
         }
     }
     public interface HandleClick{
-        void onItemClick(int position);
+        void onItemClick(int childPosition);
     }
 }

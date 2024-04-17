@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.project.financemanager.R;
 import com.project.financemanager.models.TitleTime;
+import com.project.financemanager.models.Transaction;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -28,7 +29,10 @@ public class TitleAdapter extends RecyclerView.Adapter<TitleAdapter.TitleViewHol
     private int month;
     private int year;
     private String dayOfWeekString;
-
+    RvItemClickListener rvItemClickListener;
+    public void setRvItemClickListener(RvItemClickListener rvItemClickListener){
+        this.rvItemClickListener = rvItemClickListener;
+    }
     public TitleAdapter(List<TitleTime> titleTimeList, Activity activity) {
         this.titleTimeList = titleTimeList;
         this.activity = activity;
@@ -79,18 +83,21 @@ public class TitleAdapter extends RecyclerView.Adapter<TitleAdapter.TitleViewHol
                 case 7:
                     dayOfWeekString = "Thứ Bảy";
                     break;
-//                default:
-//                    throw new IllegalStateException("Unexpected value: " + dayOfWeek);
             }
             holder.txtDateTitle.setText(String.valueOf(day));
             holder.txtDayTitle.setText(String.valueOf(dayOfWeekString));
             holder.txtMonthAndYear.setText(String.format("Tháng %d/%d", month, year));
-//            if(titleTime.getTransactionList().isEmpty()){
-//                holder.rcvTransactions.setVisibility(View.GONE);
-//            }
-            TransactionAdapter transactionAdapter = new TransactionAdapter(titleTime.getTransactionList(), activity);
+
+            TransactionAdapter transactionAdapter = new TransactionAdapter(titleTime.getTransactionList(), activity, new TransactionAdapter.HandleClick() {
+                @Override
+                public void onItemClick(int childPosition) {
+                    Transaction transaction = titleTime.getTransactionList().get(childPosition);
+                    rvItemClickListener.onChildItemClick(position, childPosition, transaction);
+                }
+            });
             holder.rcvTransactions.setLayoutManager(new LinearLayoutManager(activity));
             holder.rcvTransactions.setAdapter(transactionAdapter);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
