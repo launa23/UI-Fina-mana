@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/gray"
     android:scrollbars="none">
 <androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/parentLayout"
     android:background="@color/gray"
     android:layout_width="match_parent"
@@ -201,16 +201,17 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="8dp"
             />
+
         <TextView
             android:id="@+id/txtDateInUpdate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/imgTimeInUpdate"
-            android:textSize="18sp"
+            android:layout_centerInParent="true"
             android:layout_marginLeft="30dp"
-            android:textColor="@color/black"
+            android:layout_toRightOf="@+id/imgTimeInUpdate"
             android:text="Hôm nay 12/04/2024"
-            android:layout_centerInParent="true"/>
+            android:textColor="@color/black"
+            android:textSize="18sp" />
         <TextView
             android:id="@+id/txtHourInUpdate"
             android:layout_width="wrap_content"
