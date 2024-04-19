@@ -154,7 +154,6 @@ public class InsertAndUpdateTransaction extends AppCompatActivity {
         Map<String, String> data = parseDateTime(myObject.getTime(), yearCurrent, monthCurrent, dateCurrent);
         txtDateInUpdate.setText(data.get("date"));
         txtHourInUpdate.setText(data.get("time"));
-        // Còn nữa, làm sau......
     }
 
     private void onDialogDate(){
@@ -205,10 +204,8 @@ public class InsertAndUpdateTransaction extends AppCompatActivity {
         SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
         Map<String, String> map = new HashMap<>();
         try {
-            // Chuyển đổi chuỗi thành đối tượng Date
             Date date = inputFormat.parse(dateTime);
 
-            // Lấy ngày từ đối tượng Date
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(date);
             int day = calendar.get(Calendar.DAY_OF_MONTH);
