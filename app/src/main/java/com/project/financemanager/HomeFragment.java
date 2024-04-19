@@ -21,13 +21,12 @@ import android.widget.Toast;
 import com.project.financemanager.adapters.RvItemClickListener;
 import com.project.financemanager.adapters.TitleAdapter;
 import com.project.financemanager.api.ApiService;
-import com.project.financemanager.models.TitleTime;
-import com.project.financemanager.models.Total;
+import com.project.financemanager.dtos.TitleTime;
+import com.project.financemanager.dtos.Total;
 import com.project.financemanager.models.Transaction;
 import com.project.financemanager.models.Wallet;
 
 import java.text.NumberFormat;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 

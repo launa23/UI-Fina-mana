@@ -1,4 +1,4 @@
-package com.project.financemanager.models;
+package com.project.financemanager.dtos;
 
 import com.google.gson.annotations.SerializedName;
 

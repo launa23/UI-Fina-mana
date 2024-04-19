@@ -1,6 +1,7 @@
-package com.project.financemanager.models;
+package com.project.financemanager.dtos;
 
 import com.google.gson.annotations.SerializedName;
+import com.project.financemanager.models.Transaction;
 
 import java.io.Serializable;
 import java.util.List;

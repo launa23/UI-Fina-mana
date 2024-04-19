@@ -11,12 +11,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.project.financemanager.R;
-import com.project.financemanager.models.TitleTime;
+import com.project.financemanager.dtos.TitleTime;
 import com.project.financemanager.models.Transaction;
 
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
