@@ -25,8 +25,12 @@ import android.widget.Toast;
 import com.project.financemanager.models.TitleTime;
 import com.project.financemanager.models.Transaction;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class InsertAndUpdateTransaction extends AppCompatActivity {
     String[] items = {"Chi tiêu", "Thu nhập"};
@@ -100,7 +104,7 @@ public class InsertAndUpdateTransaction extends AppCompatActivity {
                 finish();
             }
         });
-        fillDataToTransaction();
+        fillDataToTransaction(yearCurrent, monthCurrent, dateCurrent);
 
         ActivityResultLauncher<Intent> launcher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
@@ -125,7 +129,7 @@ public class InsertAndUpdateTransaction extends AppCompatActivity {
     }
 
     // Đổ dữ liệu của transaction vào các trường tương ứng
-    private void fillDataToTransaction(){
+    private void fillDataToTransaction(int yearCurrent, int monthCurrent, int dateCurrent){
         Intent intent = getIntent();
         Transaction myObject = (Transaction) intent.getSerializableExtra("transaction");
         if(myObject.getType().equals("Income")){
@@ -147,6 +151,9 @@ public class InsertAndUpdateTransaction extends AppCompatActivity {
         inputDescription.setText(myObject.getDescription());
         txtNameWalletInUpdate.setTextColor(Color.BLACK);
         txtNameWalletInUpdate.setText(myObject.getWalletName());
+        Map<String, String> data = parseDateTime(myObject.getTime(), yearCurrent, monthCurrent, dateCurrent);
+        txtDateInUpdate.setText(data.get("date"));
+        txtHourInUpdate.setText(data.get("time"));
         // Còn nữa, làm sau......
     }
 
@@ -189,5 +196,46 @@ public class InsertAndUpdateTransaction extends AppCompatActivity {
                     }
         }, hourCurrent, minute, true);
         dialog.show();
+    }
+
+    private Map<String, String> parseDateTime(String dateTime,
+                                              int yearCurrent,
+                                              int monthCurrent,
+                                              int dateCurrent){
+        SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+        Map<String, String> map = new HashMap<>();
+        try {
+            // Chuyển đổi chuỗi thành đối tượng Date
+            Date date = inputFormat.parse(dateTime);
+
+            // Lấy ngày từ đối tượng Date
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+            int day = calendar.get(Calendar.DAY_OF_MONTH);
+            int month = calendar.get(Calendar.MONTH);
+            int year = calendar.get(Calendar.YEAR);
+            int hour = calendar.get(Calendar.HOUR_OF_DAY);
+            int minute = calendar.get(Calendar.MINUTE);
+            String strDate;
+            if(dateCurrent == day && monthCurrent == month+1 && yearCurrent == year){
+                strDate = "Hôm nay, " + day + "/" + (month+1) + "/" + year;
+            }
+            else if (dateCurrent - 1 == day && monthCurrent == month+1 &&yearCurrent == year){
+                strDate = "Hôm qua, " + day + "/" + (month+1) + "/" + year;
+            }
+            else if (dateCurrent + 1 == day && monthCurrent == month+1 &&yearCurrent == year){
+                strDate = "Ngày mai, " + day + "/" + (month+1) + "/" + year;
+            }
+            else {
+                strDate = day + "/" + (month+1) + "/" + year;
+            }
+            String strTime = hour + ":" + minute;
+            map.put("date", strDate);
+            map.put("time", strTime);
+            return map;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return map;
     }
 }
