@@ -36,7 +36,7 @@ public interface ApiService {
     OkHttpClient.Builder okBuilder = new OkHttpClient.Builder().addInterceptor(interceptor);
 
     ApiService apiService = new Retrofit.Builder()
-            .baseUrl("http://192.168.1.7:8081/api/v1/")
+            .baseUrl("http://192.168.198.78:8081/api/v1/")
             .addConverterFactory(GsonConverterFactory.create(gson))
             .client(okBuilder.build())
             .build()
