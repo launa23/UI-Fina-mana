@@ -50,6 +50,9 @@ public interface ApiService {
     @GET("categories/outcome")
     Call<List<Category>> getAllOutcomeCategories();
 
+    @GET("categories/income")
+    Call<List<Category>> getAllIncomeCategories();
+
     @GET("transaction/total")
     Call<Total> getTotalIncomeAndOutcome(@Query("month") int month, @Query("year") int year, @Query("walletId") long walletId);
 }

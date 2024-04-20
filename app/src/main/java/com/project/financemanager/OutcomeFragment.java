@@ -45,6 +45,7 @@ public class OutcomeFragment extends Fragment {
                         resultIntent.putExtra("idCategory", categoryList.get(position).getId());
                         resultIntent.putExtra("nameCategory", categoryList.get(position).getName());
                         resultIntent.putExtra("icon", categoryList.get(position).getIcon());
+                        resultIntent.putExtra("type", categoryList.get(position).getType());
                         requireActivity().setResult(getActivity().RESULT_OK, resultIntent);
                         requireActivity().finish();
                     }

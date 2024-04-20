@@ -3,6 +3,7 @@ package com.project.financemanager;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
@@ -21,6 +22,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.project.financemanager.common.NumberFormattingTextWatcher;
 import com.project.financemanager.models.Transaction;
 
 import java.text.SimpleDateFormat;
@@ -30,12 +32,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class InsertAndUpdateTransaction extends AppCompatActivity {
+
     String[] items = {"Chi tiêu", "Thu nhập"};
     AutoCompleteTextView autoCompleteTextView;
     ArrayAdapter<String> arrayAdapter;
     private ImageView btnBackInUpdate;
     private TextView txtCategoryName;
     private TextView txtCategoryIdInUpdate;
+    private TextView txtCategoryTypeInUpdate;
     private ImageView imgCategory;
     private EditText inputAmonut;
     private EditText inputDescription;
@@ -49,6 +53,7 @@ public class InsertAndUpdateTransaction extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_insert_and_update_transaction);
+        final int green = ContextCompat.getColor(getApplicationContext(), R.color.green);
         btnBackInUpdate = findViewById(R.id.btnBackInUpdateTrans);
         inputAmonut = findViewById(R.id.inputAmount);
         txtCategoryName = findViewById(R.id.txtCategoryNameInUpdate);
@@ -62,11 +67,11 @@ public class InsertAndUpdateTransaction extends AppCompatActivity {
         txtHourInUpdate = findViewById(R.id.txtHourInUpdate);
         relative2 = findViewById(R.id.relative2);
         txtCategoryIdInUpdate = findViewById(R.id.txtCategoryIdInUpdate);
-
+        txtCategoryTypeInUpdate = findViewById(R.id.txtCategoryTypeInUpdate);
         autoCompleteTextView.setText(items[0]);
         arrayAdapter = new ArrayAdapter<String>(this, R.layout.list_item, items);
         autoCompleteTextView.setAdapter(arrayAdapter);
-
+        inputAmonut.addTextChangedListener(new NumberFormattingTextWatcher(inputAmonut));
         Calendar calendar = Calendar.getInstance();
         int monthCurrent = calendar.get(Calendar.MONTH)+1;
         int dateCurrent = calendar.get(Calendar.DAY_OF_MONTH);
@@ -95,7 +100,20 @@ public class InsertAndUpdateTransaction extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String item = parent.getItemAtPosition(position).toString();
-                Toast.makeText(getApplicationContext(), "Item: " + item, Toast.LENGTH_SHORT).show();
+                String typeCategory = txtCategoryTypeInUpdate.getText().toString();
+                if(Integer.parseInt(typeCategory) != position){
+                    txtCategoryIdInUpdate.setText("");
+                    txtCategoryName.setText("Chọn danh mục");
+                    txtCategoryName.setTextColor(Color.GRAY);
+                    imgCategory.setImageResource(R.drawable.question_mark);
+                }
+                if (position == 1){
+                    inputAmonut.setHintTextColor(green);
+                    inputAmonut.setTextColor(green);
+                }
+                else {
+                    inputAmonut.setTextColor(Color.RED);
+                }
             }
         });
 
@@ -137,11 +155,12 @@ public class InsertAndUpdateTransaction extends AppCompatActivity {
                         txtCategoryName.setText(data.getStringExtra("nameCategory"));
                         String icon = data.getStringExtra("icon");
                         int type = data.getIntExtra("type", 0);
+                        txtCategoryTypeInUpdate.setText(String.valueOf(type));
                         if (type == 1) {
                             autoCompleteTextView.setText(items[1]);
                             arrayAdapter = new ArrayAdapter<String>(this, R.layout.list_item, items);
                             autoCompleteTextView.setAdapter(arrayAdapter);
-                            inputAmonut.setTextColor(Color.GREEN);
+                            inputAmonut.setTextColor(green);
                         }
                         else {
                             autoCompleteTextView.setText(items[0]);
@@ -149,6 +168,7 @@ public class InsertAndUpdateTransaction extends AppCompatActivity {
                             autoCompleteTextView.setAdapter(arrayAdapter);
                             inputAmonut.setTextColor(Color.RED);
                         }
+                        txtCategoryName.setTextColor(Color.BLACK);
                         int resourceId = this.getResources().getIdentifier(icon, "drawable", this.getPackageName());
                         imgCategory.setImageResource(resourceId);
                     }
@@ -167,13 +187,17 @@ public class InsertAndUpdateTransaction extends AppCompatActivity {
     private void fillDataToTransaction(int yearCurrent, int monthCurrent, int dateCurrent){
         Intent intent = getIntent();
         Transaction myObject = (Transaction) intent.getSerializableExtra("transaction");
+        int green = ContextCompat.getColor(getApplicationContext(), R.color.green);
         if(myObject.getType().equals("Income")){
-            inputAmonut.setTextColor(Color.GREEN);
+            inputAmonut.setTextColor(green);
             autoCompleteTextView.setText(items[1]);
+            txtCategoryTypeInUpdate.setText("1");
         }
         else {
             inputAmonut.setTextColor(Color.RED);
             autoCompleteTextView.setText(items[0]);
+            txtCategoryTypeInUpdate.setText("0");
+
         }
         arrayAdapter = new ArrayAdapter<String>(this, R.layout.list_item, items);
         autoCompleteTextView.setAdapter(arrayAdapter);
