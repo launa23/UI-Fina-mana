@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.project.financemanager.dtos.TitleTime;
 import com.project.financemanager.dtos.Total;
+import com.project.financemanager.models.Category;
 import com.project.financemanager.models.Wallet;
 
 import java.util.List;
@@ -45,6 +46,9 @@ public interface ApiService {
 
     @GET("wallet/mine")
     Call<List<Wallet>> getAllMyWallet();
+
+    @GET("categories/outcome")
+    Call<List<Category>> getAllOutcomeCategories();
 
     @GET("transaction/total")
     Call<Total> getTotalIncomeAndOutcome(@Query("month") int month, @Query("year") int year, @Query("walletId") long walletId);

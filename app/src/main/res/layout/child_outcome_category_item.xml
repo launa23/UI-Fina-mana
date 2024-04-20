@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <RelativeLayout
         android:id="@+id/relativeInOutcome"
@@ -13,30 +13,40 @@
         android:padding="6dp"
         >
         <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/imgCategoryInOutcome"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:id="@+id/imgChildCategoryInOutcome"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:src="@drawable/home"
             android:layout_centerVertical="true"/>
 
         <TextView
-            android:id="@+id/txtNameCategoryInOutcome"
+            android:id="@+id/txtNameChildCategoryInOutcome"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Sách vở"
-            android:textSize="20sp"
-            android:layout_toRightOf="@+id/imgCategoryInOutcome"
+            android:textSize="16sp"
+            android:layout_toRightOf="@+id/imgChildCategoryInOutcome"
             android:layout_centerInParent="true"
             android:layout_marginLeft="16dp"
             android:textColor="@color/black"/>
+        <TextView
+            android:id="@+id/txtChildCategoryOf"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/txtNameChildCategoryInOutcome"
+            android:layout_centerInParent="true"
+            android:layout_marginLeft="16dp"
+            android:textColor="@color/black"
+            android:visibility="gone"
+            />
         <View
             android:layout_width="match_parent"
-            android:layout_height="1dp"
+            android:layout_height="0.5dp"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="8dp"
             android:background="@android:color/darker_gray"
-            android:layout_below="@id/imgCategoryInOutcome"
-            android:layout_toRightOf="@+id/imgCategoryInOutcome"
+            android:layout_below="@id/imgChildCategoryInOutcome"
+            android:layout_toRightOf="@+id/imgChildCategoryInOutcome"
             />
     </RelativeLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
