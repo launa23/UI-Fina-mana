@@ -47,6 +47,9 @@ public interface ApiService {
     @GET("wallet/mine")
     Call<List<Wallet>> getAllMyWallet();
 
+    @GET("wallet/first")
+    Call<Wallet> getFirstWallet();
+
     @GET("categories/outcome")
     Call<List<Category>> getAllOutcomeCategories();
 

@@ -130,7 +130,7 @@ public class HomeFragment extends Fragment {
         long idWallet = sharedPreferences.getLong("idWallet", 0);
         int month = sharedPreferences.getInt("month", 0);
         int year = sharedPreferences.getInt("year", 0);
-        String titleMonthAndYear = sharedPreferences.getString("titleMonthAndYear", "");
+        String titleMonthAndYear = sharedPreferences.getString("titleMonthAndYear", "Toàn bộ thời gian");
         txtChoosenMonth.setText(titleMonthAndYear);
         if (idWallet != 0){
             ApiService.apiService.getWalletById(idWallet).enqueue(new Callback<Wallet>() {
@@ -159,7 +159,7 @@ public class HomeFragment extends Fragment {
             });
         }
         else {
-            ApiService.apiService.getWalletById(1).enqueue(new Callback<Wallet>() {
+            ApiService.apiService.getFirstWallet().enqueue(new Callback<Wallet>() {
                 @Override
                 public void onResponse(Call<Wallet> call, Response<Wallet> response) {
                     Wallet wallet = response.body();
