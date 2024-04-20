@@ -12,10 +12,21 @@ public class Category implements Serializable {
     private String name;
     @SerializedName("icon")
     private String icon;
+    @SerializedName("type")
+    private int type;
     @SerializedName("categoryOf")
     private String categoryOf;
     @SerializedName("categoryChilds")
     List<Category> categoryChilds;
+
+    public Category(int id, String name, String icon, int type, String categoryOf, List<Category> categoryChilds) {
+        this.id = id;
+        this.name = name;
+        this.icon = icon;
+        this.type = type;
+        this.categoryOf = categoryOf;
+        this.categoryChilds = categoryChilds;
+    }
 
     public Category(int id, String name, String icon, String categoryOf, List<Category> categoryChilds) {
         this.id = id;
@@ -66,5 +77,13 @@ public class Category implements Serializable {
 
     public void setCategoryChilds(List<Category> categoryChilds) {
         this.categoryChilds = categoryChilds;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
     }
 }

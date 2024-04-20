@@ -19,10 +19,16 @@ public class ChildOutcomeCategoryAdapter extends RecyclerView.Adapter<ChildOutco
 
     private List<Category> childCategoryList;
     private Activity activity;
-
+    private HandleClickChildCategory handleClickChildCategory;
     public ChildOutcomeCategoryAdapter(List<Category> childCategoryList, Activity activity) {
         this.childCategoryList = childCategoryList;
         this.activity = activity;
+    }
+
+    public ChildOutcomeCategoryAdapter(List<Category> childCategoryList, Activity activity, HandleClickChildCategory handleClickChildCategory) {
+        this.childCategoryList = childCategoryList;
+        this.activity = activity;
+        this.handleClickChildCategory = handleClickChildCategory;
     }
 
     @NonNull
@@ -57,6 +63,12 @@ public class ChildOutcomeCategoryAdapter extends RecyclerView.Adapter<ChildOutco
             imgChildCategory = itemView.findViewById(R.id.imgChildCategoryInOutcome);
             txtNameChildCategory = itemView.findViewById(R.id.txtNameChildCategoryInOutcome);
             txtChildCategoryOf = itemView.findViewById(R.id.txtChildCategoryOf);
+            itemView.setOnClickListener(v -> {
+                handleClickChildCategory.onItemClick(getAdapterPosition());
+            });
         }
+    }
+    public interface HandleClickChildCategory{
+        void onItemClick(int position);
     }
 }

@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -19,10 +20,20 @@ import java.util.List;
 public class ParentOutcomeCategoryAdapter extends RecyclerView.Adapter<ParentOutcomeCategoryAdapter.ParentOutcomeCategoryViewHolder>{
     private List<Category> parentCategoryList;
     private Activity activity;
-
+    private HandleClickParentCategory handleClickParentCategory;
+    private RvItemClickListener rvItemClickListener;
     public ParentOutcomeCategoryAdapter(List<Category> parentCategoryList, Activity activity) {
         this.parentCategoryList = parentCategoryList;
         this.activity = activity;
+    }
+    public void setRvItemClickListener(RvItemClickListener rvItemClickListener){
+        this.rvItemClickListener = rvItemClickListener;
+    }
+
+    public ParentOutcomeCategoryAdapter(List<Category> parentCategoryList, Activity activity, HandleClickParentCategory handleClickParentCategory) {
+        this.parentCategoryList = parentCategoryList;
+        this.activity = activity;
+        this.handleClickParentCategory = handleClickParentCategory;
     }
 
     @NonNull
@@ -38,7 +49,13 @@ public class ParentOutcomeCategoryAdapter extends RecyclerView.Adapter<ParentOut
         int resourceId = activity.getResources().getIdentifier(category.getIcon(), "drawable", activity.getPackageName());
         holder.imgParentCategoryInOutcome.setImageResource(resourceId);
         holder.txtNameParentCategoryInOutcome.setText(category.getName());
-        ChildOutcomeCategoryAdapter childOutcomeCategoryAdapter = new ChildOutcomeCategoryAdapter(category.getCategoryChilds(), activity);
+        ChildOutcomeCategoryAdapter childOutcomeCategoryAdapter = new ChildOutcomeCategoryAdapter(category.getCategoryChilds(), activity, new ChildOutcomeCategoryAdapter.HandleClickChildCategory() {
+            @Override
+            public void onItemClick(int childPosition) {
+                Category childCategory = category.getCategoryChilds().get(childPosition);
+                rvItemClickListener.onChildItemClick(childPosition, childPosition, childCategory);
+            }
+        });
         holder.rcvChildCategoryList.setLayoutManager(new LinearLayoutManager(activity));
         holder.rcvChildCategoryList.setAdapter(childOutcomeCategoryAdapter);
     }
@@ -52,12 +69,20 @@ public class ParentOutcomeCategoryAdapter extends RecyclerView.Adapter<ParentOut
         private ImageView imgParentCategoryInOutcome;
         private TextView txtNameParentCategoryInOutcome;
         private RecyclerView rcvChildCategoryList;
+        private RelativeLayout relativeInOutcome;
         public ParentOutcomeCategoryViewHolder(@NonNull View itemView) {
             super(itemView);
             imgParentCategoryInOutcome = itemView.findViewById(R.id.imgParentCategoryInOutcome);
             txtNameParentCategoryInOutcome = itemView.findViewById(R.id.txtNameParentCategoryInOutcome);
             rcvChildCategoryList = itemView.findViewById(R.id.rcvChildCategoryList);
+            relativeInOutcome = itemView.findViewById(R.id.relativeInOutcome);
+            relativeInOutcome.setOnClickListener(v -> {
+                handleClickParentCategory.onItemClick(getAdapterPosition());
+            });
+
         }
     }
-
+    public interface HandleClickParentCategory{
+        void onItemClick(int position);
+    }
 }

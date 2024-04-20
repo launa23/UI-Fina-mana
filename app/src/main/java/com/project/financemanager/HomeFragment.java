@@ -233,7 +233,7 @@ public class HomeFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setNestedScrollingEnabled(false);
         recyclerView.setAdapter(titleAdapter);
-        titleAdapter.setRvItemClickListener(new RvItemClickListener() {
+        titleAdapter.setRvItemClickListener(new RvItemClickListener<Transaction>() {
             @Override
             public void onChildItemClick(int parentPosition, int childPosition, Transaction item) {
                 Toast.makeText(getActivity().getApplicationContext(), item.getCategoryName(), Toast.LENGTH_SHORT).show();

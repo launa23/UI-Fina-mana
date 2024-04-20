@@ -35,12 +35,14 @@ public class InsertAndUpdateTransaction extends AppCompatActivity {
     ArrayAdapter<String> arrayAdapter;
     private ImageView btnBackInUpdate;
     private TextView txtCategoryName;
+    private TextView txtCategoryIdInUpdate;
     private ImageView imgCategory;
     private EditText inputAmonut;
     private EditText inputDescription;
     private TextView txtNameWalletInUpdate;
     private TextView txtIdWalletInUpdate;
     private RelativeLayout relative5;
+    private RelativeLayout relative2;
     private TextView txtDateInUpdate;
     private TextView txtHourInUpdate;
     @Override
@@ -58,6 +60,8 @@ public class InsertAndUpdateTransaction extends AppCompatActivity {
         txtIdWalletInUpdate = findViewById(R.id.txtIdWalletInUpdate);
         txtDateInUpdate = findViewById(R.id.txtDateInUpdate);
         txtHourInUpdate = findViewById(R.id.txtHourInUpdate);
+        relative2 = findViewById(R.id.relative2);
+        txtCategoryIdInUpdate = findViewById(R.id.txtCategoryIdInUpdate);
 
         autoCompleteTextView.setText(items[0]);
         arrayAdapter = new ArrayAdapter<String>(this, R.layout.list_item, items);
@@ -121,6 +125,40 @@ public class InsertAndUpdateTransaction extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(v.getContext(), WalletActivity.class);
                 launcher.launch(intent);
+            }
+        });
+
+        ActivityResultLauncher<Intent> launcherChooseCategory = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == this.RESULT_OK) {
+                        Intent data = result.getData();
+                        txtCategoryIdInUpdate.setText(String.valueOf(data.getIntExtra("idCategory", 0)));
+                        txtCategoryName.setText(data.getStringExtra("nameCategory"));
+                        String icon = data.getStringExtra("icon");
+                        int type = data.getIntExtra("type", 0);
+                        if (type == 1) {
+                            autoCompleteTextView.setText(items[1]);
+                            arrayAdapter = new ArrayAdapter<String>(this, R.layout.list_item, items);
+                            autoCompleteTextView.setAdapter(arrayAdapter);
+                            inputAmonut.setTextColor(Color.GREEN);
+                        }
+                        else {
+                            autoCompleteTextView.setText(items[0]);
+                            arrayAdapter = new ArrayAdapter<String>(this, R.layout.list_item, items);
+                            autoCompleteTextView.setAdapter(arrayAdapter);
+                            inputAmonut.setTextColor(Color.RED);
+                        }
+                        int resourceId = this.getResources().getIdentifier(icon, "drawable", this.getPackageName());
+                        imgCategory.setImageResource(resourceId);
+                    }
+                }
+        );
+        relative2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(v.getContext(), ChooseCategoryActivity.class);
+                launcherChooseCategory.launch(intent);
             }
         });
     }

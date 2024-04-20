@@ -126,6 +126,12 @@
         android:layout_marginTop="12dp"
         android:background="@color/white"
         android:padding="16dp">
+        <TextView
+            android:id="@+id/txtCategoryIdInUpdate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            />
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/imgCategoryInUpdate"
             android:layout_width="44dp"
@@ -142,12 +148,14 @@
             android:text="Chọn danh mục"
             android:textColor="@color/gray"
             android:textSize="22sp" />
+
         <ImageView
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:src="@drawable/ic_baseline_chevron_right_24"
             android:layout_alignParentEnd="true"
             android:layout_centerInParent="true"/>
+
     </RelativeLayout>
 
     <RelativeLayout

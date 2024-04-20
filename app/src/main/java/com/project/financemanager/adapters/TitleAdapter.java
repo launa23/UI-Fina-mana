@@ -27,7 +27,7 @@ public class TitleAdapter extends RecyclerView.Adapter<TitleAdapter.TitleViewHol
     private int month;
     private int year;
     private String dayOfWeekString;
-    RvItemClickListener rvItemClickListener;
+    private RvItemClickListener rvItemClickListener;
     public void setRvItemClickListener(RvItemClickListener rvItemClickListener){
         this.rvItemClickListener = rvItemClickListener;
     }
