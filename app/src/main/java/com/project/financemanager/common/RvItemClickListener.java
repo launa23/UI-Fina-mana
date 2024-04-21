@@ -1,4 +1,4 @@
-package com.project.financemanager.adapters;
+package com.project.financemanager.common;
 
 import com.project.financemanager.models.Transaction;
 

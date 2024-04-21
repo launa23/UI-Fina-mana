@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.project.financemanager.R;
+import com.project.financemanager.common.RvItemClickListener;
 import com.project.financemanager.models.Category;
 
 import java.util.List;
@@ -53,7 +54,7 @@ public class ParentOutcomeCategoryAdapter extends RecyclerView.Adapter<ParentOut
             @Override
             public void onItemClick(int childPosition) {
                 Category childCategory = category.getCategoryChilds().get(childPosition);
-                rvItemClickListener.onChildItemClick(childPosition, childPosition, childCategory);
+                rvItemClickListener.onChildItemClick(position, childPosition, childCategory);
             }
         });
         holder.rcvChildCategoryList.setLayoutManager(new LinearLayoutManager(activity));
