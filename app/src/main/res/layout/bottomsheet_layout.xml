@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@drawable/dialog_bkg">
+    android:background="@drawable/xml_dialog_bkg">
 
     <ImageView
         android:layout_width="36dp"
