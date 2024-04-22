@@ -23,12 +23,12 @@
             android:id="@+id/txtNameChildCategoryInOutcome"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Sách vở"
-            android:textSize="16sp"
-            android:layout_toRightOf="@+id/imgChildCategoryInOutcome"
             android:layout_centerInParent="true"
             android:layout_marginLeft="16dp"
-            android:textColor="@color/black"/>
+            android:layout_toRightOf="@+id/imgChildCategoryInOutcome"
+            android:text="Sách vở"
+            android:textColor="@color/black"
+            android:textSize="18sp" />
         <TextView
             android:id="@+id/txtChildCategoryOf"
             android:layout_width="wrap_content"

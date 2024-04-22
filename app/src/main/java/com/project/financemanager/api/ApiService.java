@@ -50,6 +50,9 @@ public interface ApiService {
     @GET("wallet/first")
     Call<Wallet> getFirstWallet();
 
+    @GET("categories/parent/{type}")
+    Call<List<Category>> getCategoryParents(@Path("type") String type);
+
     @GET("categories/outcome")
     Call<List<Category>> getAllOutcomeCategories();
 
