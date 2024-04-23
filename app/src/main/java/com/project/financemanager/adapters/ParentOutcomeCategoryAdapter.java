@@ -1,6 +1,7 @@
 package com.project.financemanager.adapters;
 
 import android.app.Activity;
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,6 +58,9 @@ public class ParentOutcomeCategoryAdapter extends RecyclerView.Adapter<ParentOut
                 rvItemClickListener.onChildItemClick(position, childPosition, childCategory);
             }
         });
+        if (category.getCategoryOf().equals("User")){
+            holder.iconLock.setVisibility(View.GONE);
+        }
         holder.rcvChildCategoryList.setLayoutManager(new LinearLayoutManager(activity));
         holder.rcvChildCategoryList.setAdapter(childOutcomeCategoryAdapter);
     }
@@ -71,18 +75,27 @@ public class ParentOutcomeCategoryAdapter extends RecyclerView.Adapter<ParentOut
         private TextView txtNameParentCategoryInOutcome;
         private RecyclerView rcvChildCategoryList;
         private RelativeLayout relativeInOutcome;
+        private ImageView iconLock;
         public ParentOutcomeCategoryViewHolder(@NonNull View itemView) {
             super(itemView);
             imgParentCategoryInOutcome = itemView.findViewById(R.id.imgParentCategoryInOutcome);
             txtNameParentCategoryInOutcome = itemView.findViewById(R.id.txtNameParentCategoryInOutcome);
             rcvChildCategoryList = itemView.findViewById(R.id.rcvChildCategoryList);
             relativeInOutcome = itemView.findViewById(R.id.relativeInOutcome);
+            iconLock = itemView.findViewById(R.id.iconLock4);
             relativeInOutcome.setOnClickListener(v -> {
                 handleClickParentCategory.onItemClick(getAdapterPosition());
             });
-
+        }
+        public ImageView getIconLock(){
+            return iconLock;
+        }
+        public void setIconLock(){
+            iconLock.setVisibility(View.VISIBLE);
         }
     }
+
+
     public interface HandleClickParentCategory{
         void onItemClick(int position);
     }

@@ -18,10 +18,16 @@ import java.util.List;
 public class CategoryNotChildAdapter extends RecyclerView.Adapter<CategoryNotChildAdapter.CategoryViewHolder> {
     private List<Category> categories;
     private Activity activity;
-
+    private HandleClickNotParentCategory handleClickNotParentCategory;
     public CategoryNotChildAdapter(List<Category> categories, Activity activity) {
         this.categories = categories;
         this.activity = activity;
+    }
+
+    public CategoryNotChildAdapter(List<Category> categories, Activity activity, HandleClickNotParentCategory handleClickNotParentCategory) {
+        this.categories = categories;
+        this.activity = activity;
+        this.handleClickNotParentCategory = handleClickNotParentCategory;
     }
 
     @NonNull
@@ -51,6 +57,15 @@ public class CategoryNotChildAdapter extends RecyclerView.Adapter<CategoryNotChi
             super(itemView);
             imgChildCategoryInOutcome = itemView.findViewById(R.id.imgChildCategoryInOutcome);
             txtNameChildCategoryInOutcome = itemView.findViewById(R.id.txtNameChildCategoryInOutcome);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    handleClickNotParentCategory.onItemClick(getAdapterPosition());
+                }
+            });
         }
+    }
+    public interface HandleClickNotParentCategory{
+        void onItemClick(int position);
     }
 }

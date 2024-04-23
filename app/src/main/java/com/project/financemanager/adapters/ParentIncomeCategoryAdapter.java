@@ -57,6 +57,9 @@ public class ParentIncomeCategoryAdapter extends RecyclerView.Adapter<ParentInco
                 rvItemClickListener.onChildItemClick(position, childPosition, childCategory);
             }
         });
+        if (category.getCategoryOf().equals("User")){
+            holder.iconLock.setVisibility(View.GONE);
+        }
         holder.rcvChildCategoryList.setLayoutManager(new LinearLayoutManager(activity));
         holder.rcvChildCategoryList.setAdapter(childIncomeCategoryAdapter);
     }
@@ -71,11 +74,14 @@ public class ParentIncomeCategoryAdapter extends RecyclerView.Adapter<ParentInco
         private TextView txtNameParentCategoryInIncome;
         private RecyclerView rcvChildCategoryList;
         private RelativeLayout relativeInIncome;
+        private ImageView iconLock;
+
         public ParentIncomeCategoryViewHolder(@NonNull View itemView) {
             super(itemView);
             imgParentCategoryInIncome = itemView.findViewById(R.id.imgParentCategoryInIncome);
             txtNameParentCategoryInIncome = itemView.findViewById(R.id.txtNameParentCategoryInIncome);
             rcvChildCategoryList = itemView.findViewById(R.id.rcvChildCategoryList);
+            iconLock = itemView.findViewById(R.id.iconLock3);
             relativeInIncome = itemView.findViewById(R.id.relativeInIncome);
             relativeInIncome.setOnClickListener(v -> {
                 handleClickParentCategory.onItemClick(getAdapterPosition());

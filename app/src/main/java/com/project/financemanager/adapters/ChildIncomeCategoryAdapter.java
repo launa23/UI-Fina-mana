@@ -46,7 +46,9 @@ public class ChildIncomeCategoryAdapter extends RecyclerView.Adapter<ChildIncome
         holder.txtChildCategoryOf.setText(category.getCategoryOf());
         int resourceId = activity.getResources().getIdentifier(category.getIcon(), "drawable", activity.getPackageName());
         holder.imgChildCategory.setImageResource(resourceId);
-
+        if (category.getCategoryOf().equals("User")){
+            holder.iconLock.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -58,11 +60,13 @@ public class ChildIncomeCategoryAdapter extends RecyclerView.Adapter<ChildIncome
         private ImageView imgChildCategory;
         private TextView txtNameChildCategory;
         private TextView txtChildCategoryOf;
+        private ImageView iconLock;
         public ChildCategoryViewHolder(@NonNull View itemView) {
             super(itemView);
             imgChildCategory = itemView.findViewById(R.id.imgChildCategoryInIncome);
             txtNameChildCategory = itemView.findViewById(R.id.txtNameChildCategoryInIncome);
             txtChildCategoryOf = itemView.findViewById(R.id.txtChildCategoryOf);
+            iconLock = itemView.findViewById(R.id.iconLock1);
             itemView.setOnClickListener(v -> {
                 handleClickChildCategory.onItemClick(getAdapterPosition());
             });
