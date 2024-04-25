@@ -24,12 +24,12 @@
             android:id="@+id/txtNameChildCategoryInIncome"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Sách vở"
-            android:textSize="16sp"
-            android:layout_toRightOf="@+id/imgChildCategoryInIncome"
             android:layout_centerInParent="true"
             android:layout_marginLeft="16dp"
-            android:textColor="@color/black"/>
+            android:layout_toRightOf="@+id/imgChildCategoryInIncome"
+            android:text="Sách vở"
+            android:textColor="@color/black"
+            android:textSize="18sp" />
         <TextView
             android:id="@+id/txtChildCategoryOf"
             android:layout_width="wrap_content"
@@ -50,4 +50,14 @@
             android:layout_toRightOf="@+id/imgChildCategoryInIncome"
             />
     </RelativeLayout>
+    <ImageView
+        android:id="@+id/iconLock1"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginRight="20dp"
+        android:src="@drawable/ic_baseline_lock_outline_24"
+        app:layout_constraintRight_toRightOf="@id/relativeInIncome"
+        app:layout_constraintBottom_toBottomOf="@id/relativeInIncome"
+        />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -18,7 +18,7 @@
             android:id="@+id/imageView"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
-            android:src="@drawable/rectangle"
+            android:src="@drawable/xml_rectangle"
             />
 
         <de.hdodenhof.circleimageview.CircleImageView
@@ -49,7 +49,16 @@
             android:layout_toRightOf="@+id/imgParentCategoryInOutcome"
             />
     </RelativeLayout>
-
+    <ImageView
+        android:id="@+id/iconLock4"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginRight="20dp"
+        android:src="@drawable/ic_baseline_lock_outline_24"
+        app:layout_constraintRight_toRightOf="@id/relativeInOutcome"
+        app:layout_constraintBottom_toBottomOf="@id/relativeInOutcome"
+        />
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rcvChildCategoryList"
         android:layout_width="match_parent"

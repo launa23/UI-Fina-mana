@@ -1,6 +1,7 @@
 package com.project.financemanager.adapters;
 
 import android.app.Activity;
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.project.financemanager.R;
+import com.project.financemanager.common.RvItemClickListener;
 import com.project.financemanager.models.Category;
 
 import java.util.List;
@@ -53,9 +55,12 @@ public class ParentOutcomeCategoryAdapter extends RecyclerView.Adapter<ParentOut
             @Override
             public void onItemClick(int childPosition) {
                 Category childCategory = category.getCategoryChilds().get(childPosition);
-                rvItemClickListener.onChildItemClick(childPosition, childPosition, childCategory);
+                rvItemClickListener.onChildItemClick(position, childPosition, childCategory);
             }
         });
+        if (category.getCategoryOf().equals("User")){
+            holder.iconLock.setVisibility(View.GONE);
+        }
         holder.rcvChildCategoryList.setLayoutManager(new LinearLayoutManager(activity));
         holder.rcvChildCategoryList.setAdapter(childOutcomeCategoryAdapter);
     }
@@ -70,18 +75,27 @@ public class ParentOutcomeCategoryAdapter extends RecyclerView.Adapter<ParentOut
         private TextView txtNameParentCategoryInOutcome;
         private RecyclerView rcvChildCategoryList;
         private RelativeLayout relativeInOutcome;
+        private ImageView iconLock;
         public ParentOutcomeCategoryViewHolder(@NonNull View itemView) {
             super(itemView);
             imgParentCategoryInOutcome = itemView.findViewById(R.id.imgParentCategoryInOutcome);
             txtNameParentCategoryInOutcome = itemView.findViewById(R.id.txtNameParentCategoryInOutcome);
             rcvChildCategoryList = itemView.findViewById(R.id.rcvChildCategoryList);
             relativeInOutcome = itemView.findViewById(R.id.relativeInOutcome);
+            iconLock = itemView.findViewById(R.id.iconLock4);
             relativeInOutcome.setOnClickListener(v -> {
                 handleClickParentCategory.onItemClick(getAdapterPosition());
             });
-
+        }
+        public ImageView getIconLock(){
+            return iconLock;
+        }
+        public void setIconLock(){
+            iconLock.setVisibility(View.VISIBLE);
         }
     }
+
+
     public interface HandleClickParentCategory{
         void onItemClick(int position);
     }

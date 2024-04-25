@@ -18,7 +18,7 @@
             android:id="@+id/imageView"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
-            android:src="@drawable/rectangle"
+            android:src="@drawable/xml_rectangle"
             />
 
         <de.hdodenhof.circleimageview.CircleImageView
@@ -40,6 +40,7 @@
             android:layout_centerInParent="true"
             android:layout_marginLeft="16dp"
             android:textColor="@color/black"/>
+
         <View
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
@@ -49,7 +50,16 @@
             android:layout_toRightOf="@+id/imgParentCategoryInIncome"
             />
     </RelativeLayout>
-
+    <ImageView
+        android:id="@+id/iconLock3"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginRight="20dp"
+        android:src="@drawable/ic_baseline_lock_outline_24"
+        app:layout_constraintRight_toRightOf="@id/relativeInIncome"
+        app:layout_constraintBottom_toBottomOf="@id/relativeInIncome"
+        />
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rcvChildCategoryList"
         android:layout_width="match_parent"

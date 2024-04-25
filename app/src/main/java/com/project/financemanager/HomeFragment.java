@@ -20,7 +20,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.project.financemanager.adapters.RvItemClickListener;
+import com.project.financemanager.common.RvItemClickListener;
 import com.project.financemanager.adapters.TitleAdapter;
 import com.project.financemanager.api.ApiService;
 import com.project.financemanager.dtos.TitleTime;
@@ -182,7 +182,6 @@ public class HomeFragment extends Fragment {
                     txtWalletName.setText(wallet.getName());
                     txtWalletId.setText(String.valueOf(wallet.getId()));
 
-                    // Chưa xử lý bất đồng bộ nên hơi cùi
                     long walletId = Long.parseLong(txtWalletId.getText().toString());
                     loadDataTransaction(rootView, walletId, month, year);
                     loadDateTotal(rootView, walletId, month, year);

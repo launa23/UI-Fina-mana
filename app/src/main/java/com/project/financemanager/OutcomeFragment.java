@@ -1,6 +1,5 @@
 package com.project.financemanager;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -14,7 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.project.financemanager.adapters.ParentOutcomeCategoryAdapter;
-import com.project.financemanager.adapters.RvItemClickListener;
+import com.project.financemanager.common.RvItemClickListener;
 import com.project.financemanager.api.ApiService;
 import com.project.financemanager.models.Category;
 

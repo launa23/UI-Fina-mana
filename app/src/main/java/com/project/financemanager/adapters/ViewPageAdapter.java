@@ -5,10 +5,11 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.fragment.app.FragmentStatePagerAdapter;
 
 import java.util.ArrayList;
 
-public class ViewPageAdapter extends FragmentPagerAdapter {
+public class ViewPageAdapter extends FragmentStatePagerAdapter {
 
     private final ArrayList<Fragment> fragments = new ArrayList<>();
     private final ArrayList<String> fragmentTitles = new ArrayList<>();
@@ -32,11 +33,13 @@ public class ViewPageAdapter extends FragmentPagerAdapter {
         fragmentTitles.add(fragmentTitle);
     }
 
+    public void removeAll(){
+        fragments.removeAll(fragments);
+        fragmentTitles.removeAll(fragmentTitles);
+    }
     @Nullable
     @Override
     public CharSequence getPageTitle(int position) {
-
-
         return fragmentTitles.get(position);
     }
 }

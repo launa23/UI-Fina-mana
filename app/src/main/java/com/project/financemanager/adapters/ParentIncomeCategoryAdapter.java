@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.project.financemanager.R;
+import com.project.financemanager.common.RvItemClickListener;
 import com.project.financemanager.models.Category;
 
 import java.util.List;
@@ -53,9 +54,12 @@ public class ParentIncomeCategoryAdapter extends RecyclerView.Adapter<ParentInco
             @Override
             public void onItemClick(int childPosition) {
                 Category childCategory = category.getCategoryChilds().get(childPosition);
-                rvItemClickListener.onChildItemClick(childPosition, childPosition, childCategory);
+                rvItemClickListener.onChildItemClick(position, childPosition, childCategory);
             }
         });
+        if (category.getCategoryOf().equals("User")){
+            holder.iconLock.setVisibility(View.GONE);
+        }
         holder.rcvChildCategoryList.setLayoutManager(new LinearLayoutManager(activity));
         holder.rcvChildCategoryList.setAdapter(childIncomeCategoryAdapter);
     }
@@ -70,11 +74,14 @@ public class ParentIncomeCategoryAdapter extends RecyclerView.Adapter<ParentInco
         private TextView txtNameParentCategoryInIncome;
         private RecyclerView rcvChildCategoryList;
         private RelativeLayout relativeInIncome;
+        private ImageView iconLock;
+
         public ParentIncomeCategoryViewHolder(@NonNull View itemView) {
             super(itemView);
             imgParentCategoryInIncome = itemView.findViewById(R.id.imgParentCategoryInIncome);
             txtNameParentCategoryInIncome = itemView.findViewById(R.id.txtNameParentCategoryInIncome);
             rcvChildCategoryList = itemView.findViewById(R.id.rcvChildCategoryList);
+            iconLock = itemView.findViewById(R.id.iconLock3);
             relativeInIncome = itemView.findViewById(R.id.relativeInIncome);
             relativeInIncome.setOnClickListener(v -> {
                 handleClickParentCategory.onItemClick(getAdapterPosition());

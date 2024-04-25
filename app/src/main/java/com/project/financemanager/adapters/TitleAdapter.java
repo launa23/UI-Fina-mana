@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.project.financemanager.R;
+import com.project.financemanager.common.RvItemClickListener;
 import com.project.financemanager.dtos.TitleTime;
 import com.project.financemanager.models.Transaction;
 
