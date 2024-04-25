@@ -1,14 +1,18 @@
 package com.project.financemanager;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -26,6 +30,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity {
+    AlertDialog alertDialog;
+    private ConstraintLayout layoutDialogLoading;
     private SharedPreferences sharedPreferences;
     private ImageView imgHideOrView;
     private EditText inputPasswordInLogin;
@@ -40,6 +46,7 @@ public class LoginActivity extends AppCompatActivity {
         inputPasswordInLogin = findViewById(R.id.inputPasswordInLogin);
         btnLogin = findViewById(R.id.btnLogin);
         inputUserNameInLogin = findViewById(R.id.inputUserNameInLogin);
+        layoutDialogLoading = findViewById(R.id.layoutDialogLoading);
         imgHideOrView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -57,6 +64,7 @@ public class LoginActivity extends AppCompatActivity {
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                alertDialog = showAlertDialog(alertDialog);
                 String username = inputUserNameInLogin.getText().toString();
                 String password = inputPasswordInLogin.getText().toString();
                 UserLogin userLogin = new UserLogin(username, password);
@@ -72,9 +80,9 @@ public class LoginActivity extends AppCompatActivity {
                             editor.apply();
 
                             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-//                            intent.putExtra("token", response.body().getToken());
                             startActivity(intent);
                             finish();
+                            dismissAlertDialog(alertDialog);
 
                         }
                         else{
@@ -89,5 +97,23 @@ public class LoginActivity extends AppCompatActivity {
                 });
             }
         });
+    }
+    private AlertDialog showAlertDialog(AlertDialog alertDialog){
+        View view = LayoutInflater.from(this).inflate(R.layout.loading_progress_bar, layoutDialogLoading);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setView(view);
+        builder.setCancelable(false);
+        alertDialog = builder.create();
+
+        if(alertDialog.getWindow() != null){
+            alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(0));
+        }
+        alertDialog.show();
+        return alertDialog;
+    }
+
+    private void dismissAlertDialog(AlertDialog alertDialog) {
+        alertDialog.dismiss();
     }
 }

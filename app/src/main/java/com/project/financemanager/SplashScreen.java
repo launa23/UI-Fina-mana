@@ -22,7 +22,7 @@ public class SplashScreen extends AppCompatActivity {
             public void run() {
                 checkLogin();
             }
-        }, 3000);
+        }, 400);
     }
 
     private void checkLogin(){

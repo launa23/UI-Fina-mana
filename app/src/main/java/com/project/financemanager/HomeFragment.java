@@ -2,10 +2,13 @@ package com.project.financemanager;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.app.AlertDialog;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -14,6 +17,7 @@ import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,6 +41,8 @@ import retrofit2.Response;
 
 
 public class HomeFragment extends Fragment {
+    AlertDialog alertDialog;
+    private ConstraintLayout layoutDialogLoading;
     private SharedPreferences sharedPreferences;
     private RecyclerView recyclerView;
     private TextView txtWalletName;
@@ -58,7 +64,7 @@ public class HomeFragment extends Fragment {
         chooseTime = rootView.findViewById(R.id.choosenMonth);
         txtChoosenMonth = rootView.findViewById(R.id.txtChoosenMonth);
         chooseWallet = rootView.findViewById(R.id.chooseWallet);
-
+        layoutDialogLoading = rootView.findViewById(R.id.layoutDialogLoading);
         loadDataWallet(rootView);
 
         ActivityResultLauncher<Intent> launcher = registerForActivityResult(
@@ -127,6 +133,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void loadDataWallet(View rootView){
+        alertDialog = showAlertDialog(alertDialog);
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
 
         long idWallet = sharedPreferences.getLong("idWallet", 0);
@@ -154,6 +161,7 @@ public class HomeFragment extends Fragment {
                     long walletId = Long.parseLong(txtWalletId.getText().toString());
                     loadDataTransaction(rootView, walletId, month, year);
                     loadDateTotal(rootView, walletId, month, year);
+                    dismissAlertDialog(alertDialog);
 
                 }
                 @Override
@@ -181,6 +189,7 @@ public class HomeFragment extends Fragment {
                         long walletId = Long.parseLong(txtWalletId.getText().toString());
                         loadDataTransaction(rootView, walletId, month, year);
                         loadDateTotal(rootView, walletId, month, year);
+                        dismissAlertDialog(alertDialog);
                     }
                     else {
                         Toast.makeText(getActivity(), "Lỗi", Toast.LENGTH_SHORT).show();
@@ -230,6 +239,7 @@ public class HomeFragment extends Fragment {
                 amountTotalIncome.setText(formattedIncome);
                 amountTotalOutcome.setText(formattedOutcome);
                 amountTotal.setText(formattedTotal);
+
             }
 
             @Override
@@ -254,5 +264,25 @@ public class HomeFragment extends Fragment {
                 startActivity(intent);
             }
         });
+
+    }
+
+    private AlertDialog showAlertDialog(AlertDialog alertDialog){
+        View view = LayoutInflater.from(getContext()).inflate(R.layout.loading_progress_bar, layoutDialogLoading);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setView(view);
+        builder.setCancelable(false);
+        alertDialog = builder.create();
+
+        if(alertDialog.getWindow() != null){
+            alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(0));
+        }
+        alertDialog.show();
+        return alertDialog;
+    }
+
+    private void dismissAlertDialog(AlertDialog alertDialog) {
+        alertDialog.dismiss();
     }
 }
