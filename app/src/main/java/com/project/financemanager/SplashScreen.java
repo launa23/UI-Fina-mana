@@ -26,7 +26,7 @@ public class SplashScreen extends AppCompatActivity {
     }
 
     private void checkLogin(){
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        sharedPreferences = getApplicationContext().getSharedPreferences("CHECK_TOKEN", getApplicationContext().MODE_PRIVATE);
         String token = sharedPreferences.getString("token", "");
         if (token.isEmpty()){
             Intent intent = new Intent(SplashScreen.this, LoginActivity.class);

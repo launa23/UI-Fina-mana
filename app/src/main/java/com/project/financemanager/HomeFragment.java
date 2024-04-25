@@ -18,9 +18,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.project.financemanager.api.ApiService;
 import com.project.financemanager.common.RvItemClickListener;
 import com.project.financemanager.adapters.TitleAdapter;
-import com.project.financemanager.api.ApiService;
+import com.project.financemanager.api.IApiService;
 import com.project.financemanager.dtos.TitleTime;
 import com.project.financemanager.dtos.Total;
 import com.project.financemanager.models.Transaction;
@@ -127,13 +128,16 @@ public class HomeFragment extends Fragment {
 
     private void loadDataWallet(View rootView){
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+
         long idWallet = sharedPreferences.getLong("idWallet", 0);
         int month = sharedPreferences.getInt("month", 0);
         int year = sharedPreferences.getInt("year", 0);
         String titleMonthAndYear = sharedPreferences.getString("titleMonthAndYear", "Toàn bộ thời gian");
         txtChoosenMonth.setText(titleMonthAndYear);
         if (idWallet != 0){
-            ApiService.apiService.getWalletById(idWallet).enqueue(new Callback<Wallet>() {
+            Call<Wallet> call = ApiService.getInstance(getContext()).getiApiService().getWalletById(idWallet);
+
+           call.enqueue(new Callback<Wallet>() {
                 @Override
                 public void onResponse(Call<Wallet> call, Response<Wallet> response) {
                     Wallet wallet = response.body();
@@ -159,22 +163,28 @@ public class HomeFragment extends Fragment {
             });
         }
         else {
-            ApiService.apiService.getFirstWallet().enqueue(new Callback<Wallet>() {
+            Call<Wallet> call = ApiService.getInstance(getActivity()).getiApiService().getFirstWallet();
+            call.enqueue(new Callback<Wallet>() {
                 @Override
                 public void onResponse(Call<Wallet> call, Response<Wallet> response) {
-                    Wallet wallet = response.body();
-                    NumberFormat numberFormatComma = NumberFormat.getNumberInstance(Locale.getDefault());
-                    String formattedNumberComma = numberFormatComma.format(Integer.parseInt(wallet.getMoney()));
-                    txtWalletName = rootView.findViewById(R.id.txtWalletName);
-                    txtWalletMoney = rootView.findViewById(R.id.moneyInWallet);
-                    txtWalletId = rootView.findViewById(R.id.txtWalletId);
-                    txtWalletMoney.setText(formattedNumberComma);
-                    txtWalletName.setText(wallet.getName());
-                    txtWalletId.setText(String.valueOf(wallet.getId()));
+                    if (response.isSuccessful()){
+                        Wallet wallet = response.body();
+                        NumberFormat numberFormatComma = NumberFormat.getNumberInstance(Locale.getDefault());
+                        String formattedNumberComma = numberFormatComma.format(Integer.parseInt(wallet.getMoney()));
+                        txtWalletName = rootView.findViewById(R.id.txtWalletName);
+                        txtWalletMoney = rootView.findViewById(R.id.moneyInWallet);
+                        txtWalletId = rootView.findViewById(R.id.txtWalletId);
+                        txtWalletMoney.setText(formattedNumberComma);
+                        txtWalletName.setText(wallet.getName());
+                        txtWalletId.setText(String.valueOf(wallet.getId()));
 
-                    long walletId = Long.parseLong(txtWalletId.getText().toString());
-                    loadDataTransaction(rootView, walletId, month, year);
-                    loadDateTotal(rootView, walletId, month, year);
+                        long walletId = Long.parseLong(txtWalletId.getText().toString());
+                        loadDataTransaction(rootView, walletId, month, year);
+                        loadDateTotal(rootView, walletId, month, year);
+                    }
+                    else {
+                        Toast.makeText(getActivity(), "Lỗi", Toast.LENGTH_SHORT).show();
+                    }
 
                 }
                 @Override
@@ -186,7 +196,8 @@ public class HomeFragment extends Fragment {
     }
 
     private void loadDataTransaction(View rootView, long walletId, int month, int year){
-        ApiService.apiService.getTransByMonthAndYear(month, year, walletId).enqueue(new Callback<List<TitleTime>>() {
+        Call<List<TitleTime>> call = ApiService.getInstance(getContext()).getiApiService().getTransByMonthAndYear(month, year, walletId);
+        call.enqueue(new Callback<List<TitleTime>>() {
             @Override
             public void onResponse(Call<List<TitleTime>> call, Response<List<TitleTime>> response) {
                 List<TitleTime> titleTimeList = response.body();
@@ -203,7 +214,9 @@ public class HomeFragment extends Fragment {
     }
 
     private void loadDateTotal(View rootView, long walletId, int month, int year){
-        ApiService.apiService.getTotalIncomeAndOutcome(month, year, walletId).enqueue(new Callback<Total>() {
+        Call<Total> call = ApiService.getInstance(getContext()).getiApiService().getTotalIncomeAndOutcome(month, year, walletId);
+
+        call.enqueue(new Callback<Total>() {
             @Override
             public void onResponse(Call<Total> call, Response<Total> response) {
                 Total total = response.body();
@@ -230,7 +243,7 @@ public class HomeFragment extends Fragment {
         recyclerView = rootView.findViewById(R.id.rcvTransactions);
         TitleAdapter titleAdapter = new TitleAdapter(titleTimeList, getActivity());
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        recyclerView.setNestedScrollingEnabled(false);
+//        recyclerView.setNestedScrollingEnabled(false);
         recyclerView.setAdapter(titleAdapter);
         titleAdapter.setRvItemClickListener(new RvItemClickListener<Transaction>() {
             @Override

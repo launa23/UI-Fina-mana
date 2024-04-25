@@ -13,8 +13,9 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.project.financemanager.adapters.ParentIncomeCategoryAdapter;
-import com.project.financemanager.common.RvItemClickListener;
 import com.project.financemanager.api.ApiService;
+import com.project.financemanager.common.RvItemClickListener;
+import com.project.financemanager.api.IApiService;
 import com.project.financemanager.models.Category;
 
 import java.util.List;
@@ -32,7 +33,8 @@ public class IncomeFragment extends Fragment {
         View rootView =  inflater.inflate(R.layout.fragment_income, container, false);
 
         rcvParentList = rootView.findViewById(R.id.rcvIncomeParentCategory);
-        ApiService.apiService.getAllIncomeCategories().enqueue(new Callback<List<Category>>() {
+        Call<List<Category>> call = ApiService.getInstance(getContext()).getiApiService().getAllIncomeCategories();
+        call.enqueue(new Callback<List<Category>>() {
             @Override
             public void onResponse(Call<List<Category>> call, Response<List<Category>> response) {
                 List<Category> categoryList = response.body();

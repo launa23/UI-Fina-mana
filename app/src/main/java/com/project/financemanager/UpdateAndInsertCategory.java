@@ -16,6 +16,7 @@ import com.project.financemanager.models.Category;
 import com.project.financemanager.models.Transaction;
 
 public class UpdateAndInsertCategory extends AppCompatActivity {
+    private String iconName;
     private ImageView imgIconDefault;
     private TextView txtChooseIcon;
     private EditText inputNameCategory;
@@ -48,6 +49,7 @@ public class UpdateAndInsertCategory extends AppCompatActivity {
                     if (result.getResultCode() == this.RESULT_OK) {
                         Intent data = result.getData();
                         int resourceId = data.getIntExtra("resourceId", 0);
+                        iconName = getResources().getResourceEntryName(resourceId);
                         imgIconDefault.setImageResource(resourceId);
                     }
                 }
@@ -67,6 +69,7 @@ public class UpdateAndInsertCategory extends AppCompatActivity {
                         else {
                             Category parentSelected = (Category) data.getSerializableExtra("parentSelected");
                             int resourceIdParent = this.getResources().getIdentifier(parentSelected.getIcon(), "drawable", this.getPackageName());
+//                            String name = getResources().getResourceEntryName(resourceIdParent);
                             imgParentIconDefault.setImageResource(resourceIdParent);
                             txtNameParentCategory.setText(parentSelected.getName());
                             txtIdParentCategory.setText(String.valueOf(parentSelected.getId()));
@@ -118,6 +121,7 @@ public class UpdateAndInsertCategory extends AppCompatActivity {
         Category category = (Category) intent.getSerializableExtra("categoryItem");
         int isParent = intent.getIntExtra("isParent", 1);
         inputNameCategory.setText(category.getName());
+        iconName = category.getIcon();
         int resourceId = this.getResources().getIdentifier(category.getIcon(), "drawable", this.getPackageName());
         imgIconDefault.setImageResource(resourceId);
         typeCategory.setText(String.valueOf(category.getType()));

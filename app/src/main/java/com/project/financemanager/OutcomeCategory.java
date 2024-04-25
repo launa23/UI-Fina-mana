@@ -1,14 +1,12 @@
 package com.project.financemanager;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -20,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.project.financemanager.adapters.ParentOutcomeCategoryAdapter;
 import com.project.financemanager.api.ApiService;
+import com.project.financemanager.api.IApiService;
 import com.project.financemanager.common.RvItemClickListener;
 import com.project.financemanager.models.Category;
 
@@ -54,7 +53,8 @@ public class OutcomeCategory extends Fragment {
         return rootView;
     }
     private void fillDataToCategoryList(View rootView, ActivityResultLauncher<Intent> launcher){
-        ApiService.apiService.getAllOutcomeCategories().enqueue(new Callback<List<Category>>() {
+        Call<List<Category>> call = ApiService.getInstance(getContext()).getiApiService().getAllOutcomeCategories();
+        call.enqueue(new Callback<List<Category>>() {
             @Override
             public void onResponse(Call<List<Category>> call, Response<List<Category>> response) {
                 List<Category> categoryList = response.body();

@@ -1,6 +1,5 @@
 package com.project.financemanager;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -10,13 +9,13 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.project.financemanager.adapters.WalletAdapter;
 import com.project.financemanager.api.ApiService;
+import com.project.financemanager.api.IApiService;
 import com.project.financemanager.models.Wallet;
 
 import java.util.List;
@@ -35,7 +34,9 @@ public class WalletActivity extends AppCompatActivity {
         setContentView(R.layout.activity_wallet);
         recyclerView = findViewById(R.id.rcvWallets);
         btnBackInWallet = findViewById(R.id.btnBackInWallet);
-        ApiService.apiService.getAllMyWallet().enqueue(new Callback<List<Wallet>>() {
+        Call<List<Wallet>> call = ApiService.getInstance(getApplicationContext()).getiApiService().getAllMyWallet();
+
+        call.enqueue(new Callback<List<Wallet>>() {
             @Override
             public void onResponse(Call<List<Wallet>> call, Response<List<Wallet>> response) {
                 List<Wallet> walletList = response.body();

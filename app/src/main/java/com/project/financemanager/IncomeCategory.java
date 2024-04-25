@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -17,9 +16,9 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.project.financemanager.adapters.ParentIncomeCategoryAdapter;
 import com.project.financemanager.adapters.ParentOutcomeCategoryAdapter;
 import com.project.financemanager.api.ApiService;
+import com.project.financemanager.api.IApiService;
 import com.project.financemanager.common.RvItemClickListener;
 import com.project.financemanager.models.Category;
 
@@ -52,7 +51,8 @@ public class IncomeCategory extends Fragment {
         return rootView;
     }
     private void fillDataToCategoryList(View rootView, ActivityResultLauncher<Intent> launcher){
-        ApiService.apiService.getAllIncomeCategories().enqueue(new Callback<List<Category>>() {
+        Call<List<Category>> call = ApiService.getInstance(getContext()).getiApiService().getAllIncomeCategories();
+        call.enqueue(new Callback<List<Category>>() {
             @Override
             public void onResponse(Call<List<Category>> call, Response<List<Category>> response) {
                 List<Category> categoryList = response.body();

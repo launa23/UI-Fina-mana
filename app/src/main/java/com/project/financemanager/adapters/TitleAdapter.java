@@ -95,6 +95,7 @@ public class TitleAdapter extends RecyclerView.Adapter<TitleAdapter.TitleViewHol
                 }
             });
             holder.rcvTransactions.setLayoutManager(new LinearLayoutManager(activity));
+            holder.rcvTransactions.setNestedScrollingEnabled(false);
             holder.rcvTransactions.setAdapter(transactionAdapter);
 
         } catch (Exception e) {

@@ -41,6 +41,7 @@ public class IconActivity extends AppCompatActivity {
             public void onItemClick(int position) {
                 Intent resultIntent = new Intent();
                 resultIntent.putExtra("resourceId", imageResourceIds.get(position));
+
 //                String resourceName = getResources().getResourceEntryName(imageResourceIds.get(position));
 //                Toast.makeText(getApplicationContext(), resourceName, Toast.LENGTH_SHORT).show();
                 setResult(Activity.RESULT_OK, resultIntent);

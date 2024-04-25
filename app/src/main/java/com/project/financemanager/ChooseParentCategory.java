@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.project.financemanager.adapters.CategoryNotChildAdapter;
 import com.project.financemanager.api.ApiService;
+import com.project.financemanager.api.IApiService;
 import com.project.financemanager.models.Category;
 
 import java.util.List;
@@ -64,7 +65,8 @@ public class ChooseParentCategory extends AppCompatActivity {
     }
 
     private void callApiGetData(String type){
-        ApiService.apiService.getCategoryParents(type).enqueue(new Callback<List<Category>>() {
+        Call<List<Category>> call = ApiService.getInstance(getApplicationContext()).getiApiService().getCategoryParents(type);
+        call.enqueue(new Callback<List<Category>>() {
             @Override
             public void onResponse(Call<List<Category>> call, Response<List<Category>> response) {
                 List<Category> categories = response.body();

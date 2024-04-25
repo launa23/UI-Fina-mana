@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.project.financemanager.api.ApiService;
+import com.project.financemanager.api.IApiService;
 import com.project.financemanager.dtos.TitleTime;
 
 import java.io.Serializable;
@@ -97,7 +98,9 @@ public class ChooseTimeActivity extends AppCompatActivity {
         editor.putInt("year", year);
         editor.putString("titleMonthAndYear", title);
         editor.apply();
-        ApiService.apiService.getTransByMonthAndYear(month, year, idWallet).enqueue(new Callback<List<TitleTime>>() {
+
+        Call<List<TitleTime>> call = ApiService.getInstance(getApplicationContext()).getiApiService().getTransByMonthAndYear(month, year, idWallet);
+        call.enqueue(new Callback<List<TitleTime>>() {
             @Override
             public void onResponse(Call<List<TitleTime>> call, Response<List<TitleTime>> response) {
                 List<TitleTime> titleTimeList = response.body();

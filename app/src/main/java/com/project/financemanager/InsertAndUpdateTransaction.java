@@ -32,7 +32,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class InsertAndUpdateTransaction extends AppCompatActivity {
-
+//    private String iconName;
     String[] items = {"Chi tiêu", "Thu nhập"};
     AutoCompleteTextView autoCompleteTextView;
     ArrayAdapter<String> arrayAdapter;
@@ -154,6 +154,7 @@ public class InsertAndUpdateTransaction extends AppCompatActivity {
                         txtCategoryIdInUpdate.setText(String.valueOf(data.getIntExtra("idCategory", 0)));
                         txtCategoryName.setText(data.getStringExtra("nameCategory"));
                         String icon = data.getStringExtra("icon");
+//                        iconName = icon;
                         int type = data.getIntExtra("type", 0);
                         txtCategoryTypeInUpdate.setText(String.valueOf(type));
                         if (type == 1) {
@@ -187,6 +188,7 @@ public class InsertAndUpdateTransaction extends AppCompatActivity {
     private void fillDataToTransaction(int yearCurrent, int monthCurrent, int dateCurrent){
         Intent intent = getIntent();
         Transaction myObject = (Transaction) intent.getSerializableExtra("transaction");
+//        iconName = myObject.getImage();
         int green = ContextCompat.getColor(getApplicationContext(), R.color.green);
         if(myObject.getType().equals("Income")){
             inputAmonut.setTextColor(green);

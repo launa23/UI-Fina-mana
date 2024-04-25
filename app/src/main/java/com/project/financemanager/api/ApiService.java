@@ -1,72 +1,67 @@
 package com.project.financemanager.api;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.project.financemanager.dtos.LoginResponse;
-import com.project.financemanager.dtos.TitleTime;
-import com.project.financemanager.dtos.Total;
-import com.project.financemanager.dtos.UserLogin;
-import com.project.financemanager.models.Category;
-import com.project.financemanager.models.User;
-import com.project.financemanager.models.Wallet;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 
-import java.util.List;
+import com.project.financemanager.LoginActivity;
 
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-import retrofit2.http.Body;
-import retrofit2.http.GET;
-import retrofit2.http.POST;
-import retrofit2.http.Path;
-import retrofit2.http.Query;
 
-public interface ApiService {
-    Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
+public class ApiService{
+    private static ApiService instance;
+    private IApiService iApiService;
+    SharedPreferences sharedPreferences;
+    private ApiService(Context context) {
+        sharedPreferences = context.getSharedPreferences("CHECK_TOKEN", context.MODE_PRIVATE);
+//        SharedPreferences.Editor editor = sharedPreferences.edit();
+//        editor.putString("token", "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImxhdW4iLCJzdWIiOiJsYXVuIiwiZXhwIjoxNzE2NjA1MDczfQ.Wp2i7M8MhC6xeoF9cpFsP-6FhzjShFgKIgH4vXYgRZ4");
+//        editor.apply();
+        String token = sharedPreferences.getString("token", "");
 
-    Interceptor interceptor = chain -> {
-        Request request = chain.request();
-        Request.Builder builder = request.newBuilder();
-        builder.addHeader("Authorization", "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImxhdW4iLCJzdWIiOiJsYXVuIiwiZXhwIjoxNzE1NTI0MDU1fQ.TkBvCVQuStxL4Vc166C1Z7RsOHBg6wvFPKUix2u3ZLA");
-        return chain.proceed(builder.build());
-    };
+        Interceptor interceptor = chain -> {
+            Request request = chain.request();
+            Request.Builder builder = request.newBuilder();
+            builder.addHeader("Authorization", token);
+            return chain.proceed(builder.build());
+        };
 
-    OkHttpClient.Builder okBuilder = new OkHttpClient.Builder().addInterceptor(interceptor);
+        OkHttpClient.Builder okBuilder = new OkHttpClient.Builder().addInterceptor(interceptor);
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(iApiService.BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(okBuilder.build())
+                .build();
+        iApiService = retrofit.create(IApiService.class);
+    }
 
-    ApiService apiService = new Retrofit.Builder()
-            .baseUrl("http://192.168.1.8:8081/api/v1/")
-            .addConverterFactory(GsonConverterFactory.create(gson))
-            .client(okBuilder.build())
-            .build()
-            .create(ApiService.class);
+    private ApiService() {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(iApiService.BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        iApiService = retrofit.create(IApiService.class);
+    }
 
-    @GET("transaction/monthandyear")
-    Call<List<TitleTime>> getTransByMonthAndYear(@Query("month") int month, @Query("year") int year, @Query("walletId") long walletId);
+    public static synchronized ApiService getInstance(Context context) {
+        if (instance == null) {
+            instance = new ApiService(context);
+        }
+        return new ApiService(context);
+    }
 
-    @GET("wallet/{id}")
-    Call<Wallet> getWalletById(@Path("id") long walletId);
+    public static synchronized ApiService getInstance() {
+        if (instance == null) {
+            instance = new ApiService();
+        }
+        return new ApiService();
+    }
 
-    @GET("wallet/mine")
-    Call<List<Wallet>> getAllMyWallet();
-
-    @GET("wallet/first")
-    Call<Wallet> getFirstWallet();
-
-    @GET("categories/parent/{type}")
-    Call<List<Category>> getCategoryParents(@Path("type") String type);
-
-    @GET("categories/outcome")
-    Call<List<Category>> getAllOutcomeCategories();
-
-    @GET("categories/income")
-    Call<List<Category>> getAllIncomeCategories();
-
-    @POST("user/login")
-    Call<LoginResponse> login(@Body UserLogin userLogin);
-
-    @GET("transaction/total")
-    Call<Total> getTotalIncomeAndOutcome(@Query("month") int month, @Query("year") int year, @Query("walletId") long walletId);
+    public IApiService getiApiService() {
+        return iApiService;
+    }
 }
