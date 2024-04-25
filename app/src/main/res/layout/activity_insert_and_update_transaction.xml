@@ -284,7 +284,6 @@
 
     <RelativeLayout
         android:id="@+id/buttonRemove"
-
         android:layout_width="170dp"
         android:layout_height="46dp"
         android:layout_marginLeft="20dp"

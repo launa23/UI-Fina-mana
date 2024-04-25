@@ -100,12 +100,12 @@ public class MainActivity extends AppCompatActivity {
         try {
             launcherforAdd = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
                 if (result != null && result.getResultCode() == RESULT_OK) {
-                    Log.e("addTransaction", "success");
-                    if (result.getData() != null) {
-                        Transaction c = (Transaction)result.getData().getSerializableExtra("contact");
+//                    Log.e("addTransaction", "success");
+//                    if (result.getData() != null) {
+////                        Transaction c = (Transaction)result.getData().getSerializableExtra("contact");
                         binding.bottomNavigationView.setSelectedItemId(R.id.home);
-                        replaceFragment(new HomeFragment());
-                    }
+//                        replaceFragment(new HomeFragment());
+//                    }
                 }
             });
         } catch (Exception ex) {

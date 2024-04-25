@@ -7,6 +7,7 @@ import com.project.financemanager.dtos.TitleTime;
 import com.project.financemanager.dtos.Total;
 import com.project.financemanager.dtos.UserLogin;
 import com.project.financemanager.models.Category;
+import com.project.financemanager.models.Transaction;
 import com.project.financemanager.models.Wallet;
 
 import java.util.List;
@@ -25,22 +26,7 @@ import retrofit2.http.Query;
 
 public interface IApiService {
     Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
-    String BASE_URL = "http://192.168.1.8:8081/api/v1/";
-//    Interceptor interceptor = chain -> {
-//        Request request = chain.request();
-//        Request.Builder builder = request.newBuilder();
-//        builder.addHeader("Authorization", "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImxhdW4iLCJzdWIiOiJsYXVuIiwiZXhwIjoxNzE1NTI0MDU1fQ.TkBvCVQuStxL4Vc166C1Z7RsOHBg6wvFPKUix2u3ZLA");
-//        return chain.proceed(builder.build());
-//    };
-//
-//    OkHttpClient.Builder okBuilder = new OkHttpClient.Builder().addInterceptor(interceptor);
-//
-//    IApiService apiService = new Retrofit.Builder()
-//            .baseUrl("http://192.168.1.8:8081/api/v1/")
-//            .addConverterFactory(GsonConverterFactory.create(gson))
-//            .client(okBuilder.build())
-//            .build()
-//            .create(IApiService.class);
+    String BASE_URL = "http://192.168.198.78:8081/api/v1/";
 
     @GET("transaction/monthandyear")
     Call<List<TitleTime>> getTransByMonthAndYear(@Query("month") int month, @Query("year") int year, @Query("walletId") long walletId);
@@ -68,4 +54,9 @@ public interface IApiService {
 
     @GET("transaction/total")
     Call<Total> getTotalIncomeAndOutcome(@Query("month") int month, @Query("year") int year, @Query("walletId") long walletId);
+    @POST("transaction/create/income")
+    Call<Transaction> createIncomeTransaction(@Body Transaction dataTrans);
+    @POST("transaction/create/outcome")
+    Call<Transaction> createOutcomeTransaction(@Body Transaction dataTrans);
+
 }

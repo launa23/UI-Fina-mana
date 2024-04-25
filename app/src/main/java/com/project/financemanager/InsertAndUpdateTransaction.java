@@ -5,6 +5,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
@@ -167,7 +168,7 @@ public class InsertAndUpdateTransaction extends AppCompatActivity {
                 } else {//tao moi
                     Intent t = new Intent();
                     t.putExtra("transCreate", transCreate);
-                    setResult(RESULT_OK, t);
+                    setResult(Activity.RESULT_OK, t);
                     finish();
                 }
                 //sut
@@ -218,7 +219,8 @@ public class InsertAndUpdateTransaction extends AppCompatActivity {
                         if (validateWallet && validateCate) {
                             Transaction dataTrans = new Transaction(amount, description, time, categoryID, walletID);
                             if (typeTrans.equals("Thu nhập")) {
-                                ApiService.apiService.createIncomeTransaction(dataTrans).enqueue(new Callback<Transaction>() {
+                                Call<Transaction> call = ApiService.getInstance(getApplicationContext()).getiApiService().createIncomeTransaction(dataTrans);
+                                call.enqueue(new Callback<Transaction>() {
                                     @Override
                                     public void onResponse(Call<Transaction> call, Response<Transaction> response) {
                                         if (response.code() != 200) {
@@ -239,7 +241,8 @@ public class InsertAndUpdateTransaction extends AppCompatActivity {
                                 });
 
                             } else {
-                                ApiService.apiService.createOutcomeTransaction(dataTrans).enqueue(new Callback<Transaction>() {
+                                Call<Transaction> call = ApiService.getInstance(getApplicationContext()).getiApiService().createOutcomeTransaction(dataTrans);
+                                call.enqueue(new Callback<Transaction>() {
                                     @Override
                                     public void onResponse(Call<Transaction> call, Response<Transaction> response) {
                                         if (response.code() != 200) {

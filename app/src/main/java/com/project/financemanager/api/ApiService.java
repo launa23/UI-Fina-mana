@@ -33,9 +33,6 @@ public class ApiService{
     SharedPreferences sharedPreferences;
     private ApiService(Context context) {
         sharedPreferences = context.getSharedPreferences("CHECK_TOKEN", context.MODE_PRIVATE);
-//        SharedPreferences.Editor editor = sharedPreferences.edit();
-//        editor.putString("token", "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImxhdW4iLCJzdWIiOiJsYXVuIiwiZXhwIjoxNzE2NjA1MDczfQ.Wp2i7M8MhC6xeoF9cpFsP-6FhzjShFgKIgH4vXYgRZ4");
-//        editor.apply();
         String token = sharedPreferences.getString("token", "");
 
         Interceptor interceptor = chain -> {
@@ -63,15 +60,15 @@ public class ApiService{
     }
 
     public static synchronized ApiService getInstance(Context context) {
-        if (instance == null) {
-            instance = new ApiService(context);
+        if (instance != null) {
+            return instance;
         }
         return new ApiService(context);
     }
 
     public static synchronized ApiService getInstance() {
-        if (instance == null) {
-            instance = new ApiService();
+        if (instance != null) {
+            return instance;
         }
         return new ApiService();
     }
