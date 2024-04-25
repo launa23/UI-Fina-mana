@@ -1,5 +1,6 @@
 package com.project.financemanager;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
@@ -14,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,6 +36,7 @@ import com.project.financemanager.models.Wallet;
 import java.text.NumberFormat;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -56,6 +59,11 @@ public class HomeFragment extends Fragment {
     private TextView idWallet;
     private RelativeLayout chooseWallet;
 
+    //tus
+    private ActivityResultLauncher<Intent> launcherforEdit;
+    private List<TitleTime> titleTimeList;
+    private TitleAdapter titleAdapter;
+    //sut
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -65,6 +73,9 @@ public class HomeFragment extends Fragment {
         txtChoosenMonth = rootView.findViewById(R.id.txtChoosenMonth);
         chooseWallet = rootView.findViewById(R.id.chooseWallet);
         layoutDialogLoading = rootView.findViewById(R.id.layoutDialogLoading);
+        //tus
+        initResultLauncher();
+        //sut
         loadDataWallet(rootView);
 
         ActivityResultLauncher<Intent> launcher = registerForActivityResult(
@@ -209,7 +220,7 @@ public class HomeFragment extends Fragment {
         call.enqueue(new Callback<List<TitleTime>>() {
             @Override
             public void onResponse(Call<List<TitleTime>> call, Response<List<TitleTime>> response) {
-                List<TitleTime> titleTimeList = response.body();
+                titleTimeList = response.body();
                 loadRecyclerView(rootView, titleTimeList);
 
             }
@@ -251,17 +262,20 @@ public class HomeFragment extends Fragment {
 
     private void loadRecyclerView(View rootView, List<TitleTime> titleTimeList){
         recyclerView = rootView.findViewById(R.id.rcvTransactions);
-        TitleAdapter titleAdapter = new TitleAdapter(titleTimeList, getActivity());
+        titleAdapter = new TitleAdapter(titleTimeList, getActivity());
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-//        recyclerView.setNestedScrollingEnabled(false);
+        recyclerView.setNestedScrollingEnabled(false);
         recyclerView.setAdapter(titleAdapter);
         titleAdapter.setRvItemClickListener(new RvItemClickListener<Transaction>() {
             @Override
             public void onChildItemClick(int parentPosition, int childPosition, Transaction item) {
                 Toast.makeText(getActivity().getApplicationContext(), item.getCategoryName(), Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(rootView.getContext(), InsertAndUpdateTransaction.class);
+                Intent intent = new Intent(getActivity(), InsertAndUpdateTransaction.class);
                 intent.putExtra("transaction", item);
-                startActivity(intent);
+                //tus
+                intent.putExtra("flag", "1");
+                launcherforEdit.launch(intent);
+                //sut
             }
         });
 
@@ -285,4 +299,29 @@ public class HomeFragment extends Fragment {
     private void dismissAlertDialog(AlertDialog alertDialog) {
         alertDialog.dismiss();
     }
+
+    //tus
+    private void initResultLauncher() {
+        try {
+            launcherforEdit = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+                //edit data
+                if (result != null && result.getResultCode() == Activity.RESULT_OK) {
+//                    //lay ve contact tai day va cap nhat len giao dien
+//                    Contact c = (Contact) result.getData().getSerializableExtra("contact");
+//                    //cap nhat tren giao
+//                    arrayList.set(iPosition, c);
+//                    contactAdapter.notifyItemChanged(iPosition);
+//                    Log.e("Editing", "success");
+                    Transaction c = (Transaction)result.getData().getSerializableExtra("contact1");
+                    Log.e("editTransaction", "successs");
+
+
+                }
+            });
+
+        } catch (Exception ex) {
+            Log.e("initResultLauncher", Objects.requireNonNull(ex.getMessage()));
+        }
+    }
+    //sut
 }

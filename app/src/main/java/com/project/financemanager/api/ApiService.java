@@ -1,5 +1,15 @@
 package com.project.financemanager.api;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.project.financemanager.dtos.LoginResponse;
+import com.project.financemanager.dtos.TitleTime;
+import com.project.financemanager.dtos.Total;
+import com.project.financemanager.dtos.UserLogin;
+import com.project.financemanager.models.Category;
+import com.project.financemanager.models.Transaction;
+import com.project.financemanager.models.User;
+import com.project.financemanager.models.Wallet;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
@@ -11,6 +21,11 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.http.Body;
+import retrofit2.http.GET;
+import retrofit2.http.POST;
+import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public class ApiService{
     private static ApiService instance;
@@ -60,6 +75,7 @@ public class ApiService{
         }
         return new ApiService();
     }
+
 
     public IApiService getiApiService() {
         return iApiService;

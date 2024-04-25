@@ -19,10 +19,15 @@ public class Transaction implements Serializable {
     private String walletName;
     @SerializedName("categoryName")
     private String categoryName;
+    @SerializedName("category_id")
+    private String categoryID;
+    //tus
     @SerializedName("image")
     private String image;
-
-    public Transaction(int id, String amount, String description, String time, String type, String walletName, String categoryName, String image) {
+    @SerializedName("wallet_id")
+    private String walletID;
+    //sut
+    public Transaction(int id, String amount, String description, String time, String type, String walletName, String categoryName) {
         this.id = id;
         this.amount = amount;
         this.description = description;
@@ -32,6 +37,18 @@ public class Transaction implements Serializable {
         this.categoryName = categoryName;
         this.image = image;
     }
+
+    //tus
+
+    public Transaction(String amount, String description, String time, String categoryID, String walletID) {
+        this.amount = amount;
+        this.description = description;
+        this.time = time;
+        this.categoryID = categoryID;
+        this.walletID = walletID;
+    }
+
+    //sut
 
     public int getId() {
         return id;
