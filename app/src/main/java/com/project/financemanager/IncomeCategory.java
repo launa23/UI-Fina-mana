@@ -72,6 +72,7 @@ public class IncomeCategory extends Fragment {
                 });
                 rcvParentList.setLayoutManager(new LinearLayoutManager(getActivity()));
                 rcvParentList.setNestedScrollingEnabled(false);
+//                rcvParentList.setHasFixedSize(true);
                 rcvParentList.setAdapter(parentOutcomeCategoryAdapter);
                 parentOutcomeCategoryAdapter.setRvItemClickListener(new RvItemClickListener<Category>() {
                     @Override

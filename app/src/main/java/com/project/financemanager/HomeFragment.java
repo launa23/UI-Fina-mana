@@ -73,7 +73,7 @@ public class HomeFragment extends Fragment {
         chooseWallet = rootView.findViewById(R.id.chooseWallet);
         layoutDialogLoading = rootView.findViewById(R.id.layoutDialogLoading);
         //tus
-//        initResultLauncher();
+        initResultLauncher();
         //sut
         loadDataWallet(rootView);
 
@@ -263,7 +263,8 @@ public class HomeFragment extends Fragment {
         recyclerView = rootView.findViewById(R.id.rcvTransactions);
         titleAdapter = new TitleAdapter(titleTimeList, getActivity());
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        recyclerView.setNestedScrollingEnabled(false);
+//        recyclerView.setNestedScrollingEnabled(false);
+        recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(titleAdapter);
         titleAdapter.setRvItemClickListener(new RvItemClickListener<Transaction>() {
             @Override
@@ -300,27 +301,27 @@ public class HomeFragment extends Fragment {
     }
 
     //tus
-//    private void initResultLauncher() {
-//        try {
-//            launcherforEdit = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
-//                //edit data
-//                if (result != null && result.getResultCode() == Activity.RESULT_OK) {
-////                    //lay ve contact tai day va cap nhat len giao dien
-////                    Contact c = (Contact) result.getData().getSerializableExtra("contact");
-////                    //cap nhat tren giao
-////                    arrayList.set(iPosition, c);
-////                    contactAdapter.notifyItemChanged(iPosition);
-////                    Log.e("Editing", "success");
-//                    Transaction c = (Transaction)result.getData().getSerializableExtra("contact1");
-//                    Log.e("editTransaction", "successs");
-//
-//
-//                }
-//            });
-//
-//        } catch (Exception ex) {
-//            Log.e("initResultLauncher", Objects.requireNonNull(ex.getMessage()));
-//        }
-//    }
+    private void initResultLauncher() {
+        try {
+            launcherforEdit = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+                //edit data
+                if (result != null && result.getResultCode() == Activity.RESULT_OK) {
+//                    //lay ve contact tai day va cap nhat len giao dien
+//                    Contact c = (Contact) result.getData().getSerializableExtra("contact");
+//                    //cap nhat tren giao
+//                    arrayList.set(iPosition, c);
+//                    contactAdapter.notifyItemChanged(iPosition);
+//                    Log.e("Editing", "success");
+                    Transaction c = (Transaction)result.getData().getSerializableExtra("contact1");
+                    Log.e("editTransaction", "successs");
+
+
+                }
+            });
+
+        } catch (Exception ex) {
+            Log.e("initResultLauncher", Objects.requireNonNull(ex.getMessage()));
+        }
+    }
     //sut
 }

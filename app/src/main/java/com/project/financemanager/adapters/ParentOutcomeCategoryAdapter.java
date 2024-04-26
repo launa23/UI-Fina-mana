@@ -61,6 +61,7 @@ public class ParentOutcomeCategoryAdapter extends RecyclerView.Adapter<ParentOut
         if (category.getCategoryOf().equals("User")){
             holder.iconLock.setVisibility(View.GONE);
         }
+        holder.rcvChildCategoryList.setHasFixedSize(true);
         holder.rcvChildCategoryList.setLayoutManager(new LinearLayoutManager(activity));
         holder.rcvChildCategoryList.setAdapter(childOutcomeCategoryAdapter);
     }
