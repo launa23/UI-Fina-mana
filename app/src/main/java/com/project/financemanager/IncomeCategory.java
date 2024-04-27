@@ -29,6 +29,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class IncomeCategory extends Fragment {
+    private final String FLAG = "1";
     private RecyclerView rcvParentList;
     private ConstraintLayout layoutDialog;
     @Override
@@ -62,7 +63,13 @@ public class IncomeCategory extends Fragment {
                         if (categoryList.get(position).getCategoryOf().equals("User")){
                             Intent intent = new Intent(getContext(), UpdateAndInsertCategory.class);
                             intent.putExtra("categoryItem", categoryList.get(position));
-                            intent.putExtra("isParent", 1);
+                            if(categoryList.get(position).getCategoryChilds().isEmpty()){
+                                intent.putExtra("isParent", 0);
+                            }
+                            else {
+                                intent.putExtra("isParent", 1);
+                            }
+                            intent.putExtra("fl", FLAG);
                             launcher.launch(intent);
                         }
                         else {
@@ -81,6 +88,7 @@ public class IncomeCategory extends Fragment {
                             Intent intent = new Intent(getContext(), UpdateAndInsertCategory.class);
                             intent.putExtra("categoryItem", item);
                             intent.putExtra("isParent", 0);
+                            intent.putExtra("fl", FLAG);
                             intent.putExtra("categoryParent", categoryList.get(parentPosition));
                             launcher.launch(intent);
                         }

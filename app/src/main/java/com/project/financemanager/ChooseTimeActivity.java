@@ -1,12 +1,17 @@
 package com.project.financemanager;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -24,6 +29,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class ChooseTimeActivity extends AppCompatActivity {
+    AlertDialog alertDialog;
+    private ConstraintLayout layoutDialogLoading;
     private ImageView back;
     private TextView thisMonth;
     private TextView lastMonth;
@@ -42,7 +49,7 @@ public class ChooseTimeActivity extends AppCompatActivity {
         thisYear = findViewById(R.id.thisYear);
         lastYear = findViewById(R.id.lastYear);
         allTime = findViewById(R.id.allTime);
-
+        layoutDialogLoading = findViewById(R.id.layoutDialogLoading);
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -119,5 +126,31 @@ public class ChooseTimeActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    private AlertDialog showLoadingDialog(AlertDialog alertDialog){
+        View view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.loading_progress_bar, layoutDialogLoading);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
+        builder.setView(view);
+        builder.setCancelable(false);
+        alertDialog = builder.create();
+
+        if(alertDialog.getWindow() != null){
+            alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(0));
+        }
+        alertDialog.show();
+        return alertDialog;
+    }
+
+    private void dismissLoadingDialog(AlertDialog alertDialog) {
+
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                alertDialog.dismiss();
+            }
+        }, 1000);
     }
 }

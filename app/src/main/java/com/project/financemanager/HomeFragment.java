@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -297,7 +298,14 @@ public class HomeFragment extends Fragment {
     }
 
     private void dismissAlertDialog(AlertDialog alertDialog) {
-        alertDialog.dismiss();
+
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                alertDialog.dismiss();
+            }
+        }, 1000);
     }
 
     //tus

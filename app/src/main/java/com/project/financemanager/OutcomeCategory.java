@@ -3,6 +3,7 @@ package com.project.financemanager;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,8 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AlertDialog;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -29,9 +32,12 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class OutcomeCategory extends Fragment {
+    AlertDialog alertDialog;
     private RecyclerView rcvParentList;
-
+    private ConstraintLayout layoutDialogLoading;
+    private final String FLAG = "1";
     private ConstraintLayout layoutDialog;
+    private ActivityResultLauncher<Intent> launcher;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -40,7 +46,8 @@ public class OutcomeCategory extends Fragment {
 
         rcvParentList = rootView.findViewById(R.id.rcvParentList);
         layoutDialog = rootView.findViewById(R.id.layoutDialog);
-        ActivityResultLauncher<Intent> launcher = registerForActivityResult(
+        layoutDialogLoading = rootView.findViewById(R.id.layoutDialogLoading);
+        launcher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     if (result.getResultCode() == getActivity().RESULT_OK) {
@@ -49,10 +56,12 @@ public class OutcomeCategory extends Fragment {
                     }
                 }
         );
-        fillDataToCategoryList(rootView, launcher);
+
+        fillDataToCategoryList();
         return rootView;
     }
-    private void fillDataToCategoryList(View rootView, ActivityResultLauncher<Intent> launcher){
+    public void fillDataToCategoryList(){
+        alertDialog = showLoadingDialog(alertDialog);
         Call<List<Category>> call = ApiService.getInstance(getContext()).getiApiService().getAllOutcomeCategories();
         call.enqueue(new Callback<List<Category>>() {
             @Override
@@ -64,7 +73,13 @@ public class OutcomeCategory extends Fragment {
                         if (categoryList.get(position).getCategoryOf().equals("User")){
                             Intent intent = new Intent(getContext(), UpdateAndInsertCategory.class);
                             intent.putExtra("categoryItem", categoryList.get(position));
-                            intent.putExtra("isParent", 1);
+                            if(categoryList.get(position).getCategoryChilds().isEmpty()){
+                                intent.putExtra("isParent", 0);
+                            }
+                            else {
+                                intent.putExtra("isParent", 1);
+                            }
+                            intent.putExtra("fl", FLAG);
                             launcher.launch(intent);
                         }
                         else {
@@ -84,6 +99,7 @@ public class OutcomeCategory extends Fragment {
                             intent.putExtra("categoryItem", item);
                             intent.putExtra("isParent", 0);
                             intent.putExtra("categoryParent", categoryList.get(parentPosition));
+                            intent.putExtra("fl", FLAG);
                             launcher.launch(intent);
                         }
                         else {
@@ -91,6 +107,7 @@ public class OutcomeCategory extends Fragment {
                         }
                     }
                 });
+                dismissLoadingDialog(alertDialog);
             }
 
             @Override
@@ -116,5 +133,31 @@ public class OutcomeCategory extends Fragment {
             alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(0));
         }
         alertDialog.show();
+    }
+
+    private AlertDialog showLoadingDialog(AlertDialog alertDialog){
+        View view = LayoutInflater.from(getContext()).inflate(R.layout.loading_progress_bar, layoutDialogLoading);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setView(view);
+        builder.setCancelable(false);
+        alertDialog = builder.create();
+
+        if(alertDialog.getWindow() != null){
+            alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(0));
+        }
+        alertDialog.show();
+        return alertDialog;
+    }
+
+    private void dismissLoadingDialog(AlertDialog alertDialog) {
+
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                alertDialog.dismiss();
+            }
+        }, 1000);
     }
 }

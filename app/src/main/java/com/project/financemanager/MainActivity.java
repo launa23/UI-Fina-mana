@@ -22,11 +22,14 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ImageView;
 
+import com.github.clans.fab.FloatingActionButton;
 import com.project.financemanager.databinding.ActivityMainBinding;
+import com.project.financemanager.models.Category;
 import com.project.financemanager.models.Transaction;
 
 public class MainActivity extends AppCompatActivity {
-
+//    private FloatingActionButton btnAddOutcome;
+//    private FloatingActionButton btnAddIncome;
     ActivityMainBinding binding;
     //tus
     private ActivityResultLauncher<Intent> launcherforAdd;
@@ -44,12 +47,16 @@ public class MainActivity extends AppCompatActivity {
         binding.bottomNavigationView.setOnItemSelectedListener(item -> {
             if (item.getItemId() == R.id.home) {
                 replaceFragment(new HomeFragment());
+                binding.fabMenu.setVisibility(View.GONE);
             } else if (item.getItemId() == R.id.categorys) {
                 replaceFragment(new CategoryFragment());
+                binding.fabMenu.setVisibility(View.VISIBLE);
             } else if (item.getItemId() == R.id.charts) {
                 replaceFragment(new ChartFragment());
+                binding.fabMenu.setVisibility(View.GONE);
             } else if (item.getItemId() == R.id.account) {
                 replaceFragment(new AccountFragment());
+                binding.fabMenu.setVisibility(View.GONE);
             }
             return true;
         });
@@ -66,6 +73,35 @@ public class MainActivity extends AppCompatActivity {
                     ex.printStackTrace();
                 }
                 //sut
+            }
+        });
+
+        ActivityResultLauncher<Intent> launcherAddCategory = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == this.RESULT_OK) {
+                        Intent data = result.getData();
+                        binding.bottomNavigationView.setSelectedItemId(R.id.categorys);
+                    }
+                }
+        );
+        binding.btnAddOutcome.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), UpdateAndInsertCategory.class);
+                intent.putExtra("fl", "0");
+                intent.putExtra("typeCategory", "0");
+                launcherAddCategory.launch(intent);
+            }
+        });
+
+        binding.btnAddIncome.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), UpdateAndInsertCategory.class);
+                intent.putExtra("fl", "0");
+                intent.putExtra("typeCategory", "1");
+                launcherAddCategory.launch(intent);
             }
         });
     }

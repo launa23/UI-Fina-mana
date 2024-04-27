@@ -15,6 +15,8 @@ import android.widget.TextView;
 import com.project.financemanager.models.Category;
 import com.project.financemanager.models.Transaction;
 
+import java.util.Objects;
+
 public class UpdateAndInsertCategory extends AppCompatActivity {
     private String iconName;
     private ImageView imgIconDefault;
@@ -26,7 +28,7 @@ public class UpdateAndInsertCategory extends AppCompatActivity {
     private TextView txtNameParentCategory;
     private TextView txtIdParentCategory;
     private TextView typeCategory;
-
+    private String flag;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,8 +43,16 @@ public class UpdateAndInsertCategory extends AppCompatActivity {
         txtIdParentCategory = findViewById(R.id.txtIdParentCategory);
         typeCategory = findViewById(R.id.typeInUpdateCate);
 
+        Intent iCategoryFrg = getIntent();
+        flag = iCategoryFrg.getStringExtra("fl");
 
-        fillDataToIntent();
+        if(Objects.equals(flag, "1")){
+            fillDataToIntent();
+        }
+        else{
+            Intent intent = getIntent();
+            typeCategory.setText(intent.getStringExtra("typeCategory"));
+        }
         ActivityResultLauncher<Intent> launcherIcon = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
@@ -93,6 +103,9 @@ public class UpdateAndInsertCategory extends AppCompatActivity {
         btnCloseInUpdateCate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent intent = new Intent();
+                setResult(MainActivity.RESULT_OK, intent);
+
                 finish();
             }
         });
@@ -130,9 +143,12 @@ public class UpdateAndInsertCategory extends AppCompatActivity {
         }
         else{
             Category categoryParent = (Category) intent.getSerializableExtra("categoryParent");
-            int resourceIdParent = this.getResources().getIdentifier(categoryParent.getIcon(), "drawable", this.getPackageName());
-            imgParentIconDefault.setImageResource(resourceIdParent);
-            txtNameParentCategory.setText(categoryParent.getName());
+            if(categoryParent != null){
+                int resourceIdParent = this.getResources().getIdentifier(categoryParent.getIcon(), "drawable", this.getPackageName());
+                imgParentIconDefault.setImageResource(resourceIdParent);
+                txtNameParentCategory.setText(categoryParent.getName());
+            }
+
         }
     }
 }
