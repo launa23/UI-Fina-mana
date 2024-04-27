@@ -113,4 +113,20 @@ public class Transaction implements Serializable {
     public void setImage(String image) {
         this.image = image;
     }
+
+    public String getCategoryID() {
+        return categoryID;
+    }
+
+    public void setCategoryID(String categoryID) {
+        this.categoryID = categoryID;
+    }
+
+    public String getWalletID() {
+        return walletID;
+    }
+
+    public void setWalletID(String walletID) {
+        this.walletID = walletID;
+    }
 }

@@ -62,6 +62,7 @@ public class HomeFragment extends Fragment {
     private ActivityResultLauncher<Intent> launcherforEdit;
     private List<TitleTime> titleTimeList;
     private TitleAdapter titleAdapter;
+
     //sut
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -73,7 +74,7 @@ public class HomeFragment extends Fragment {
         chooseWallet = rootView.findViewById(R.id.chooseWallet);
         layoutDialogLoading = rootView.findViewById(R.id.layoutDialogLoading);
         //tus
-        initResultLauncher();
+        initResultLauncher(rootView);
         //sut
         loadDataWallet(rootView);
 
@@ -142,7 +143,7 @@ public class HomeFragment extends Fragment {
         return rootView;
     }
 
-    private void loadDataWallet(View rootView){
+    private void loadDataWallet(View rootView) {
         alertDialog = showAlertDialog(alertDialog);
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
 
@@ -151,10 +152,10 @@ public class HomeFragment extends Fragment {
         int year = sharedPreferences.getInt("year", 0);
         String titleMonthAndYear = sharedPreferences.getString("titleMonthAndYear", "Toàn bộ thời gian");
         txtChoosenMonth.setText(titleMonthAndYear);
-        if (idWallet != 0){
+        if (idWallet != 0) {
             Call<Wallet> call = ApiService.getInstance(getContext()).getiApiService().getWalletById(idWallet);
 
-           call.enqueue(new Callback<Wallet>() {
+            call.enqueue(new Callback<Wallet>() {
                 @Override
                 public void onResponse(Call<Wallet> call, Response<Wallet> response) {
                     Wallet wallet = response.body();
@@ -174,18 +175,18 @@ public class HomeFragment extends Fragment {
                     dismissAlertDialog(alertDialog);
 
                 }
+
                 @Override
                 public void onFailure(Call<Wallet> call, Throwable throwable) {
 
                 }
             });
-        }
-        else {
+        } else {
             Call<Wallet> call = ApiService.getInstance(getActivity()).getiApiService().getFirstWallet();
             call.enqueue(new Callback<Wallet>() {
                 @Override
                 public void onResponse(Call<Wallet> call, Response<Wallet> response) {
-                    if (response.isSuccessful()){
+                    if (response.isSuccessful()) {
                         Wallet wallet = response.body();
                         NumberFormat numberFormatComma = NumberFormat.getNumberInstance(Locale.getDefault());
                         String formattedNumberComma = numberFormatComma.format(Integer.parseInt(wallet.getMoney()));
@@ -200,12 +201,12 @@ public class HomeFragment extends Fragment {
                         loadDataTransaction(rootView, walletId, month, year);
                         loadDateTotal(rootView, walletId, month, year);
                         dismissAlertDialog(alertDialog);
-                    }
-                    else {
+                    } else {
                         Toast.makeText(getActivity(), "Lỗi", Toast.LENGTH_SHORT).show();
                     }
 
                 }
+
                 @Override
                 public void onFailure(Call<Wallet> call, Throwable throwable) {
 
@@ -214,7 +215,7 @@ public class HomeFragment extends Fragment {
         }
     }
 
-    private void loadDataTransaction(View rootView, long walletId, int month, int year){
+    private void loadDataTransaction(View rootView, long walletId, int month, int year) {
         Call<List<TitleTime>> call = ApiService.getInstance(getContext()).getiApiService().getTransByMonthAndYear(month, year, walletId);
         call.enqueue(new Callback<List<TitleTime>>() {
             @Override
@@ -232,7 +233,7 @@ public class HomeFragment extends Fragment {
         });
     }
 
-    private void loadDateTotal(View rootView, long walletId, int month, int year){
+    private void loadDateTotal(View rootView, long walletId, int month, int year) {
         Call<Total> call = ApiService.getInstance(getContext()).getiApiService().getTotalIncomeAndOutcome(month, year, walletId);
 
         call.enqueue(new Callback<Total>() {
@@ -259,7 +260,7 @@ public class HomeFragment extends Fragment {
         });
     }
 
-    private void loadRecyclerView(View rootView, List<TitleTime> titleTimeList){
+    private void loadRecyclerView(View rootView, List<TitleTime> titleTimeList) {
         recyclerView = rootView.findViewById(R.id.rcvTransactions);
         titleAdapter = new TitleAdapter(titleTimeList, getActivity());
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -281,7 +282,7 @@ public class HomeFragment extends Fragment {
 
     }
 
-    private AlertDialog showAlertDialog(AlertDialog alertDialog){
+    private AlertDialog showAlertDialog(AlertDialog alertDialog) {
         View view = LayoutInflater.from(getContext()).inflate(R.layout.loading_progress_bar, layoutDialogLoading);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
@@ -289,7 +290,7 @@ public class HomeFragment extends Fragment {
         builder.setCancelable(false);
         alertDialog = builder.create();
 
-        if(alertDialog.getWindow() != null){
+        if (alertDialog.getWindow() != null) {
             alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(0));
         }
         alertDialog.show();
@@ -301,21 +302,17 @@ public class HomeFragment extends Fragment {
     }
 
     //tus
-    private void initResultLauncher() {
+    private void initResultLauncher(View rootView) {
         try {
             launcherforEdit = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
                 //edit data
                 if (result != null && result.getResultCode() == Activity.RESULT_OK) {
-//                    //lay ve contact tai day va cap nhat len giao dien
-//                    Contact c = (Contact) result.getData().getSerializableExtra("contact");
-//                    //cap nhat tren giao
-//                    arrayList.set(iPosition, c);
-//                    contactAdapter.notifyItemChanged(iPosition);
-//                    Log.e("Editing", "success");
-                    Transaction c = (Transaction)result.getData().getSerializableExtra("contact1");
-                    Log.e("editTransaction", "successs");
-
-
+                    int flagUD = result.getData().getIntExtra("flagUD", 0);
+                    if (flagUD == 2 || flagUD == 1) {
+                        loadDataWallet(rootView);
+                    }
+                } else {
+                    Log.e("editTransaction", "failed");
                 }
             });
 

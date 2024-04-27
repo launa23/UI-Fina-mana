@@ -42,7 +42,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class InsertAndUpdateTransaction extends AppCompatActivity {
-//    private String iconName;
+    //    private String iconName;
     String[] items = {"Chi tiêu", "Thu nhập"};
     AutoCompleteTextView autoCompleteTextView;
     ArrayAdapter<String> arrayAdapter;
@@ -65,7 +65,7 @@ public class InsertAndUpdateTransaction extends AppCompatActivity {
     private RelativeLayout btnRemove;
 
     private String flag;
-    private Transaction transCreate;
+    private Transaction transCreate, transUpdate, myObject;
 
     //sut
     @Override
@@ -153,17 +153,7 @@ public class InsertAndUpdateTransaction extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //tus
-                if (flag.equals("1")) {//sua
-                    //Lưu vào sqlite
-                    //Contact c = new Contact(idEdit, name, phone);
-                    //db.updateContact(c);
-                    //day tra ve mainactivity
-                    Transaction k = new Transaction(8, "3", "3", "3", "3", "3", "3");
-
-                    Intent t = new Intent();
-                    t.putExtra("contact1", k);
-                    Log.e("Editing", "success");
-                    setResult(RESULT_OK, t);
+                if (flag.equals("1")) {
                     finish();
                 } else {//tao moi
                     Intent t = new Intent();
@@ -179,94 +169,86 @@ public class InsertAndUpdateTransaction extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //tus
-                if (flag.equals("1")) {//sua
-                    //Lưu vào sqlite
-                    //Contact c = new Contact(idEdit, name, phone);
-                    //db.updateContact(c);
-                    //day tra ve mainactivity
-//                    Transaction k = new Transaction(8,"3","3","3","3","3","3");
-//
-//                    Intent t = new Intent();
-//                    t.putExtra("contact1", k);
-//                    Log.e("Editing", "success");
-//                    setResult(RESULT_OK, t);
-//                    finish();
-                } else {//tao moi
-                    try {
-                        // xử lí amount
-                        String amount = (inputAmonut.getText().toString()).replaceAll("[,.]", "");
-                        amount = (amount.equals("")) ? "0" : amount;
-                        // xử lí descrip
-                        String description = inputDescription.getText().toString();
-                        // xử lí time transaction
-                        String[] timeArrCreate = ((txtDateInUpdate.getText().toString()).replaceAll("\\b(?:Hôm\\s+nay,\\s*|Hôm\\s+qua,\\s*|Ngày\\s+mai,\\s*)\\b", "")).split("/");
-                        String[] hourArrCreate = (txtHourInUpdate.getText().toString()).split(":");
+                try {
+                    // xử lí amount
+                    String amount = (inputAmonut.getText().toString()).replaceAll("[,.]", "");
+                    amount = (amount.equals("")) ? "0" : amount;
+                    // xử lí descrip
+                    String description = inputDescription.getText().toString();
+                    // xử lí time transaction
+                    String[] timeArrCreate = ((txtDateInUpdate.getText().toString()).replaceAll("\\b(?:Hôm\\s+nay,\\s*|Hôm\\s+qua,\\s*|Ngày\\s+mai,\\s*)\\b", "")).split("/");
+                    String[] hourArrCreate = (txtHourInUpdate.getText().toString()).split(":");
 
-                        String monthCreate = (Integer.parseInt(timeArrCreate[1]) >= 10) ? timeArrCreate[1] : "0" + timeArrCreate[1];
-                        String dateCreate = (Integer.parseInt(timeArrCreate[0]) >= 10) ? timeArrCreate[0] : "0" + timeArrCreate[0];
-                        String hourCreate = (Integer.parseInt(hourArrCreate[0]) >= 10) ? hourArrCreate[0] : "0" + hourArrCreate[0];
-                        String minuteCreate = (Integer.parseInt(hourArrCreate[1]) >= 10) ? hourArrCreate[1] : "0" + hourArrCreate[1];
+                    String monthCreate = (Integer.parseInt(timeArrCreate[1]) >= 10) ? timeArrCreate[1] : "0" + timeArrCreate[1];
+                    String dateCreate = (Integer.parseInt(timeArrCreate[0]) >= 10) ? timeArrCreate[0] : "0" + timeArrCreate[0];
+                    String hourCreate = (Integer.parseInt(hourArrCreate[0]) >= 10) ? hourArrCreate[0] : "0" + hourArrCreate[0];
+                    String minuteCreate = (Integer.parseInt(hourArrCreate[1]) >= 10) ? hourArrCreate[1] : "0" + hourArrCreate[1];
 
-                        String time = timeArrCreate[2] + "-" + monthCreate + "-" + dateCreate + "T" + hourCreate + ":" + minuteCreate + ":00";
-                        //xử lí danh mục và loại ví
-                        String categoryID = (txtCategoryIdInUpdate.getText().toString());
-                        String walletID = txtIdWalletInUpdate.getText().toString();
+                    String time = timeArrCreate[2] + "-" + monthCreate + "-" + dateCreate + "T" + hourCreate + ":" + minuteCreate + ":00";
+                    //xử lí danh mục và loại ví
+                    String categoryID = (txtCategoryIdInUpdate.getText().toString());
+                    String walletID = txtIdWalletInUpdate.getText().toString();
 
-                        String typeTrans = autoCompleteTextView.getText().toString();
-                        boolean validateCate = validateEmpty(categoryID, "Không được để trống danh mục!");
-                        boolean validateWallet = validateEmpty(walletID, "Không được để trống ví!");
+                    String typeTrans = ((autoCompleteTextView.getText().toString()).equals("Thu nhập")) ? "income" : "outcome";
+//                    int idTrans = myObject.getId();
+                    boolean validateCate = validateEmpty(categoryID, "Không được để trống danh mục!");
+                    boolean validateWallet = validateEmpty(walletID, "Không được để trống ví!");
 
-                        if (validateWallet && validateCate) {
-                            Transaction dataTrans = new Transaction(amount, description, time, categoryID, walletID);
-                            if (typeTrans.equals("Thu nhập")) {
-                                Call<Transaction> call = ApiService.getInstance(getApplicationContext()).getiApiService().createIncomeTransaction(dataTrans);
-                                call.enqueue(new Callback<Transaction>() {
-                                    @Override
-                                    public void onResponse(Call<Transaction> call, Response<Transaction> response) {
-                                        if (response.code() != 200) {
-                                            Toast.makeText(getApplicationContext(), "Error: Thêm khoản thu không thành công!", Toast.LENGTH_LONG).show();
-                                        } else {
-                                            transCreate = response.body();
-                                            Log.d("Response", "onResponse: " + transCreate);
-                                            clearInputTrans();
-                                            Toast.makeText(getApplicationContext(), "Thêm mới giao dịch thành công!!", Toast.LENGTH_SHORT).show();
-                                        }
+                    if (validateWallet && validateCate) {
+                        Transaction dataTrans = new Transaction(amount, description, time, categoryID, walletID);
+                        if (flag.equals("0")) {
+                            Call<Transaction> call = ApiService.getInstance(getApplicationContext()).getiApiService().createTransaction(typeTrans, dataTrans);
+                            call.enqueue(new Callback<Transaction>() {
+                                @Override
+                                public void onResponse(Call<Transaction> call, Response<Transaction> response) {
+                                    if (response.code() != 200) {
+                                        Toast.makeText(getApplicationContext(), "Error: Thêm giao dịch không thành công!", Toast.LENGTH_LONG).show();
+                                    } else {
+                                        transCreate = response.body();
+                                        Log.d("Response", "onResponse: " + transCreate);
+                                        clearInputTrans();
+                                        Toast.makeText(getApplicationContext(), "Thêm mới giao dịch thành công!!", Toast.LENGTH_SHORT).show();
                                     }
+                                }
 
-                                    @Override
-                                    public void onFailure(Call<Transaction> call, Throwable t) {
-                                        Toast.makeText(getApplicationContext(), "An error has occured", Toast.LENGTH_LONG).show();
-                                        Log.e("error", t.getMessage());
-                                    }
-                                });
+                                @Override
+                                public void onFailure(Call<Transaction> call, Throwable t) {
+                                    Toast.makeText(getApplicationContext(), "An error has occured", Toast.LENGTH_LONG).show();
+                                    Log.e("error", t.getMessage());
+                                }
+                            });
 
-                            } else {
-                                Call<Transaction> call = ApiService.getInstance(getApplicationContext()).getiApiService().createOutcomeTransaction(dataTrans);
-                                call.enqueue(new Callback<Transaction>() {
-                                    @Override
-                                    public void onResponse(Call<Transaction> call, Response<Transaction> response) {
-                                        if (response.code() != 200) {
-                                            Toast.makeText(getApplicationContext(), "Error: Thêm khoản chi không thành công!", Toast.LENGTH_LONG).show();
-                                        } else {
-                                            transCreate = response.body();
-                                            Log.d("Response", "onResponse: " + transCreate);
-                                            clearInputTrans();
-                                            Toast.makeText(getApplicationContext(), "Thêm mới giao dịch thành công!!", Toast.LENGTH_SHORT).show();
-                                        }
+                        } else {
+                            int idTrans = myObject.getId();
+                            Call<Transaction> call = ApiService.getInstance(getApplicationContext()).getiApiService().updateTransaction(typeTrans, idTrans, dataTrans);
+                            call.enqueue(new Callback<Transaction>() {
+                                @Override
+                                public void onResponse(Call<Transaction> call, Response<Transaction> response) {
+                                    if (response.code() != 200) {
+                                        Toast.makeText(getApplicationContext(), "Error: Sửa giao dịch không thành công!", Toast.LENGTH_LONG).show();
+                                    } else {
+                                        transUpdate = response.body();
+                                        Toast.makeText(getApplicationContext(), "Sửa giao dịch thành công!!", Toast.LENGTH_SHORT).show();
+                                        Intent t = new Intent();
+                                        t.putExtra("transUpdate", transUpdate);
+                                        t.putExtra("flagUD", 1);
+                                        setResult(RESULT_OK, t);
+                                        finish();
                                     }
+                                }
 
-                                    @Override
-                                    public void onFailure(Call<Transaction> call, Throwable t) {
-                                        Toast.makeText(getApplicationContext(), "An error has occured", Toast.LENGTH_LONG).show();
-                                        Log.e("error", t.getMessage());
-                                    }
-                                });
-                            }
+                                @Override
+                                public void onFailure(Call<Transaction> call, Throwable t) {
+                                    Toast.makeText(getApplicationContext(), "An error has occured", Toast.LENGTH_LONG).show();
+                                    Log.e("error", t.getMessage());
+                                }
+                            });
                         }
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
                     }
+                } catch (Exception ex) {
+                    ex.printStackTrace();
                 }
+
                 //sut
             }
 
@@ -276,18 +258,35 @@ public class InsertAndUpdateTransaction extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //tus
-                if (flag.equals("1")) {//sua
-                    //Lưu vào sqlite
-                    //Contact c = new Contact(idEdit, name, phone);
-                    //db.updateContact(c);
-                    //day tra ve mainactivity
-//                    Transaction k = new Transaction(8,"3","3","3","3","3","3");
-//
-//                    Intent t = new Intent();
-//                    t.putExtra("contact1", k);
-//                    Log.e("Editing", "success");
-//                    setResult(RESULT_OK, t);
-//                    finish();
+                if (flag.equals("1")) {
+                    try {
+                        String typeTrans = myObject.getType().toLowerCase();
+                        int idTrans = myObject.getId();
+                        Call<Void> call = ApiService.getInstance(getApplicationContext()).getiApiService().deleteTransaction(typeTrans, idTrans);
+                        call.enqueue(new Callback<Void>() {
+                            @Override
+                            public void onResponse(Call<Void> call, Response<Void> response) {
+                                if (response.code() != 200) {
+                                    Toast.makeText(getApplicationContext(), "Error: Xóa khoản giao dịch không thành công!", Toast.LENGTH_LONG).show();
+                                } else {
+                                    Toast.makeText(getApplicationContext(), "Xóa khoản giao dịch thành công!", Toast.LENGTH_SHORT).show();
+                                    Intent t = new Intent();
+                                    t.putExtra("transDelete", myObject);
+                                    t.putExtra("flagUD", 2);
+                                    setResult(RESULT_OK, t);
+                                    finish();
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<Void> call, Throwable t) {
+                                Toast.makeText(getApplicationContext(), "An error has occured", Toast.LENGTH_LONG).show();
+                                Log.e("error", t.getMessage());
+                            }
+                        });
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
                 } else {//tao moi
                     try {
                         clearInputTrans();
@@ -371,7 +370,7 @@ public class InsertAndUpdateTransaction extends AppCompatActivity {
     // Đổ dữ liệu của transaction vào các trường tương ứng
     private void fillDataToTransaction(int yearCurrent, int monthCurrent, int dateCurrent) {
         Intent intent = getIntent();
-        Transaction myObject = (Transaction) intent.getSerializableExtra("transaction");
+        myObject = (Transaction) intent.getSerializableExtra("transaction");
 //        iconName = myObject.getImage();
         int green = ContextCompat.getColor(getApplicationContext(), R.color.green);
         if (myObject.getType().equals("Income")) {
@@ -389,12 +388,14 @@ public class InsertAndUpdateTransaction extends AppCompatActivity {
         inputAmonut.setText(myObject.getAmount());
         txtCategoryName.setText(myObject.getCategoryName());
         txtCategoryName.setTextColor(Color.BLACK);
+        txtCategoryIdInUpdate.setText(myObject.getCategoryID());
         int resourceId = this.getResources().getIdentifier(myObject.getImage(), "drawable", this.getPackageName());
         imgCategory.setImageResource(resourceId);
         inputDescription.setTextColor(Color.BLACK);
         inputDescription.setText(myObject.getDescription());
         txtNameWalletInUpdate.setTextColor(Color.BLACK);
         txtNameWalletInUpdate.setText(myObject.getWalletName());
+        txtIdWalletInUpdate.setText(myObject.getWalletID());
         Map<String, String> data = parseDateTime(myObject.getTime(), yearCurrent, monthCurrent, dateCurrent);
         txtDateInUpdate.setText(data.get("date"));
         txtHourInUpdate.setText(data.get("time"));
