@@ -49,7 +49,6 @@ import retrofit2.Response;
 
 public class InsertAndUpdateTransaction extends AppCompatActivity {
     //    private String iconName;
-    Alerter alerter;
     String[] items = {"Chi tiêu", "Thu nhập"};
     AutoCompleteTextView autoCompleteTextView;
     ArrayAdapter<String> arrayAdapter;
@@ -494,7 +493,7 @@ public class InsertAndUpdateTransaction extends AppCompatActivity {
                     .setTitle(message)
                     .enableSwipeToDismiss()
                     .setIcon(R.drawable.ic_baseline_info_24)
-                    .setBackgroundColorRes(R.color.yellow)
+                    .setBackgroundColorRes(R.color.orange)
                     .setIconColorFilter(0)
                     .setIconSize(R.dimen.icon_alert)
                     .show();
@@ -522,7 +521,6 @@ public class InsertAndUpdateTransaction extends AppCompatActivity {
                         if (response.code() != 200) {
                             Toast.makeText(getApplicationContext(), "Error: Xóa khoản giao dịch không thành công!", Toast.LENGTH_LONG).show();
                         } else {
-                            Toast.makeText(getApplicationContext(), "Xóa khoản giao dịch thành công!", Toast.LENGTH_SHORT).show();
                             Intent t = new Intent();
                             t.putExtra("transDelete", myObject);
                             t.putExtra("flagUD", 2);
