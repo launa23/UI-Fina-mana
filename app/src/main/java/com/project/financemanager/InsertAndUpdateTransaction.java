@@ -2,7 +2,9 @@ package com.project.financemanager;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 
 import android.app.Activity;
@@ -10,12 +12,15 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -42,7 +47,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class InsertAndUpdateTransaction extends AppCompatActivity {
-    //    private String iconName;
     String[] items = {"Chi tiêu", "Thu nhập"};
     AutoCompleteTextView autoCompleteTextView;
     ArrayAdapter<String> arrayAdapter;
@@ -57,27 +61,23 @@ public class InsertAndUpdateTransaction extends AppCompatActivity {
     private TextView txtIdWalletInUpdate;
     private RelativeLayout relative5;
     private RelativeLayout relative2;
+    private ConstraintLayout layoutConfirmDeleteDialog;
     private TextView txtDateInUpdate;
     private TextView txtHourInUpdate;
-
-    //tus
     private RelativeLayout btnSave;
     private RelativeLayout btnRemove;
-
     private String flag;
     private Transaction transCreate, transUpdate, myObject;
 
-    //sut
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_insert_and_update_transaction);
         final int green = ContextCompat.getColor(getApplicationContext(), R.color.green);
         btnBackInUpdate = findViewById(R.id.btnBackInUpdateTrans);
-        //tus
         btnSave = findViewById(R.id.buttonSave);
         btnRemove = findViewById(R.id.buttonRemove);
-        //sut
+        layoutConfirmDeleteDialog = findViewById(R.id.layoutConfirmDeleteDialog);
         inputAmonut = findViewById(R.id.inputAmount);
         txtCategoryName = findViewById(R.id.txtCategoryNameInUpdate);
         imgCategory = findViewById(R.id.imgCategoryInUpdate);
@@ -106,12 +106,10 @@ public class InsertAndUpdateTransaction extends AppCompatActivity {
         txtHourInUpdate.setText(strTime);
         txtDateInUpdate.setText(strDate);
 
-        //tus
         //lay ve gia tri ben activity cha la HomeFragment
         Intent iHomeFrg = getIntent();
         flag = iHomeFrg.getStringExtra("flag");
         Toast.makeText(getApplicationContext(), flag, Toast.LENGTH_SHORT).show();
-        //sut
         txtDateInUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -125,6 +123,7 @@ public class InsertAndUpdateTransaction extends AppCompatActivity {
                 onDialogTime();
             }
         });
+
         // Click chọn loại transaction trên toolbar
         autoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -155,20 +154,18 @@ public class InsertAndUpdateTransaction extends AppCompatActivity {
                 //tus
                 if (flag.equals("1")) {
                     finish();
-                } else {//tao moi
+                } else {
                     Intent t = new Intent();
                     t.putExtra("transCreate", transCreate);
                     setResult(Activity.RESULT_OK, t);
                     finish();
                 }
-                //sut
             }
         });
 
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //tus
                 try {
                     // xử lí amount
                     String amount = (inputAmonut.getText().toString()).replaceAll("[,.]", "");
@@ -190,7 +187,6 @@ public class InsertAndUpdateTransaction extends AppCompatActivity {
                     String walletID = txtIdWalletInUpdate.getText().toString();
 
                     String typeTrans = ((autoCompleteTextView.getText().toString()).equals("Thu nhập")) ? "income" : "outcome";
-//                    int idTrans = myObject.getId();
                     boolean validateCate = validateEmpty(categoryID, "Không được để trống danh mục!");
                     boolean validateWallet = validateEmpty(walletID, "Không được để trống ví!");
 
@@ -248,59 +244,29 @@ public class InsertAndUpdateTransaction extends AppCompatActivity {
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
-
-                //sut
             }
-
         });
 
         btnRemove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //tus
                 if (flag.equals("1")) {
                     try {
-                        String typeTrans = myObject.getType().toLowerCase();
-                        int idTrans = myObject.getId();
-                        Call<Void> call = ApiService.getInstance(getApplicationContext()).getiApiService().deleteTransaction(typeTrans, idTrans);
-                        call.enqueue(new Callback<Void>() {
-                            @Override
-                            public void onResponse(Call<Void> call, Response<Void> response) {
-                                if (response.code() != 200) {
-                                    Toast.makeText(getApplicationContext(), "Error: Xóa khoản giao dịch không thành công!", Toast.LENGTH_LONG).show();
-                                } else {
-                                    Toast.makeText(getApplicationContext(), "Xóa khoản giao dịch thành công!", Toast.LENGTH_SHORT).show();
-                                    Intent t = new Intent();
-                                    t.putExtra("transDelete", myObject);
-                                    t.putExtra("flagUD", 2);
-                                    setResult(RESULT_OK, t);
-                                    finish();
-                                }
-                            }
-
-                            @Override
-                            public void onFailure(Call<Void> call, Throwable t) {
-                                Toast.makeText(getApplicationContext(), "An error has occured", Toast.LENGTH_LONG).show();
-                                Log.e("error", t.getMessage());
-                            }
-                        });
+                        showAlertConfirmDelDialog();
                     } catch (Exception ex) {
                         ex.printStackTrace();
                     }
-                } else {//tao moi
+                } else {
                     try {
                         clearInputTrans();
                     } catch (Exception ex) {
                         ex.printStackTrace();
                     }
                 }
-                //sut
             }
 
         });
 
-
-        //tus
         if (flag.equals("1")) {
             fillDataToTransaction(yearCurrent, monthCurrent, dateCurrent);
         } else {
@@ -308,7 +274,7 @@ public class InsertAndUpdateTransaction extends AppCompatActivity {
             inputAmonut.setTextColor(Color.RED);
             inputAmonut.setHintTextColor(Color.RED);
         }
-        //sut
+
         ActivityResultLauncher<Intent> launcher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
@@ -506,5 +472,54 @@ public class InsertAndUpdateTransaction extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
         }
         return isEmptyError;
+    }
+
+    private void showAlertConfirmDelDialog() {
+        View view = LayoutInflater.from(InsertAndUpdateTransaction.this).inflate(R.layout.alert_confirm_delete_dialog, layoutConfirmDeleteDialog);
+        Button btnOk = view.findViewById(R.id.alertOkDeleteBtn);
+        Button btnCancel = view.findViewById(R.id.alertCancelDeleteBtn);
+        AlertDialog.Builder builder = new AlertDialog.Builder(InsertAndUpdateTransaction.this);
+        builder.setView(view);
+        final AlertDialog alertDialog = builder.create();
+        btnOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+                String typeTrans = myObject.getType().toLowerCase();
+                int idTrans = myObject.getId();
+                Call<Void> call = ApiService.getInstance(getApplicationContext()).getiApiService().deleteTransaction(typeTrans, idTrans);
+                call.enqueue(new Callback<Void>() {
+                    @Override
+                    public void onResponse(Call<Void> call, Response<Void> response) {
+                        if (response.code() != 200) {
+                            Toast.makeText(getApplicationContext(), "Error: Xóa khoản giao dịch không thành công!", Toast.LENGTH_LONG).show();
+                        } else {
+                            Toast.makeText(getApplicationContext(), "Xóa khoản giao dịch thành công!", Toast.LENGTH_SHORT).show();
+                            Intent t = new Intent();
+                            t.putExtra("transDelete", myObject);
+                            t.putExtra("flagUD", 2);
+                            setResult(RESULT_OK, t);
+                            finish();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<Void> call, Throwable t) {
+                        Toast.makeText(getApplicationContext(), "An error has occured", Toast.LENGTH_LONG).show();
+                        Log.e("error", t.getMessage());
+                    }
+                });
+            }
+        });
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+            }
+        });
+        if (alertDialog.getWindow() != null) {
+            alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(0));
+        }
+        alertDialog.show();
     }
 }
