@@ -2,4 +2,6 @@
     <string name="app_name">Finance Manager</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="confirmDelete">Dữ liệu bị xóa sẽ không thể khôi phục lại được. Bạn có muốn tiếp tục ?</string>
+
 </resources>
