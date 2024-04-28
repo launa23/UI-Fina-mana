@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="icon_alert">40dp</dimen>
+    <dimen name="text_alert">20dp</dimen>
+
+</resources>

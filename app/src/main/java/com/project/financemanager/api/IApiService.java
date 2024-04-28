@@ -58,7 +58,7 @@ public interface IApiService {
     @POST("transaction/create/{type}")
     Call<Transaction> createTransaction(@Path("type") String typeTrans,@Body Transaction dataTrans);
     @PUT("transaction/update/{type}/{id}")
-    Call<Transaction> updateTransaction(@Path("type") String typeTrans,@Path("id") int idTrans,@Body Transaction dataTrans);
+    Call<Transaction> updateTransaction(@Path("type") String typeTrans, @Path("id") int idTrans, @Body Transaction dataTrans);
     @PUT("transaction/delete/{type}/{id}")
     Call<Void> deleteTransaction(@Path("type") String typeTrans, @Path("id") int idTrans);
 }

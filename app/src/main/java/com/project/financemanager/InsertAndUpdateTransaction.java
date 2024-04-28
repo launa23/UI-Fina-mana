@@ -28,6 +28,7 @@ import com.project.financemanager.api.ApiService;
 import com.project.financemanager.common.NumberFormattingTextWatcher;
 import com.project.financemanager.dtos.Total;
 import com.project.financemanager.models.Transaction;
+import com.tapadoo.alerter.Alerter;
 
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
@@ -41,8 +42,10 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+
 public class InsertAndUpdateTransaction extends AppCompatActivity {
     //    private String iconName;
+    Alerter alerter;
     String[] items = {"Chi tiêu", "Thu nhập"};
     AutoCompleteTextView autoCompleteTextView;
     ArrayAdapter<String> arrayAdapter;
@@ -164,10 +167,14 @@ public class InsertAndUpdateTransaction extends AppCompatActivity {
                 //sut
             }
         });
-
+//        alerter = Alerter.create(this)
+//                .setTitle("Alert Title")
+//                .setText("Alert text...")
+//                .setBackgroundColorRes(R.color.blue_white);
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 //tus
                 try {
                     // xử lí amount
@@ -191,8 +198,14 @@ public class InsertAndUpdateTransaction extends AppCompatActivity {
 
                     String typeTrans = ((autoCompleteTextView.getText().toString()).equals("Thu nhập")) ? "income" : "outcome";
 //                    int idTrans = myObject.getId();
-                    boolean validateCate = validateEmpty(categoryID, "Không được để trống danh mục!");
-                    boolean validateWallet = validateEmpty(walletID, "Không được để trống ví!");
+                    boolean validateCate = true;
+                    boolean validateWallet = true;
+                    if (categoryID.trim().equals("")){
+                        validateCate = validateEmpty(categoryID, "Bạn quên chọn danh mục kìa!");
+                    }
+                    else {
+                        validateWallet = validateEmpty(walletID, "Bạn quên chọn ví rồi!");
+                    }
 
                     if (validateWallet && validateCate) {
                         Transaction dataTrans = new Transaction(amount, description, time, categoryID, walletID);
@@ -202,12 +215,21 @@ public class InsertAndUpdateTransaction extends AppCompatActivity {
                                 @Override
                                 public void onResponse(Call<Transaction> call, Response<Transaction> response) {
                                     if (response.code() != 200) {
+
                                         Toast.makeText(getApplicationContext(), "Error: Thêm giao dịch không thành công!", Toast.LENGTH_LONG).show();
                                     } else {
+                                        Alerter.create(InsertAndUpdateTransaction.this)
+                                                .setTitle("Thêm giao dịch mới thành công!")
+                                                .enableSwipeToDismiss()
+                                                .setIcon(R.drawable.ic_baseline_check_circle_24)
+                                                .setBackgroundColorRes(R.color.green)
+                                                .setIconColorFilter(0)
+                                                .setIconSize(R.dimen.icon_alert)
+                                                .show();
                                         transCreate = response.body();
                                         Log.d("Response", "onResponse: " + transCreate);
                                         clearInputTrans();
-                                        Toast.makeText(getApplicationContext(), "Thêm mới giao dịch thành công!!", Toast.LENGTH_SHORT).show();
+//                                        Toast.makeText(getApplicationContext(), "Thêm mới giao dịch thành công!!", Toast.LENGTH_SHORT).show();
                                     }
                                 }
 
@@ -228,7 +250,6 @@ public class InsertAndUpdateTransaction extends AppCompatActivity {
                                         Toast.makeText(getApplicationContext(), "Error: Sửa giao dịch không thành công!", Toast.LENGTH_LONG).show();
                                     } else {
                                         transUpdate = response.body();
-                                        Toast.makeText(getApplicationContext(), "Sửa giao dịch thành công!!", Toast.LENGTH_SHORT).show();
                                         Intent t = new Intent();
                                         t.putExtra("transUpdate", transUpdate);
                                         t.putExtra("flagUD", 1);
@@ -269,7 +290,6 @@ public class InsertAndUpdateTransaction extends AppCompatActivity {
                                 if (response.code() != 200) {
                                     Toast.makeText(getApplicationContext(), "Error: Xóa khoản giao dịch không thành công!", Toast.LENGTH_LONG).show();
                                 } else {
-                                    Toast.makeText(getApplicationContext(), "Xóa khoản giao dịch thành công!", Toast.LENGTH_SHORT).show();
                                     Intent t = new Intent();
                                     t.putExtra("transDelete", myObject);
                                     t.putExtra("flagUD", 2);
@@ -503,7 +523,14 @@ public class InsertAndUpdateTransaction extends AppCompatActivity {
         boolean isEmptyError = true;
         if (input.trim().equals("")) {
             isEmptyError = false;
-            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+            Alerter.create(InsertAndUpdateTransaction.this)
+                    .setTitle(message)
+                    .enableSwipeToDismiss()
+                    .setIcon(R.drawable.ic_baseline_info_24)
+                    .setBackgroundColorRes(R.color.yellow)
+                    .setIconColorFilter(0)
+                    .setIconSize(R.dimen.icon_alert)
+                    .show();
         }
         return isEmptyError;
     }

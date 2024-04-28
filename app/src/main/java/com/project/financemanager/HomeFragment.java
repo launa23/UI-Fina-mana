@@ -33,6 +33,7 @@ import com.project.financemanager.dtos.TitleTime;
 import com.project.financemanager.dtos.Total;
 import com.project.financemanager.models.Transaction;
 import com.project.financemanager.models.Wallet;
+import com.tapadoo.alerter.Alerter;
 
 import java.text.NumberFormat;
 import java.util.List;
@@ -316,10 +317,30 @@ public class HomeFragment extends Fragment {
                 //edit data
                 if (result != null && result.getResultCode() == Activity.RESULT_OK) {
                     int flagUD = result.getData().getIntExtra("flagUD", 0);
-                    if (flagUD == 2 || flagUD == 1) {
+                    if (flagUD == 2) {
+                        Alerter.create(getActivity())
+                                .setTitle("Xóa giao dịch thành công!")
+                                .enableSwipeToDismiss()
+                                .setIcon(R.drawable.ic_baseline_check_circle_24)
+                                .setBackgroundColorRes(R.color.green)
+                                .setIconColorFilter(0)
+                                .setIconSize(R.dimen.icon_alert)
+                                .show();
                         loadDataWallet(rootView);
                     }
-                } else {
+                    else if(flagUD == 1){
+                        Alerter.create(getActivity())
+                                .setTitle("Sửa giao dịch thành công!")
+                                .enableSwipeToDismiss()
+                                .setIcon(R.drawable.ic_baseline_check_circle_24)
+                                .setBackgroundColorRes(R.color.green)
+                                .setIconColorFilter(0)
+                                .setIconSize(R.dimen.icon_alert)
+                                .show();
+                        loadDataWallet(rootView);
+                    }
+                }
+                else {
                     Log.e("editTransaction", "failed");
                 }
             });
