@@ -9,6 +9,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.Intent;
 import android.graphics.Color;
@@ -23,22 +24,37 @@ import android.view.Window;
 import android.widget.ImageView;
 
 import com.github.clans.fab.FloatingActionButton;
+import com.project.financemanager.broadcast.BroadcastAirplaneMode;
+import com.project.financemanager.broadcast.BroadcastWifi;
 import com.project.financemanager.databinding.ActivityMainBinding;
 import com.project.financemanager.models.Category;
 import com.project.financemanager.models.Transaction;
 
 public class MainActivity extends AppCompatActivity {
-//    private FloatingActionButton btnAddOutcome;
-//    private FloatingActionButton btnAddIncome;
+
     ActivityMainBinding binding;
     //tus
     private ActivityResultLauncher<Intent> launcherforAdd;
+    private BroadcastWifi broadcastWifi;
+    private BroadcastAirplaneMode broadcastAirplaneMode;
+
     //sut
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        //wifi mode show
+        broadcastWifi = new BroadcastWifi();
+        IntentFilter filterWifi = new IntentFilter("android.net.wifi.WIFI_STATE_CHANGED");
+        registerReceiver(broadcastWifi, filterWifi);
+
+        //airplane mode show
+        broadcastAirplaneMode = new BroadcastAirplaneMode();
+        IntentFilter filterAirplane = new IntentFilter("android.intent.action.AIRPLANE_MODE");
+        registerReceiver(broadcastAirplaneMode, filterAirplane);
+
         replaceFragment(new HomeFragment());
         //tus
         initResultLauncher();
@@ -105,6 +121,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(broadcastWifi);
+        unregisterReceiver(broadcastAirplaneMode);
+    }
     private void replaceFragment(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -135,13 +158,11 @@ public class MainActivity extends AppCompatActivity {
     private void initResultLauncher() {
         try {
             launcherforAdd = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
-                if (result != null && result.getResultCode() == RESULT_OK) {
-//                    Log.e("addTransaction", "success");
-//                    if (result.getData() != null) {
-////                        Transaction c = (Transaction)result.getData().getSerializableExtra("contact");
+                if (result.getData() != null && result.getResultCode() == RESULT_OK) {
+                    Transaction transCreate = (Transaction) result.getData().getSerializableExtra("transCreate");
+                    if (transCreate != null) {
                         binding.bottomNavigationView.setSelectedItemId(R.id.home);
-//                        replaceFragment(new HomeFragment());
-//                    }
+                    }
                 }
             });
         } catch (Exception ex) {

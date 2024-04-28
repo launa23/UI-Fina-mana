@@ -21,6 +21,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
@@ -54,9 +55,10 @@ public interface IApiService {
 
     @GET("transaction/total")
     Call<Total> getTotalIncomeAndOutcome(@Query("month") int month, @Query("year") int year, @Query("walletId") long walletId);
-    @POST("transaction/create/income")
-    Call<Transaction> createIncomeTransaction(@Body Transaction dataTrans);
-    @POST("transaction/create/outcome")
-    Call<Transaction> createOutcomeTransaction(@Body Transaction dataTrans);
-
+    @POST("transaction/create/{type}")
+    Call<Transaction> createTransaction(@Path("type") String typeTrans,@Body Transaction dataTrans);
+    @PUT("transaction/update/{type}/{id}")
+    Call<Transaction> updateTransaction(@Path("type") String typeTrans,@Path("id") int idTrans,@Body Transaction dataTrans);
+    @PUT("transaction/delete/{type}/{id}")
+    Call<Void> deleteTransaction(@Path("type") String typeTrans, @Path("id") int idTrans);
 }
