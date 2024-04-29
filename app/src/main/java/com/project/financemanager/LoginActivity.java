@@ -1,5 +1,7 @@
 package com.project.financemanager;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -8,6 +10,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
@@ -24,6 +27,7 @@ import com.project.financemanager.api.ApiService;
 import com.project.financemanager.api.IApiService;
 import com.project.financemanager.dtos.LoginResponse;
 import com.project.financemanager.dtos.UserLogin;
+import com.tapadoo.alerter.Alerter;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -37,6 +41,7 @@ public class LoginActivity extends AppCompatActivity {
     private EditText inputPasswordInLogin;
     private Button btnLogin;
     private TextView inputUserNameInLogin;
+    private TextView btnRegisterInLogin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +52,7 @@ public class LoginActivity extends AppCompatActivity {
         btnLogin = findViewById(R.id.btnLogin);
         inputUserNameInLogin = findViewById(R.id.inputUserNameInLogin);
         layoutDialogLoading = findViewById(R.id.layoutDialogLoading);
+        btnRegisterInLogin = findViewById(R.id.btnRegisterInLogin);
         imgHideOrView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -60,7 +66,22 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }
         });
+        ActivityResultLauncher<Intent> launcherRegister = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == LoginActivity.RESULT_OK) {
+                        Intent data = result.getData();
 
+                    }
+                }
+        );
+        btnRegisterInLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+                launcherRegister.launch(intent);
+            }
+        });
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -73,7 +94,6 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
                         if (response.isSuccessful()){
-                            Toast.makeText(getApplicationContext(), "Thành công", Toast.LENGTH_SHORT).show();
                             sharedPreferences = getApplicationContext().getSharedPreferences("CHECK_TOKEN", getApplicationContext().MODE_PRIVATE);
                             SharedPreferences.Editor editor = sharedPreferences.edit();
                             editor.putString("token", "Bearer " + response.body().getToken());
@@ -86,7 +106,15 @@ public class LoginActivity extends AppCompatActivity {
 
                         }
                         else{
-                            Toast.makeText(getApplicationContext(), "Thất bại", Toast.LENGTH_SHORT).show();
+                            Alerter.create(LoginActivity.this)
+                                    .setTitle("Tài khoản mật khẩu không phù hợp!")
+                                    .enableSwipeToDismiss()
+                                    .setIcon(R.drawable.ic_baseline_info_24)
+                                    .setBackgroundColorRes(R.color.red)
+                                    .setIconColorFilter(0)
+                                    .setIconSize(R.dimen.icon_alert)
+                                    .show();
+                            dismissAlertDialog(alertDialog);
                         }
                     }
 
@@ -114,6 +142,13 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void dismissAlertDialog(AlertDialog alertDialog) {
-        alertDialog.dismiss();
+
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                alertDialog.dismiss();
+            }
+        }, 1000);
     }
 }

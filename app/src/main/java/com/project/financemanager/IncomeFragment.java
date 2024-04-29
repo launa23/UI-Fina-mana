@@ -41,7 +41,6 @@ public class IncomeFragment extends Fragment {
                 ParentIncomeCategoryAdapter parentIncomeCategoryAdapter = new ParentIncomeCategoryAdapter(categoryList, getActivity(), new ParentIncomeCategoryAdapter.HandleClickParentCategory() {
                     @Override
                     public void onItemClick(int position) {
-                        Toast.makeText(getActivity().getApplicationContext(), categoryList.get(position).getName(), Toast.LENGTH_SHORT).show();
                         Intent resultIntent = new Intent();
                         resultIntent.putExtra("idCategory", categoryList.get(position).getId());
                         resultIntent.putExtra("nameCategory", categoryList.get(position).getName());
@@ -57,7 +56,6 @@ public class IncomeFragment extends Fragment {
                 parentIncomeCategoryAdapter.setRvItemClickListener(new RvItemClickListener<Category>() {
                     @Override
                     public void onChildItemClick(int parentPosition, int childPosition, Category item) {
-                        Toast.makeText(getActivity().getApplicationContext(), item.getName(), Toast.LENGTH_SHORT).show();
                         Intent resultIntent = new Intent();
                         resultIntent.putExtra("idCategory", item.getId());
                         resultIntent.putExtra("nameCategory", item.getName());

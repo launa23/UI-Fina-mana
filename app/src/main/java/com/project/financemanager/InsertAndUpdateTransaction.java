@@ -111,7 +111,6 @@ public class InsertAndUpdateTransaction extends AppCompatActivity {
         //lay ve gia tri ben activity cha la HomeFragment
         Intent iHomeFrg = getIntent();
         flag = iHomeFrg.getStringExtra("flag");
-        Toast.makeText(getApplicationContext(), flag, Toast.LENGTH_SHORT).show();
         txtDateInUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -503,8 +502,8 @@ public class InsertAndUpdateTransaction extends AppCompatActivity {
 
     private void showAlertConfirmDelDialog() {
         View view = LayoutInflater.from(InsertAndUpdateTransaction.this).inflate(R.layout.alert_confirm_delete_dialog, layoutConfirmDeleteDialog);
-        Button btnOk = view.findViewById(R.id.alertOkDeleteBtn);
-        Button btnCancel = view.findViewById(R.id.alertCancelDeleteBtn);
+        TextView btnOk = view.findViewById(R.id.alertOkDeleteBtn);
+        TextView btnCancel = view.findViewById(R.id.alertCancelDeleteBtn);
         AlertDialog.Builder builder = new AlertDialog.Builder(InsertAndUpdateTransaction.this);
         builder.setView(view);
         final AlertDialog alertDialog = builder.create();

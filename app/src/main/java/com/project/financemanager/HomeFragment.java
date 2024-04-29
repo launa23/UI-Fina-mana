@@ -224,7 +224,6 @@ public class HomeFragment extends Fragment {
             public void onResponse(Call<List<TitleTime>> call, Response<List<TitleTime>> response) {
                 titleTimeList = response.body();
                 loadRecyclerView(rootView, titleTimeList);
-
             }
 
             @Override
@@ -272,7 +271,6 @@ public class HomeFragment extends Fragment {
         titleAdapter.setRvItemClickListener(new RvItemClickListener<Transaction>() {
             @Override
             public void onChildItemClick(int parentPosition, int childPosition, Transaction item) {
-                Toast.makeText(getActivity().getApplicationContext(), item.getCategoryName(), Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(getActivity(), InsertAndUpdateTransaction.class);
                 intent.putExtra("transaction", item);
                 //tus

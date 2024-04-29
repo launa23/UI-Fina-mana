@@ -32,7 +32,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
-            android:paddingTop="20dp"
+            android:paddingTop="16dp"
             android:text="Thông báo"
             android:textColor="@color/black"
             android:textSize="20sp"
@@ -48,42 +48,36 @@
             android:layout_marginStart="20dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="20dp"
-            android:gravity="center_horizontal"
+            android:gravity="center"
             android:text="@string/confirmDelete"
-            android:textSize="18sp"
+            android:textSize="16sp"
             app:layout_constraintTop_toBottomOf="@id/alertConfirmDeleteTitle"
             app:layout_constraintBottom_toTopOf="@id/alertOkDeleteBtn"
             />
 
-        <Button
+        <TextView
             android:id="@+id/alertOkDeleteBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="40dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="30dp"
-            android:text="Có"
-            android:textSize="18sp"
-            app:cornerRadius="12dp"
+            android:text="CÓ"
+            android:textColor="@color/blue_white"
+            android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/alertConfirmDeleteDescription" />
 
-        <Button
+        <TextView
             android:id="@+id/alertCancelDeleteBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="30dp"
             android:layout_marginTop="16dp"
-            android:layout_marginEnd="40dp"
-            android:text="Không"
-            android:backgroundTint="@color/red"
-            android:textSize="18sp"
-            app:cornerRadius="12dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginEnd="20dp"
+            android:textColor="@color/red"
+            android:text="KHÔNG"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toStartOf="@id/alertOkDeleteBtn"
             app:layout_constraintTop_toBottomOf="@id/alertConfirmDeleteDescription" />
 
 
