@@ -27,6 +27,7 @@ import com.github.clans.fab.FloatingActionButton;
 import com.project.financemanager.broadcast.BroadcastAirplaneMode;
 import com.project.financemanager.broadcast.BroadcastWifi;
 import com.project.financemanager.databinding.ActivityMainBinding;
+import com.project.financemanager.dtos.CategoryDTO;
 import com.project.financemanager.models.Category;
 import com.project.financemanager.models.Transaction;
 
@@ -95,9 +96,11 @@ public class MainActivity extends AppCompatActivity {
         ActivityResultLauncher<Intent> launcherAddCategory = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
-                    if (result.getResultCode() == this.RESULT_OK) {
-                        Intent data = result.getData();
-                        binding.bottomNavigationView.setSelectedItemId(R.id.categorys);
+                    if (result.getData() != null && result.getResultCode() == RESULT_OK) {
+                        CategoryDTO cateCreate = (CategoryDTO) result.getData().getSerializableExtra("cateCreate");
+                        if (cateCreate != null) {
+                            binding.bottomNavigationView.setSelectedItemId(R.id.categorys);
+                        }
                     }
                 }
         );

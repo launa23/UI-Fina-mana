@@ -1,5 +1,6 @@
 package com.project.financemanager;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AlertDialog;
@@ -68,6 +69,8 @@ public class InsertAndUpdateTransaction extends AppCompatActivity {
     private TextView txtHourInUpdate;
     private RelativeLayout btnSave;
     private RelativeLayout btnRemove;
+    private OnBackPressedCallback backEvent;
+
     private String flag;
     private Transaction transCreate, transUpdate, myObject;
 
@@ -153,14 +156,7 @@ public class InsertAndUpdateTransaction extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //tus
-                if (flag.equals("1")) {
-                    finish();
-                } else {
-                    Intent t = new Intent();
-                    t.putExtra("transCreate", transCreate);
-                    setResult(Activity.RESULT_OK, t);
-                    finish();
-                }
+               backEventCustom();
             }
         });
 
@@ -188,7 +184,6 @@ public class InsertAndUpdateTransaction extends AppCompatActivity {
                     String walletID = txtIdWalletInUpdate.getText().toString();
 
                     String typeTrans = ((autoCompleteTextView.getText().toString()).equals("Thu nhập")) ? "income" : "outcome";
-//                    int idTrans = myObject.getId();
                     boolean validateCate = true;
                     boolean validateWallet = true;
                     if (categoryID.trim().equals("")){
@@ -323,7 +318,6 @@ public class InsertAndUpdateTransaction extends AppCompatActivity {
                         txtCategoryIdInUpdate.setText(String.valueOf(data.getIntExtra("idCategory", 0)));
                         txtCategoryName.setText(data.getStringExtra("nameCategory"));
                         String icon = data.getStringExtra("icon");
-//                        iconName = icon;
                         int type = data.getIntExtra("type", 0);
                         txtCategoryTypeInUpdate.setText(String.valueOf(type));
                         if (type == 1) {
@@ -350,13 +344,21 @@ public class InsertAndUpdateTransaction extends AppCompatActivity {
                 launcherChooseCategory.launch(intent);
             }
         });
+
+        // xử lí sự kiện back mặc định của hệ thống
+        backEvent = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                backEventCustom();
+            }
+        };
+        getOnBackPressedDispatcher().addCallback(this, backEvent);
     }
 
     // Đổ dữ liệu của transaction vào các trường tương ứng
     private void fillDataToTransaction(int yearCurrent, int monthCurrent, int dateCurrent) {
         Intent intent = getIntent();
         myObject = (Transaction) intent.getSerializableExtra("transaction");
-//        iconName = myObject.getImage();
         int green = ContextCompat.getColor(getApplicationContext(), R.color.green);
         if (myObject.getType().equals("Income")) {
             inputAmonut.setTextColor(green);
@@ -546,5 +548,15 @@ public class InsertAndUpdateTransaction extends AppCompatActivity {
             alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(0));
         }
         alertDialog.show();
+    }
+    private void backEventCustom(){
+        if (flag.equals("1")) {
+            finish();
+        } else {
+            Intent t = new Intent();
+            t.putExtra("transCreate", transCreate);
+            setResult(Activity.RESULT_OK, t);
+            finish();
+        }
     }
 }
