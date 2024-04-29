@@ -9,6 +9,7 @@ import com.project.financemanager.dtos.Total;
 import com.project.financemanager.dtos.UserLogin;
 import com.project.financemanager.models.Category;
 import com.project.financemanager.models.Transaction;
+import com.project.financemanager.models.User;
 import com.project.financemanager.models.Wallet;
 
 import java.util.List;
@@ -53,6 +54,9 @@ public interface IApiService {
 
     @POST("user/login")
     Call<LoginResponse> login(@Body UserLogin userLogin);
+
+    @GET("user/current")
+    Call<User> getCurrentUser();
 
     @GET("transaction/total")
     Call<Total> getTotalIncomeAndOutcome(@Query("month") int month, @Query("year") int year, @Query("walletId") long walletId);

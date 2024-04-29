@@ -9,24 +9,19 @@ public class User implements Serializable {
     private int id;
     @SerializedName("fullName")
     private String fullName;
-    @SerializedName("phoneNumber")
-    private String phoneNumber;
+    @SerializedName("email")
+    private String email;
     @SerializedName("username")
     private String username;
-    @SerializedName("password")
-    private String password;
+    @SerializedName("dateOfBirth")
+    private String dateOfBirth;
 
-    public User(int id, String fullName, String phoneNumber, String username, String password) {
+    public User(int id, String fullName, String email, String username, String dateOfBirth) {
         this.id = id;
         this.fullName = fullName;
-        this.phoneNumber = phoneNumber;
+        this.email = email;
         this.username = username;
-        this.password = password;
-    }
-
-    public User(String username, String password) {
-        this.username = username;
-        this.password = password;
+        this.dateOfBirth = dateOfBirth;
     }
 
     public int getId() {
@@ -45,12 +40,12 @@ public class User implements Serializable {
         this.fullName = fullName;
     }
 
-    public String getPhoneNumber() {
-        return phoneNumber;
+    public String getEmail() {
+        return email;
     }
 
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getUsername() {
@@ -61,11 +56,11 @@ public class User implements Serializable {
         this.username = username;
     }
 
-    public String getPassword() {
-        return password;
+    public String getDateOfBirth() {
+        return dateOfBirth;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setDateOfBirth(String dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
     }
 }

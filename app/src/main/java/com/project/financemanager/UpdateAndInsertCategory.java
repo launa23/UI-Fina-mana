@@ -331,8 +331,8 @@ public class UpdateAndInsertCategory extends AppCompatActivity {
 
     private void showAlertConfirmDelDialog() {
         View view = LayoutInflater.from(UpdateAndInsertCategory.this).inflate(R.layout.alert_confirm_delete_cate_dialog, layoutConfirmDeleteCateDialog);
-        Button btnOk = view.findViewById(R.id.alertOkDeleteCateBtn);
-        Button btnCancel = view.findViewById(R.id.alertCancelDeleteCateBtn);
+        TextView btnOk = view.findViewById(R.id.alertOkDeleteCate);
+        TextView btnCancel = view.findViewById(R.id.alertCancelDeleteCate);
         AlertDialog.Builder builder = new AlertDialog.Builder(UpdateAndInsertCategory.this);
         builder.setView(view);
         final AlertDialog alertDialog = builder.create();

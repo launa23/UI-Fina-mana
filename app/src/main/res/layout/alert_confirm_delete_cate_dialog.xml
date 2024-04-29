@@ -52,38 +52,32 @@
             android:text="@string/confirmDeleteCate"
             android:textSize="18sp"
             app:layout_constraintTop_toBottomOf="@id/alertConfirmDeleteCateTitle"
-            app:layout_constraintBottom_toTopOf="@id/alertOkDeleteCateBtn"
+            app:layout_constraintBottom_toTopOf="@id/alertOkDeleteCate"
             />
 
-        <Button
-            android:id="@+id/alertOkDeleteCateBtn"
+        <TextView
+            android:id="@+id/alertOkDeleteCate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="40dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="30dp"
-            android:text="Có"
-            android:textSize="18sp"
-            app:cornerRadius="12dp"
+            android:text="CÓ"
+            android:textColor="@color/blue_white"
+            android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/alertConfirmDeleteCateDescription" />
 
-        <Button
-            android:id="@+id/alertCancelDeleteCateBtn"
+        <TextView
+            android:id="@+id/alertCancelDeleteCate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="30dp"
             android:layout_marginTop="16dp"
-            android:layout_marginEnd="40dp"
-            android:text="Không"
-            android:backgroundTint="@color/black"
-            android:textSize="18sp"
-            app:cornerRadius="12dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginEnd="20dp"
+            android:textColor="@color/red"
+            android:text="KHÔNG"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toStartOf="@id/alertOkDeleteCate"
             app:layout_constraintTop_toBottomOf="@id/alertConfirmDeleteCateDescription" />
 
 
