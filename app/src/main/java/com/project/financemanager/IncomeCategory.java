@@ -21,6 +21,7 @@ import com.project.financemanager.api.ApiService;
 import com.project.financemanager.api.IApiService;
 import com.project.financemanager.common.RvItemClickListener;
 import com.project.financemanager.models.Category;
+import com.tapadoo.alerter.Alerter;
 
 import java.util.List;
 
@@ -32,6 +33,7 @@ public class IncomeCategory extends Fragment {
     private final String FLAG = "1";
     private RecyclerView rcvParentList;
     private ConstraintLayout layoutDialog;
+    private ActivityResultLauncher<Intent> launcher;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -39,19 +41,40 @@ public class IncomeCategory extends Fragment {
         View rootView =  inflater.inflate(R.layout.fragment_outcome, container, false);
         layoutDialog = rootView.findViewById(R.id.layoutDialog);
         rcvParentList = rootView.findViewById(R.id.rcvParentList);
-        ActivityResultLauncher<Intent> launcher = registerForActivityResult(
+        launcher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     if (result.getResultCode() == getActivity().RESULT_OK) {
-                        Intent data = result.getData();
-
+                        int flagUD = result.getData().getIntExtra("flagUD", 0);
+                        if (flagUD == 2) {
+                            Alerter.create(getActivity())
+                                    .setTitle("Xóa danh mục thành công!")
+                                    .enableSwipeToDismiss()
+                                    .setIcon(R.drawable.ic_baseline_check_circle_24)
+                                    .setBackgroundColorRes(R.color.green)
+                                    .setIconColorFilter(0)
+                                    .setIconSize(R.dimen.icon_alert)
+                                    .show();
+                            fillDataToCategoryList();
+                        }
+                        else if(flagUD == 1){
+                            Alerter.create(getActivity())
+                                    .setTitle("Sửa danh mục thành công!")
+                                    .enableSwipeToDismiss()
+                                    .setIcon(R.drawable.ic_baseline_check_circle_24)
+                                    .setBackgroundColorRes(R.color.green)
+                                    .setIconColorFilter(0)
+                                    .setIconSize(R.dimen.icon_alert)
+                                    .show();
+                            fillDataToCategoryList();
+                        }
                     }
                 }
         );
-        fillDataToCategoryList(rootView, launcher);
+        fillDataToCategoryList();
         return rootView;
     }
-    private void fillDataToCategoryList(View rootView, ActivityResultLauncher<Intent> launcher){
+    private void fillDataToCategoryList(){
         Call<List<Category>> call = ApiService.getInstance(getContext()).getiApiService().getAllIncomeCategories();
         call.enqueue(new Callback<List<Category>>() {
             @Override

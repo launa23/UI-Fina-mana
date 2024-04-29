@@ -2,6 +2,7 @@ package com.project.financemanager.api;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.project.financemanager.dtos.CategoryDTO;
 import com.project.financemanager.dtos.LoginResponse;
 import com.project.financemanager.dtos.TitleTime;
 import com.project.financemanager.dtos.Total;
@@ -27,7 +28,7 @@ import retrofit2.http.Query;
 
 public interface IApiService {
     Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
-    String BASE_URL = "http://192.168.0.106:8081/api/v1/";
+    String BASE_URL = "http://192.168.2.101:8081/api/v1/";
 
     @GET("transaction/monthandyear")
     Call<List<TitleTime>> getTransByMonthAndYear(@Query("month") int month, @Query("year") int year, @Query("walletId") long walletId);
@@ -61,4 +62,11 @@ public interface IApiService {
     Call<Transaction> updateTransaction(@Path("type") String typeTrans, @Path("id") int idTrans, @Body Transaction dataTrans);
     @PUT("transaction/delete/{type}/{id}")
     Call<Void> deleteTransaction(@Path("type") String typeTrans, @Path("id") int idTrans);
+
+    @POST("categories/create/{type}")
+    Call<CategoryDTO> createCategory(@Path("type") String typeCate, @Body CategoryDTO dataCate);
+    @PUT("categories/update/{type}/{id}")
+    Call<CategoryDTO> updateCategory(@Path("type") String typeCate, @Path("id") int idCate, @Body CategoryDTO dataCate);
+    @PUT("categories/delete/{type}/{id}")
+    Call<Void> deleteCategory(@Path("type") String typeCate, @Path("id") int idCate);
 }

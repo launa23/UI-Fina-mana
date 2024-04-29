@@ -24,6 +24,7 @@ import com.project.financemanager.api.ApiService;
 import com.project.financemanager.api.IApiService;
 import com.project.financemanager.common.RvItemClickListener;
 import com.project.financemanager.models.Category;
+import com.tapadoo.alerter.Alerter;
 
 import java.util.List;
 
@@ -51,7 +52,29 @@ public class OutcomeCategory extends Fragment {
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     if (result.getResultCode() == getActivity().RESULT_OK) {
-                        Intent data = result.getData();
+                        int flagUD = result.getData().getIntExtra("flagUD", 0);
+                        if (flagUD == 2) {
+                            Alerter.create(getActivity())
+                                    .setTitle("Xóa danh mục thành công!")
+                                    .enableSwipeToDismiss()
+                                    .setIcon(R.drawable.ic_baseline_check_circle_24)
+                                    .setBackgroundColorRes(R.color.green)
+                                    .setIconColorFilter(0)
+                                    .setIconSize(R.dimen.icon_alert)
+                                    .show();
+                            fillDataToCategoryList();
+                        }
+                        else if(flagUD == 1){
+                            Alerter.create(getActivity())
+                                    .setTitle("Sửa danh mục thành công!")
+                                    .enableSwipeToDismiss()
+                                    .setIcon(R.drawable.ic_baseline_check_circle_24)
+                                    .setBackgroundColorRes(R.color.green)
+                                    .setIconColorFilter(0)
+                                    .setIconSize(R.dimen.icon_alert)
+                                    .show();
+                            fillDataToCategoryList();
+                        }
 
                     }
                 }
