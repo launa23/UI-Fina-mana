@@ -59,6 +59,10 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
             holder.moneyUnit.setTextColor(Color.RED);
 
         }
+        if (!transaction.getDescription().isEmpty()){
+            holder.cateChildDesc.setText(transaction.getDescription());
+            holder.cateChildDesc.setVisibility(View.VISIBLE);
+        }
         int resourceId = activity.getResources().getIdentifier(transaction.getImage(), "drawable", activity.getPackageName());
         holder.imageView.setImageResource(resourceId);
         holder.txtCategoryName.setText(transaction.getCategoryName());
@@ -76,12 +80,14 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
         final private TextView txtCategoryName;
         final private TextView txtAmount;
         final private TextView moneyUnit;
+        private TextView cateChildDesc;
         public TransactionViewHolder(@NonNull View itemView) {
             super(itemView);
             imageView = itemView.findViewById(R.id.cateChildImage);
             txtCategoryName = itemView.findViewById(R.id.cateChildName);
             txtAmount = itemView.findViewById(R.id.cateChildAmount);
             moneyUnit = itemView.findViewById(R.id.moneyUnit);
+            cateChildDesc = itemView.findViewById(R.id.cateChildDesc);
             itemView.setOnClickListener(v -> {
                 handleClick.onItemClick(getAdapterPosition());
             });

@@ -14,6 +14,6 @@
     <color name="red">#f11</color>
     <color name="pale_blue">#5FE1FF</color>
     <color name="orange">#FF9800</color>
-
+    <color name="dark_gray">#ACACAC</color>
     <color name="yellow">#f6f100</color>
 </resources>

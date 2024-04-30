@@ -18,25 +18,41 @@
             android:layout_marginLeft="14dp"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
-
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             />
-
-        <TextView
-            android:id="@+id/cateChildName"
+        <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="64dp"
-            android:layout_marginTop="20dp"
-            android:text="Ăn uống"
-            android:textColor="@color/black"
-            android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0" />
+            android:gravity="center_vertical"
+            android:layout_marginLeft="64dp"
+            app:layout_constraintVertical_bias="0.5">
+            <TextView
+                android:id="@+id/cateChildName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Ăn uống"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                 />
+
+            <TextView
+                android:id="@+id/cateChildDesc"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:text="..."
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:visibility="gone"
+                android:textColor="@color/dark_gray"
+                android:textSize="14sp"
+                android:layout_below="@id/cateChildName" />
+        </RelativeLayout>
+
 
         <TextView
             android:id="@+id/cateChildAmount"

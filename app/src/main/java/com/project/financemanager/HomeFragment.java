@@ -3,6 +3,7 @@ package com.project.financemanager;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 
@@ -25,6 +26,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.project.financemanager.api.ApiService;
 import com.project.financemanager.common.RvItemClickListener;
 import com.project.financemanager.adapters.TitleAdapter;
@@ -36,6 +43,7 @@ import com.project.financemanager.models.Wallet;
 import com.tapadoo.alerter.Alerter;
 
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
@@ -46,6 +54,9 @@ import retrofit2.Response;
 
 
 public class HomeFragment extends Fragment {
+    private int totalIncome;
+    private int totalOutcome;
+    private int totaler;
     AlertDialog alertDialog;
     private ConstraintLayout layoutDialogLoading;
     private SharedPreferences sharedPreferences;
@@ -64,7 +75,7 @@ public class HomeFragment extends Fragment {
     private ActivityResultLauncher<Intent> launcherforEdit;
     private List<TitleTime> titleTimeList;
     private TitleAdapter titleAdapter;
-
+    private BarChart barChart;
     //sut
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -79,6 +90,8 @@ public class HomeFragment extends Fragment {
         initResultLauncher(rootView);
         //sut
         loadDataWallet(rootView);
+
+        barChart = rootView.findViewById(R.id.barChartInHome);
 
         ActivityResultLauncher<Intent> launcher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
@@ -241,6 +254,9 @@ public class HomeFragment extends Fragment {
             public void onResponse(Call<Total> call, Response<Total> response) {
                 Total total = response.body();
                 NumberFormat numberFormatComma = NumberFormat.getNumberInstance(Locale.getDefault());
+                totalIncome = Integer.parseInt(total.getIncome());
+                totalOutcome = Integer.parseInt(total.getOutcome());
+                totaler = Integer.parseInt(total.getTotal());
                 String formattedIncome = numberFormatComma.format(Integer.parseInt(total.getIncome()));
                 String formattedOutcome = numberFormatComma.format(Integer.parseInt(total.getOutcome()));
                 String formattedTotal = numberFormatComma.format(Integer.parseInt(total.getTotal()));
@@ -250,6 +266,44 @@ public class HomeFragment extends Fragment {
                 amountTotalIncome.setText(formattedIncome);
                 amountTotalOutcome.setText(formattedOutcome);
                 amountTotal.setText(formattedTotal);
+                // Biểu đồ
+                barChart.getXAxis().setDrawGridLines(false);
+                barChart.getAxisLeft().setDrawGridLines(false);
+                barChart.getAxisRight().setDrawGridLines(false);
+                barChart.setDoubleTapToZoomEnabled(false);
+                barChart.getXAxis().setDrawAxisLine(false);
+                barChart.getXAxis().setDrawLabels(false);
+                barChart.getAxisRight().setEnabled(false);
+                barChart.getAxisLeft().setEnabled(false);
+                barChart.getAxisLeft().setAxisMinimum(0);
+                barChart.getDescription().setEnabled(false);
+
+                BarDataSet barDataSet1 = new BarDataSet(dataValue1(), null);
+                barDataSet1.setColor(Color.parseColor("#02b835"));
+                BarDataSet barDataSet2 = new BarDataSet(dataValue2(), null);
+                barDataSet2.setColor(Color.parseColor("#d43939"));
+                BarData barData = new BarData(barDataSet1, barDataSet2);
+                barChart.setData(barData);
+
+                String[] title = new String[]{"Chi tiêu", "Thu nhập"};
+                XAxis xAxis = barChart.getXAxis();
+                xAxis.setValueFormatter(new IndexAxisValueFormatter(title));
+                xAxis.setCenterAxisLabels(true);
+                xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+                xAxis.setGranularity(1);
+                xAxis.setGranularityEnabled(true);
+
+                float groupSpace = 0.44f;
+                float barSpace = 0.68f;
+                float barWidth = 3.0f;
+
+                xAxis.setAxisMinimum(0);
+                xAxis.setAxisMaximum(0+barChart.getBarData().getGroupWidth(groupSpace, barSpace)*2);
+                barData.setBarWidth(barWidth);
+
+
+                barChart.groupBars(0, groupSpace, barSpace);
+                barChart.invalidate();
 
             }
 
@@ -347,4 +401,15 @@ public class HomeFragment extends Fragment {
         }
     }
     //sut
+
+    private ArrayList<BarEntry> dataValue1(){
+        ArrayList<BarEntry> data = new ArrayList<>();
+        data.add(new BarEntry(1, totalIncome));
+        return data;
+    }
+    private ArrayList<BarEntry> dataValue2(){
+        ArrayList<BarEntry> data = new ArrayList<>();
+        data.add(new BarEntry(1, totalOutcome));
+        return data;
+    }
 }

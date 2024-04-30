@@ -131,7 +131,7 @@
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/cardViewDiff"
-                android:layout_width="382dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -144,27 +144,51 @@
                     android:layout_height="wrap_content"
                     android:padding="10dp">
 
+                    <com.github.mikephil.charting.charts.BarChart
+                        android:id="@+id/barChartInHome"
+                        android:layout_width="150dp"
+                        android:layout_height="170dp"
+                        android:layout_marginTop="2dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageView
+                        android:layout_width="10dp"
+                        android:layout_height="10dp"
+                        android:layout_marginTop="56dp"
+                        android:src="@drawable/ic_baseline_circle_24_green"
+                        app:layout_constraintStart_toEndOf="@id/barChartInHome"
+                        app:layout_constraintTop_toTopOf="parent"/>
                     <TextView
                         android:id="@+id/titleIncome"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Thu nhập"
-                        android:layout_marginStart="12dp"
+                        android:layout_marginTop="50dp"
+                        android:layout_marginStart="14dp"
                         android:textColor="@color/black"
                         android:textSize="15sp"
-                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/barChartInHome"
                         app:layout_constraintTop_toTopOf="parent" />
-
+                    <ImageView
+                        android:layout_width="10dp"
+                        android:layout_height="10dp"
+                        android:layout_marginTop="88dp"
+                        android:src="@drawable/ic_baseline_circle_24_red"
+                        app:layout_constraintStart_toEndOf="@id/barChartInHome"
+                        app:layout_constraintTop_toTopOf="parent"/>
                     <TextView
                         android:id="@+id/titleOutcome"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="12dp"
+                        android:layout_marginStart="14dp"
                         android:layout_marginTop="12dp"
                         android:text="Chi tiêu"
                         android:textColor="@color/black"
                         android:textSize="15sp"
-                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/barChartInHome"
                         app:layout_constraintTop_toBottomOf="@+id/titleIncome" />
 
                     <TextView
@@ -174,6 +198,7 @@
                         android:text="0"
                         android:layout_marginRight="12dp"
                         android:textSize="15sp"
+                        android:layout_marginTop="50dp"
                         android:textColor="@color/green"
                         android:textStyle="bold"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -193,13 +218,13 @@
 
                     <View
                         android:id="@+id/dividerDA"
-                        android:layout_width="match_parent"
+                        android:layout_width="160dp"
                         android:layout_height="0.5dp"
-                        android:layout_marginTop="60dp"
+                        android:layout_marginTop="6dp"
                         android:background="@android:color/darker_gray"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintStart_toEndOf="@id/barChartInHome"
+                        app:layout_constraintTop_toBottomOf="@id/titleOutcome" />
                     <TextView
                         android:id="@+id/titleTotal"
                         android:layout_width="wrap_content"
@@ -209,7 +234,7 @@
                         android:textColor="@color/black"
                         android:textSize="18sp"
                         android:layout_marginTop="10dp"
-                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/barChartInHome"
                         app:layout_constraintTop_toBottomOf="@id/dividerDA" />
                     <TextView
                         android:id="@+id/amountTotal"
