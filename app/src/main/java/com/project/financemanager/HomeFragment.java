@@ -170,7 +170,6 @@ public class HomeFragment extends Fragment {
                     txtWalletName.setText(wallet.getName());
                     txtWalletId.setText(String.valueOf(wallet.getId()));
 
-                    // Chưa xử lý bất đồng bộ nên hơi cùi
                     long walletId = Long.parseLong(txtWalletId.getText().toString());
                     loadDataTransaction(rootView, walletId, month, year);
                     loadDateTotal(rootView, walletId, month, year);

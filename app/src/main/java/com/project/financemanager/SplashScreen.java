@@ -48,6 +48,8 @@ public class SplashScreen extends AppCompatActivity {
                     if (response.isSuccessful()){
                         SharedPreferences.Editor editor = sharedPreferences.edit();
                         editor.putString("fullname", response.body().getFullName());
+                        editor.putString("email", response.body().getEmail());
+
                         editor.apply();
                     }
                 }

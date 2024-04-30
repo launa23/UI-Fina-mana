@@ -101,8 +101,9 @@ public class LoginActivity extends AppCompatActivity {
 
                             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                             startActivity(intent);
-                            finish();
                             dismissAlertDialog(alertDialog);
+                            finish();
+
 
                         }
                         else{
@@ -149,6 +150,6 @@ public class LoginActivity extends AppCompatActivity {
             public void run() {
                 alertDialog.dismiss();
             }
-        }, 1000);
+        }, 100);
     }
 }

@@ -39,10 +39,26 @@
             app:layout_constraintTop_toBottomOf="@id/imgAvatar"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:paddingBottom="20dp"/>
+            />
+        <TextView
+            android:id="@+id/txtEmailUser"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Email"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:layout_marginTop="2dp"
+            android:gravity="center_horizontal"
+            android:layout_below="@id/imgAvatar"
+            app:layout_constraintTop_toBottomOf="@id/txtNameUser"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:paddingBottom="20dp"
+            />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
     <RelativeLayout
+        android:id="@+id/relative32"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
@@ -54,21 +70,103 @@
 
         <ImageView
             android:id="@+id/img31"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:src="@drawable/freelance"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/wallet_2"
             android:layout_marginStart="12dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginBottom="4dp"/>
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="12dp"/>
         <TextView
+            android:id="@+id/txtNameWalletInAccount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Ví của tôi"
             android:textColor="@color/black"
             android:layout_marginStart="12dp"
+            android:layout_marginEnd="20dp"
             android:layout_centerVertical="true"
             android:layout_toRightOf="@id/img31"
             android:textSize="16sp"/>
+
+        <ImageView
+            android:id="@+id/imageView32"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="12dp"
+            android:src="@drawable/ic_baseline_chevron_right_24" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/relative40"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:background="@color/white"
+        app:layout_constraintTop_toBottomOf="@id/relative32"
+        app:layout_constraintStart_toStartOf="parent"
+        android:gravity="center_vertical"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageView
+            android:id="@+id/img34"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@mipmap/resume"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="12dp"/>
+        <TextView
+            android:id="@+id/txtEditInAccount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Thông tin của tôi"
+            android:textColor="@color/black"
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="20dp"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/img34"
+            android:textSize="16sp"/>
+
+        <ImageView
+            android:id="@+id/imageView34"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="12dp"
+            android:src="@drawable/ic_baseline_chevron_right_24" />
+    </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/btnLogout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:background="@color/white"
+        app:layout_constraintTop_toBottomOf="@id/relative40"
+        app:layout_constraintStart_toStartOf="parent"
+        android:gravity="center_vertical"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageView
+            android:id="@+id/img32"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@mipmap/exit_door_sign"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="12dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ĐĂNG XUẤT"
+            android:textColor="@color/red"
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="20dp"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/img32"
+            android:textSize="14sp"/>
 
     </RelativeLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
