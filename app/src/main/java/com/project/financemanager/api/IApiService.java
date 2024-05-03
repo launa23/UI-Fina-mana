@@ -7,7 +7,9 @@ import com.project.financemanager.dtos.LoginResponse;
 import com.project.financemanager.dtos.StatisticByDayDTO;
 import com.project.financemanager.dtos.TitleTime;
 import com.project.financemanager.dtos.Total;
+import com.project.financemanager.dtos.UserDTO;
 import com.project.financemanager.dtos.UserLogin;
+import com.project.financemanager.dtos.WalletDTO;
 import com.project.financemanager.models.Category;
 import com.project.financemanager.models.Transaction;
 import com.project.financemanager.models.User;
@@ -44,6 +46,9 @@ public interface IApiService {
     @GET("wallet/first")
     Call<Wallet> getFirstWallet();
 
+    @PUT("wallet/update/first")
+    Call<WalletDTO> createFirstWallet(@Body WalletDTO dataWallet);
+
     @GET("categories/parent/{type}")
     Call<List<Category>> getCategoryParents(@Path("type") String type);
 
@@ -55,6 +60,9 @@ public interface IApiService {
 
     @POST("user/login")
     Call<LoginResponse> login(@Body UserLogin userLogin);
+
+    @POST("user/register")
+    Call<Void> register(@Body UserDTO dataUser);
 
     @GET("user/current")
     Call<User> getCurrentUser();
@@ -77,4 +85,6 @@ public interface IApiService {
     Call<CategoryDTO> updateCategory(@Path("type") String typeCate, @Path("id") int idCate, @Body CategoryDTO dataCate);
     @PUT("categories/delete/{type}/{id}")
     Call<Void> deleteCategory(@Path("type") String typeCate, @Path("id") int idCate);
+
+
 }
