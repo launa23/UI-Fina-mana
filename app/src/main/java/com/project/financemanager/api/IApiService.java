@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.project.financemanager.dtos.CategoryDTO;
 import com.project.financemanager.dtos.LoginResponse;
+import com.project.financemanager.dtos.StatisticByDayDTO;
 import com.project.financemanager.dtos.TitleTime;
 import com.project.financemanager.dtos.Total;
 import com.project.financemanager.dtos.UserLogin;
@@ -29,7 +30,7 @@ import retrofit2.http.Query;
 
 public interface IApiService {
     Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
-    String BASE_URL = "http://192.168.0.109:8081/api/v1/";
+    String BASE_URL = "http://192.168.1.12:8081/api/v1/";
 
     @GET("transaction/monthandyear")
     Call<List<TitleTime>> getTransByMonthAndYear(@Query("month") int month, @Query("year") int year, @Query("walletId") long walletId);
@@ -57,6 +58,9 @@ public interface IApiService {
 
     @GET("user/current")
     Call<User> getCurrentUser();
+
+    @GET("transaction/statistic")
+    Call<List<StatisticByDayDTO>> getStatisticByDay();
 
     @GET("transaction/total")
     Call<Total> getTotalIncomeAndOutcome(@Query("month") int month, @Query("year") int year, @Query("walletId") long walletId);
