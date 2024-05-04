@@ -68,7 +68,7 @@ public interface IApiService {
     Call<User> getCurrentUser();
 
     @GET("transaction/statistic")
-    Call<List<StatisticByDayDTO>> getStatisticByDay();
+    Call<List<StatisticByDayDTO>> getStatisticByDay(@Query("when") String when);
 
     @GET("transaction/total")
     Call<Total> getTotalIncomeAndOutcome(@Query("month") int month, @Query("year") int year, @Query("walletId") long walletId);

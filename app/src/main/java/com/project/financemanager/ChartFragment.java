@@ -32,8 +32,8 @@ public class ChartFragment extends Fragment {
 
         ViewPagerAdapter adapter = new ViewPagerAdapter(getActivity().getSupportFragmentManager(), FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         adapter.addFragment(new StatisticByDayFragment(), "Theo ngày");
-        adapter.addFragment(new IncomeCategory(), "Theo tháng");
-        adapter.addFragment(new OutcomeCategory(), "Theo năm");
+        adapter.addFragment(new StatisticByMonthFragment(), "Theo tháng");
+        adapter.addFragment(new StatisticByYearFragment(), "Theo năm");
         ViewPager viewPager = (ViewPager) rootView.findViewById(R.id.viewpager);
         viewPager.setAdapter(adapter);
 
