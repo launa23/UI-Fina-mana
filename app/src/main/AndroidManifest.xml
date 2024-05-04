@@ -25,6 +25,15 @@
         <activity
             android:name=".LoginActivity"
             android:exported="false" />
+
+        <activity
+            android:name=".WalletMainActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".InsertAndUpdateWallet"
+            android:exported="false" />
+
         <activity
             android:name=".SplashScreen"
             android:exported="true"
