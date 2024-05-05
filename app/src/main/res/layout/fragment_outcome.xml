@@ -22,7 +22,17 @@
         android:nestedScrollingEnabled="false"
         />
 
-
+    <ProgressBar
+        android:id="@+id/progressBarInChooseCate"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="@id/rcvParentList"
+        app:layout_constraintStart_toStartOf="@id/rcvParentList"
+        app:layout_constraintEnd_toEndOf="@id/rcvParentList"
+        app:layout_constraintBottom_toBottomOf="@id/rcvParentList"
+        app:layout_constraintVertical_bias="0.4"
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

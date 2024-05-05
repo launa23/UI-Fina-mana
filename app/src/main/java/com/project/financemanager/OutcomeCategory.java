@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ProgressBar;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -39,6 +40,7 @@ public class OutcomeCategory extends Fragment {
     private final String FLAG = "1";
     private ConstraintLayout layoutDialog;
     private ActivityResultLauncher<Intent> launcher;
+    private ProgressBar progressBarInChooseCate;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -48,6 +50,7 @@ public class OutcomeCategory extends Fragment {
         rcvParentList = rootView.findViewById(R.id.rcvParentList);
         layoutDialog = rootView.findViewById(R.id.layoutDialog);
         layoutDialogLoading = rootView.findViewById(R.id.layoutDialogLoading);
+        progressBarInChooseCate = rootView.findViewById(R.id.progressBarInChooseCate);
         launcher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
@@ -84,7 +87,8 @@ public class OutcomeCategory extends Fragment {
         return rootView;
     }
     public void fillDataToCategoryList(){
-        alertDialog = showLoadingDialog(alertDialog);
+//        alertDialog = showLoadingDialog(alertDialog);
+        progressBarInChooseCate.setVisibility(View.VISIBLE);
         Call<List<Category>> call = ApiService.getInstance(getContext()).getiApiService().getAllOutcomeCategories();
         call.enqueue(new Callback<List<Category>>() {
             @Override
@@ -130,7 +134,8 @@ public class OutcomeCategory extends Fragment {
                         }
                     }
                 });
-                dismissLoadingDialog(alertDialog);
+                progressBarInChooseCate.setVisibility(View.GONE);
+//                dismissLoadingDialog(alertDialog);
             }
 
             @Override

@@ -78,6 +78,7 @@ public class HomeFragment extends Fragment {
     private List<TitleTime> titleTimeList;
     private TitleAdapter titleAdapter;
     private BarChart barChart;
+    private RelativeLayout rltEmpty;
     //sut
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -88,6 +89,8 @@ public class HomeFragment extends Fragment {
         txtChoosenMonth = rootView.findViewById(R.id.txtChoosenMonth);
         chooseWallet = rootView.findViewById(R.id.chooseWallet);
         layoutDialogLoading = rootView.findViewById(R.id.layoutDialogLoading);
+        rltEmpty = rootView.findViewById(R.id.rltEmpty);
+
         Animation blinkAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.blink_animation);
         //tus
         initResultLauncher(rootView);
@@ -239,6 +242,12 @@ public class HomeFragment extends Fragment {
             @Override
             public void onResponse(Call<List<TitleTime>> call, Response<List<TitleTime>> response) {
                 titleTimeList = response.body();
+                if (titleTimeList.isEmpty()){
+                    rltEmpty.setVisibility(View.VISIBLE);
+                }
+                else{
+                    rltEmpty.setVisibility(View.GONE);
+                }
                 loadRecyclerView(rootView, titleTimeList);
             }
 

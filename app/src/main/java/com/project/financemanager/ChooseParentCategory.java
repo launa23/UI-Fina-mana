@@ -8,6 +8,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.project.financemanager.adapters.CategoryNotChildAdapter;
@@ -24,12 +25,14 @@ import retrofit2.Response;
 public class ChooseParentCategory extends AppCompatActivity {
     private RecyclerView recyclerView;
     private TextView txtNotChoose;
+    private ProgressBar progressBar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose_parent_category);
         recyclerView = findViewById(R.id.rcvCategoryNotChild);
         txtNotChoose = findViewById(R.id.txtNotChoose);
+        progressBar = findViewById(R.id.progressBarInChooseParent);
 
         Intent intent = getIntent();
         String type = intent.getStringExtra("type");
@@ -62,9 +65,12 @@ public class ChooseParentCategory extends AppCompatActivity {
         });
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(categoryNotChildAdapter);
+        progressBar.setVisibility(View.GONE);
     }
 
     private void callApiGetData(String type){
+        progressBar.setVisibility(View.VISIBLE);
+
         Call<List<Category>> call = ApiService.getInstance(getApplicationContext()).getiApiService().getCategoryParents(type);
         call.enqueue(new Callback<List<Category>>() {
             @Override

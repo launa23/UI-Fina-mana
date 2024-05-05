@@ -68,5 +68,16 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/view2" />
-
+    <ProgressBar
+        android:id="@+id/progressBarInChooseParent"
+        android:layout_width="66dp"
+        android:layout_height="66dp"
+        android:paddingTop="30dp"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="@id/rcvCategoryNotChild"
+        app:layout_constraintStart_toStartOf="@id/rcvCategoryNotChild"
+        app:layout_constraintEnd_toEndOf="@id/rcvCategoryNotChild"
+        app:layout_constraintBottom_toBottomOf="@id/rcvCategoryNotChild"
+        app:layout_constraintVertical_bias="0.5"
+        />
 </androidx.constraintlayout.widget.ConstraintLayout>

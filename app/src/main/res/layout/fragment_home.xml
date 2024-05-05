@@ -260,8 +260,30 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 android:paddingBottom="100dp"
                 app:layout_constraintRight_toRightOf="parent"/>
-<!--        </androidx.constraintlayout.widget.ConstraintLayout>-->
-
+            <RelativeLayout
+                android:id="@+id/rltEmpty"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="80dp"
+                android:paddingBottom="200dp"
+                android:background="@color/gray"
+                app:layout_constraintTop_toTopOf="@id/rcvTransactions"
+                app:layout_constraintStart_toStartOf="@id/rcvTransactions"
+                app:layout_constraintEnd_toEndOf="@id/rcvTransactions">
+                <ImageView
+                    android:id="@+id/image1"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_centerHorizontal="true"
+                    android:src="@mipmap/money"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:textSize="18sp"
+                    android:text="Hãy bắt đầu ghi chép những giao dịch nào!"
+                    android:layout_below="@id/image1"/>
+            </RelativeLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>

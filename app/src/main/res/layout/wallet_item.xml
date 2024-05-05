@@ -11,7 +11,7 @@
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginLeft="16dp"
-        android:src="@drawable/diet"/>
+        android:src="@drawable/digital_wallet"/>
     <TextView
         android:id="@+id/txtWalletNameInWallet"
         android:layout_width="wrap_content"
