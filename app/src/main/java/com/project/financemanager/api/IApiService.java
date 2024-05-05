@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.project.financemanager.dtos.CategoryDTO;
 import com.project.financemanager.dtos.LoginResponse;
+import com.project.financemanager.dtos.StatisticByCategoryDTO;
 import com.project.financemanager.dtos.StatisticByDayDTO;
 import com.project.financemanager.dtos.TitleTime;
 import com.project.financemanager.dtos.Total;
@@ -69,6 +70,8 @@ public interface IApiService {
 
     @GET("transaction/statistic")
     Call<List<StatisticByDayDTO>> getStatisticByDay(@Query("when") String when);
+    @GET("transaction/statistic/category")
+    Call<List<StatisticByCategoryDTO>> getStatisticByCategory(@Query("start") String start, @Query("end") String end, @Query("type") String type);
 
     @GET("transaction/total")
     Call<Total> getTotalIncomeAndOutcome(@Query("month") int month, @Query("year") int year, @Query("walletId") long walletId);

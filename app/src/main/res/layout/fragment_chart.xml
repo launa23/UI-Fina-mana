@@ -27,7 +27,18 @@
         app:layout_constraintRight_toRightOf="@id/toolbarInWallet"
         app:layout_constraintLeft_toLeftOf="@id/toolbarInWallet"
         app:layout_constraintBottom_toBottomOf="@id/toolbarInWallet"/>
-
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="50dp"
+        android:scrollbars="none"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbarInWallet"
+        >
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
     <com.ogaclejapan.smarttablayout.SmartTabLayout
         android:id="@+id/viewpagertab"
         android:layout_width="match_parent"
@@ -56,7 +67,7 @@
         app:stl_clickable="true"
         app:stl_titleOffset="24dp"
         app:stl_drawDecorationAfterTab="false"
-        app:layout_constraintTop_toBottomOf="@id/toolbarInWallet"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:background="@color/white"
@@ -68,6 +79,70 @@
         android:layout_height="320dp"
         android:background="@color/white"
         app:layout_constraintTop_toBottomOf="@id/viewpagertab"
-
         />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="100dp"
+        android:background="@color/white"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@id/viewpager">
+        <TextView
+            android:id="@+id/txtTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Trong tháng"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="12dp"
+            />
+        <TextView
+            android:id="@+id/txtTitleIncome"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="CHI TIÊU"
+            android:textColor="@color/black"
+            android:textSize="14sp"
+            app:layout_constraintTop_toBottomOf="@id/txtTitle"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="12dp"
+            android:layout_marginStart="20dp"
+            />
+        <com.github.mikephil.charting.charts.PieChart
+            android:id="@+id/pieChartOutcome"
+            android:layout_width="300dp"
+            android:layout_height="300dp"
+            android:layout_marginTop="12dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/txtTitle"/>
+        <TextView
+            android:id="@+id/txtTitleOutcome"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="THU NHẬP"
+            android:layout_marginTop="20dp"
+            android:textColor="@color/black"
+            android:textSize="14sp"
+            app:layout_constraintTop_toBottomOf="@id/pieChartOutcome"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="20dp"
+            />
+        <com.github.mikephil.charting.charts.PieChart
+            android:id="@+id/pieChartIncome"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:layout_marginTop="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/pieChartOutcome"
+            />
+        
+    </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>
