@@ -17,6 +17,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -47,7 +49,6 @@ public class UpdateAndInsertCategory extends AppCompatActivity {
     private RelativeLayout btnRemoveCate;
     private RelativeLayout relative11;
     private ConstraintLayout layoutConfirmDeleteCateDialog;
-
     private ImageView imgParentIconDefault;
     private TextView txtNameParentCategory;
     private TextView txtIdParentCategory;
@@ -77,6 +78,7 @@ public class UpdateAndInsertCategory extends AppCompatActivity {
         txtNameIconCategory = findViewById(R.id.txtNameIconCategory);
         titleInUpdateCate = findViewById(R.id.titleInUpdateCate);
         typeCategory = findViewById(R.id.typeInUpdateCate);
+        Animation blinkAnimation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.blink_animation);
 
         Intent iCategoryFrg = getIntent();
         flag = iCategoryFrg.getStringExtra("fl");
@@ -126,6 +128,7 @@ public class UpdateAndInsertCategory extends AppCompatActivity {
         imgIconDefault.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                imgIconDefault.startAnimation(blinkAnimation);
                 onClickChooseIcon(launcherIcon);
             }
         });
@@ -146,6 +149,7 @@ public class UpdateAndInsertCategory extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 try {
+                    btnSaveCate.startAnimation(blinkAnimation);
                     //xu li ten icon
                     String iconNameCate = txtNameIconCategory.getText().toString();
                     //xu li ten danh muc
@@ -235,6 +239,7 @@ public class UpdateAndInsertCategory extends AppCompatActivity {
         btnRemoveCate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                btnRemoveCate.startAnimation(blinkAnimation);
                 if (flag.equals("1")) {
                     try {
                         showAlertConfirmDelDialog();
@@ -254,6 +259,7 @@ public class UpdateAndInsertCategory extends AppCompatActivity {
         relative11.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                relative11.startAnimation(blinkAnimation);
                 onClickChooseParent(launcherParent);
             }
         });

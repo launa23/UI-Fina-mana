@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -54,6 +56,7 @@ public class InsertAndUpdateWallet extends AppCompatActivity {
         inputAmountWallet.addTextChangedListener(new NumberFormattingTextWatcher(inputAmountWallet));
         inputNameWallet = findViewById(R.id.inputNameWallet);
         layoutConfirmDeleteWalletDialog = findViewById(R.id.layoutConfirmDeleteWalletDialog);
+        Animation blinkAnimation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.blink_animation);
 
         int green = ContextCompat.getColor(getApplicationContext(), R.color.green);
         inputAmountWallet.setTextColor(green);
@@ -76,6 +79,7 @@ public class InsertAndUpdateWallet extends AppCompatActivity {
         buttonSaveWallet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                buttonSaveWallet.startAnimation(blinkAnimation);
                 // xử lí amount
                 money = (inputAmountWallet.getText().toString()).replaceAll("[,.]", "");
                 money = (money.equals("")) ? "0" : money;
@@ -156,6 +160,7 @@ public class InsertAndUpdateWallet extends AppCompatActivity {
         buttonRemoveWallet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                buttonRemoveWallet.startAnimation(blinkAnimation);
                 if (flag.equals("1")) {
                     try {
                         showAlertConfirmDelDialog();

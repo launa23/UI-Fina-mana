@@ -21,6 +21,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -86,6 +88,7 @@ public class HomeFragment extends Fragment {
         txtChoosenMonth = rootView.findViewById(R.id.txtChoosenMonth);
         chooseWallet = rootView.findViewById(R.id.chooseWallet);
         layoutDialogLoading = rootView.findViewById(R.id.layoutDialogLoading);
+        Animation blinkAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.blink_animation);
         //tus
         initResultLauncher(rootView);
         //sut
@@ -134,6 +137,7 @@ public class HomeFragment extends Fragment {
         chooseTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                chooseTime.startAnimation(blinkAnimation);
                 sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
                 long data = Long.parseLong(txtWalletId.getText().toString());
                 SharedPreferences.Editor editor = sharedPreferences.edit();

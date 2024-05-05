@@ -18,6 +18,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -64,6 +66,7 @@ public class InsertAndUpdateTransaction extends AppCompatActivity {
     private TextView txtIdWalletInUpdate;
     private RelativeLayout relative5;
     private RelativeLayout relative2;
+    private RelativeLayout relative4;
     private ConstraintLayout layoutConfirmDeleteDialog;
     private TextView txtDateInUpdate;
     private TextView txtHourInUpdate;
@@ -90,6 +93,7 @@ public class InsertAndUpdateTransaction extends AppCompatActivity {
         inputDescription = findViewById(R.id.inputDescription);
         txtNameWalletInUpdate = findViewById(R.id.txtNameWalletInUpdate);
         relative5 = findViewById(R.id.relative5);
+        relative4 = findViewById(R.id.relative4);
         txtIdWalletInUpdate = findViewById(R.id.txtIdWalletInUpdate);
         txtDateInUpdate = findViewById(R.id.txtDateInUpdate);
         txtHourInUpdate = findViewById(R.id.txtHourInUpdate);
@@ -110,6 +114,7 @@ public class InsertAndUpdateTransaction extends AppCompatActivity {
         String strTime = hourCurrent + ":" + minute;
         txtHourInUpdate.setText(strTime);
         txtDateInUpdate.setText(strDate);
+        Animation blinkAnimation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.blink_animation);
 
         //lay ve gia tri ben activity cha la HomeFragment
         Intent iHomeFrg = getIntent();
@@ -117,6 +122,7 @@ public class InsertAndUpdateTransaction extends AppCompatActivity {
         txtDateInUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                relative4.startAnimation(blinkAnimation);
                 onDialogDate();
             }
         });
@@ -124,6 +130,7 @@ public class InsertAndUpdateTransaction extends AppCompatActivity {
         txtHourInUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                relative4.startAnimation(blinkAnimation);
                 onDialogTime();
             }
         });
@@ -155,6 +162,7 @@ public class InsertAndUpdateTransaction extends AppCompatActivity {
         btnBackInUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                btnBackInUpdate.startAnimation(blinkAnimation);
                 //tus
                backEventCustom();
             }
@@ -164,6 +172,7 @@ public class InsertAndUpdateTransaction extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 try {
+                    btnSave.startAnimation(blinkAnimation);
                     // xử lí amount
                     String amount = (inputAmonut.getText().toString()).replaceAll("[,.]", "");
                     amount = (amount.equals("")) ? "0" : amount;
@@ -261,6 +270,7 @@ public class InsertAndUpdateTransaction extends AppCompatActivity {
         btnRemove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                btnRemove.startAnimation(blinkAnimation);
                 if (flag.equals("1")) {
                     try {
                         showAlertConfirmDelDialog();
@@ -305,6 +315,7 @@ public class InsertAndUpdateTransaction extends AppCompatActivity {
         relative5.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                relative5.startAnimation(blinkAnimation);
                 Intent intent = new Intent(v.getContext(), WalletActivity.class);
                 launcher.launch(intent);
             }
@@ -340,6 +351,7 @@ public class InsertAndUpdateTransaction extends AppCompatActivity {
         relative2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                relative2.startAnimation(blinkAnimation);
                 Intent intent = new Intent(v.getContext(), ChooseCategoryActivity.class);
                 launcherChooseCategory.launch(intent);
             }

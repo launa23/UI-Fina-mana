@@ -13,6 +13,8 @@ import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -50,6 +52,8 @@ public class ChooseTimeActivity extends AppCompatActivity {
         lastYear = findViewById(R.id.lastYear);
         allTime = findViewById(R.id.allTime);
         layoutDialogLoading = findViewById(R.id.layoutDialogLoading);
+        Animation blinkAnimation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.blink_animation);
+
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -60,6 +64,7 @@ public class ChooseTimeActivity extends AppCompatActivity {
         thisMonth.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                thisMonth.startAnimation(blinkAnimation);
                 Calendar calendar = Calendar.getInstance();
                 callApiMonthAndYear("Tháng này", calendar.get(Calendar.MONTH)+1, calendar.get(Calendar.YEAR));
             }
@@ -67,6 +72,7 @@ public class ChooseTimeActivity extends AppCompatActivity {
         lastMonth.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                lastMonth.startAnimation(blinkAnimation);
                 Calendar calendar = Calendar.getInstance();
                 callApiMonthAndYear("Tháng trước", calendar.get(Calendar.MONTH), calendar.get(Calendar.YEAR));
             }
@@ -74,6 +80,7 @@ public class ChooseTimeActivity extends AppCompatActivity {
         thisYear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                thisYear.startAnimation(blinkAnimation);
                 Calendar calendar = Calendar.getInstance();
                 callApiMonthAndYear("Năm nay", 0, calendar.get(Calendar.YEAR));
             }
@@ -81,6 +88,7 @@ public class ChooseTimeActivity extends AppCompatActivity {
         lastYear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                lastYear.startAnimation(blinkAnimation);
                 Calendar calendar = Calendar.getInstance();
                 callApiMonthAndYear("Năm trước", 0, calendar.get(Calendar.YEAR)-1);
             }
@@ -89,6 +97,7 @@ public class ChooseTimeActivity extends AppCompatActivity {
         allTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                allTime.startAnimation(blinkAnimation);
                 Calendar calendar = Calendar.getInstance();
                 callApiMonthAndYear("Toàn bộ thời gian", 0, 0);
             }
