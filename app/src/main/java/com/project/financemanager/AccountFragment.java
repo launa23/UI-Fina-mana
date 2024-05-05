@@ -14,6 +14,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 public class AccountFragment extends Fragment {
@@ -23,6 +24,7 @@ public class AccountFragment extends Fragment {
     private TextView txtNameUser;
     private TextView txtEmailUser;
     private SharedPreferences sharedPreferences;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -47,6 +49,12 @@ public class AccountFragment extends Fragment {
             public void onClick(View v) {
 
                 relative32.startAnimation(blinkAnimation);
+                try {
+                    Intent intent = new Intent(getActivity(), WalletMainActivity.class);
+                    startActivity(intent);
+                } catch (Exception ex) {
+                    Toast.makeText(getActivity(), ex.getMessage(), Toast.LENGTH_LONG).show();
+                }
             }
         });
 

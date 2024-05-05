@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/alertConfirmDeleteWallet"
+    android:layout_gravity="center"
+    android:layout_width="300dp"
+    android:layout_height="wrap_content">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layoutConfirmDeleteWalletDialog"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/xml_confirm_del_bkg"
+        android:paddingBottom="12dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+        <ImageView
+            android:id="@+id/alertConfirmDeleteWalletImage"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:src="@mipmap/dontknow"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="40dp"
+            android:layout_marginStart="40dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/layoutConfirmDeleteWalletDialog"/>
+        <TextView
+            android:id="@+id/alertConfirmDeleteWalletTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:paddingTop="20dp"
+            android:text="Thông báo"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/alertConfirmDeleteWalletImage" />
+
+        <TextView
+            android:id="@+id/alertConfirmDeleteWalletDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="20dp"
+            android:gravity="center_horizontal"
+            android:text="@string/confirmDeleteWallet"
+            android:textSize="18sp"
+            app:layout_constraintTop_toBottomOf="@id/alertConfirmDeleteWalletTitle"
+            app:layout_constraintBottom_toTopOf="@id/alertOkDeleteWallet"
+            />
+
+        <TextView
+            android:id="@+id/alertOkDeleteWallet"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="30dp"
+            android:text="CÓ"
+            android:textColor="@color/blue_white"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintTop_toBottomOf="@id/alertConfirmDeleteWalletDescription" />
+
+        <TextView
+            android:id="@+id/alertCancelDeleteWallet"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="20dp"
+            android:textColor="@color/red"
+            android:text="KHÔNG"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toStartOf="@id/alertOkDeleteWallet"
+            app:layout_constraintTop_toBottomOf="@id/alertConfirmDeleteWalletDescription" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

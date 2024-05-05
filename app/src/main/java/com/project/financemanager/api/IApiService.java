@@ -25,6 +25,7 @@ import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
@@ -33,7 +34,7 @@ import retrofit2.http.Query;
 
 public interface IApiService {
     Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
-    String BASE_URL = "http://192.168.1.12:8081/api/v1/";
+    String BASE_URL = "http://192.168.2.100:8081/api/v1/";
 
     @GET("transaction/monthandyear")
     Call<List<TitleTime>> getTransByMonthAndYear(@Query("month") int month, @Query("year") int year, @Query("walletId") long walletId);
@@ -49,7 +50,12 @@ public interface IApiService {
 
     @PUT("wallet/update/first")
     Call<WalletDTO> createFirstWallet(@Body WalletDTO dataWallet);
-
+    @POST("wallet/create")
+    Call<Wallet> createWallet(@Body WalletDTO dataWallet);
+    @PUT("wallet/update/{id}")
+    Call<Wallet> updateWallet(@Path("id") int idWallet, @Body WalletDTO dataWallet);
+    @DELETE("wallet/delete/{id}")
+    Call<Void> deleteWallet(@Path("id") int idWallet);
     @GET("categories/parent/{type}")
     Call<List<Category>> getCategoryParents(@Path("type") String type);
 

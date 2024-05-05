@@ -13,12 +13,30 @@ public class Wallet implements Serializable {
     private String icon;
     @SerializedName("money")
     private String money;
+    @SerializedName("belongUser")
+    private String belongUser;
 
     public Wallet(int id, String name, String icon, String money) {
         this.id = id;
         this.name = name;
         this.icon = icon;
         this.money = money;
+    }
+
+    public String getBelongUser() {
+        return belongUser;
+    }
+
+    public void setBelongUser(String belongUser) {
+        this.belongUser = belongUser;
+    }
+
+    public Wallet(int id, String name, String icon, String money, String belongUser) {
+        this.id = id;
+        this.name = name;
+        this.icon = icon;
+        this.money = money;
+        this.belongUser = belongUser;
     }
 
     public int getId() {
