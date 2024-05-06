@@ -100,48 +100,85 @@
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginTop="12dp"
             />
-        <TextView
+        <RelativeLayout
             android:id="@+id/txtTitleIncome"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="CHI TIÊU"
-            android:textColor="@color/black"
-            android:textSize="14sp"
             app:layout_constraintTop_toBottomOf="@id/txtTitle"
             app:layout_constraintStart_toStartOf="parent"
             android:layout_marginTop="12dp"
-            android:layout_marginStart="20dp"
-            />
+            android:layout_marginStart="20dp">
+            <TextView
+                android:id="@+id/textView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="CHI TIÊU"
+                android:layout_centerVertical="true"
+                android:textColor="@color/black"
+                android:textSize="14sp"
+                />
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_baseline_chevron_right_24"
+                android:layout_toRightOf="@id/textView1"/>
+        </RelativeLayout>
+
         <com.github.mikephil.charting.charts.PieChart
             android:id="@+id/pieChartOutcome"
             android:layout_width="300dp"
             android:layout_height="300dp"
-            android:layout_marginTop="12dp"
+            android:visibility="gone"
+            android:layout_marginTop="8dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/txtTitle"/>
-        <TextView
+            app:layout_constraintTop_toBottomOf="@id/txtTitleIncome"/>
+
+
+        <RelativeLayout
             android:id="@+id/txtTitleOutcome"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="THU NHẬP"
-            android:layout_marginTop="20dp"
-            android:textColor="@color/black"
-            android:textSize="14sp"
             app:layout_constraintTop_toBottomOf="@id/pieChartOutcome"
             app:layout_constraintStart_toStartOf="parent"
             android:layout_marginStart="20dp"
-            />
+            android:layout_marginTop="12dp">
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="THU NHẬP"
+                android:layout_centerVertical="true"
+                android:textColor="@color/black"
+                android:textSize="14sp"
+                />
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_baseline_chevron_right_24"
+                android:layout_toRightOf="@id/textView2"/>
+        </RelativeLayout>
+
         <com.github.mikephil.charting.charts.PieChart
             android:id="@+id/pieChartIncome"
             android:layout_width="match_parent"
             android:layout_height="300dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="8dp"
+            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/pieChartOutcome"
+            app:layout_constraintTop_toBottomOf="@id/txtTitleOutcome"
             />
-        
+        <ProgressBar
+            android:id="@+id/progressBarInPieOutcome"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            app:layout_constraintTop_toTopOf="@id/pieChartIncome"
+            app:layout_constraintStart_toStartOf="@id/pieChartIncome"
+            app:layout_constraintEnd_toEndOf="@id/pieChartIncome"
+            app:layout_constraintBottom_toBottomOf="@id/pieChartIncome"
+            app:layout_constraintVertical_bias="0.4"
+            />
     </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

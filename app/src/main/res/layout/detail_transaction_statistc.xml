@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rltWalletItem"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp"
+    android:layout_marginTop="8dp"
+    >
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/imgCategoryInDetail"
+        android:layout_width="46dp"
+        android:layout_height="46dp"
+        android:layout_marginLeft="16dp"
+        android:src="@drawable/digital_wallet"/>
+    <TextView
+        android:id="@+id/txtCategoryInDetail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Ăn uống"
+        android:layout_marginTop="6dp"
+        android:paddingStart="10dp"
+        android:layout_toRightOf="@id/imgCategoryInDetail"
+        android:textSize="14sp"
+        android:textColor="@color/black"/>
+    <TextView
+        android:id="@+id/txtAmountInDetail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="320,000 đ"
+        android:layout_marginTop="6dp"
+        android:layout_marginEnd="2dp"
+        android:layout_toStartOf="@id/txtPercentInDetail"
+        android:textSize="14sp"
+        android:textColor="@color/black"/>
+    <TextView
+        android:id="@+id/txtPercentInDetail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="(32,25%)"
+        android:layout_marginTop="6dp"
+        android:layout_marginEnd="20dp"
+        android:layout_alignParentRight="true"
+        android:textSize="14sp"
+        android:textColor="@color/dark_gray"/>
+
+    <ProgressBar
+        android:id="@+id/progressInDetail"
+        android:layout_width="match_parent"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:layout_height="wrap_content"
+        android:paddingStart="10dp"
+        android:paddingEnd="18dp"
+        android:progress="25"
+        android:progressTint="@color/blue_white"
+        android:layout_toRightOf="@id/imgCategoryInDetail"
+        android:layout_below="@id/txtCategoryInDetail"/>
+
+</RelativeLayout>

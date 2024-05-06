@@ -2,7 +2,9 @@ package com.project.financemanager.dtos;
 
 import com.google.gson.annotations.SerializedName;
 
-public class StatisticByCategoryDTO {
+import java.io.Serializable;
+
+public class StatisticByCategoryDTO implements Serializable {
     @SerializedName("id")
     private long id;
     @SerializedName("name")

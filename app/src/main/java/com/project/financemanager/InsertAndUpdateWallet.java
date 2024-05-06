@@ -1,9 +1,11 @@
 package com.project.financemanager;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -219,6 +221,7 @@ public class InsertAndUpdateWallet extends AppCompatActivity {
             public void onClick(View v) {
                 alertDialog.dismiss();
                 int idWallet = w.getId();
+                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
                 Call<Void> call = ApiService.getInstance(getApplicationContext()).getiApiService().deleteWallet(idWallet);
                 call.enqueue(new Callback<Void>() {
                     @Override
@@ -226,6 +229,9 @@ public class InsertAndUpdateWallet extends AppCompatActivity {
                         if (response.code() != 200) {
                             Toast.makeText(getApplicationContext(), "Error: Xóa ví không thành công!", Toast.LENGTH_LONG).show();
                         } else {
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            editor.remove("idWallet");
+                            editor.apply();
                             Intent t = new Intent();
                             t.putExtra("walletDelete", w);
                             t.putExtra("flagUD", 2);

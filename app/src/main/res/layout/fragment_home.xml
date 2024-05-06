@@ -265,7 +265,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingTop="80dp"
-                android:paddingBottom="200dp"
+                android:paddingBottom="230dp"
                 android:background="@color/gray"
                 app:layout_constraintTop_toTopOf="@id/rcvTransactions"
                 app:layout_constraintStart_toStartOf="@id/rcvTransactions"
