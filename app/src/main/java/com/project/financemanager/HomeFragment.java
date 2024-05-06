@@ -44,6 +44,7 @@ import com.project.financemanager.models.Transaction;
 import com.project.financemanager.models.Wallet;
 import com.tapadoo.alerter.Alerter;
 
+import java.io.IOException;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -174,40 +175,13 @@ public class HomeFragment extends Fragment {
         int year = sharedPreferences.getInt("year", 0);
         String titleMonthAndYear = sharedPreferences.getString("titleMonthAndYear", "Toàn bộ thời gian");
         txtChoosenMonth.setText(titleMonthAndYear);
-        if (idWallet != 0) {
-            Call<Wallet> call = ApiService.getInstance(getContext()).getiApiService().getWalletById(idWallet);
+        try {
+            if (idWallet != 0) {
+                Call<Wallet> call = ApiService.getInstance(getContext()).getiApiService().getWalletById(idWallet);
 
-            call.enqueue(new Callback<Wallet>() {
-                @Override
-                public void onResponse(Call<Wallet> call, Response<Wallet> response) {
-                    Wallet wallet = response.body();
-                    NumberFormat numberFormatComma = NumberFormat.getNumberInstance(Locale.getDefault());
-                    String formattedNumberComma = numberFormatComma.format(Integer.parseInt(wallet.getMoney()));
-                    txtWalletName = rootView.findViewById(R.id.txtWalletName);
-                    txtWalletMoney = rootView.findViewById(R.id.moneyInWallet);
-                    txtWalletId = rootView.findViewById(R.id.txtWalletId);
-                    txtWalletMoney.setText(formattedNumberComma);
-                    txtWalletName.setText(wallet.getName());
-                    txtWalletId.setText(String.valueOf(wallet.getId()));
-
-                    long walletId = Long.parseLong(txtWalletId.getText().toString());
-                    loadDataTransaction(rootView, walletId, month, year);
-                    loadDateTotal(rootView, walletId, month, year);
-                    dismissAlertDialog(alertDialog);
-
-                }
-
-                @Override
-                public void onFailure(Call<Wallet> call, Throwable throwable) {
-
-                }
-            });
-        } else {
-            Call<Wallet> call = ApiService.getInstance(getActivity()).getiApiService().getFirstWallet();
-            call.enqueue(new Callback<Wallet>() {
-                @Override
-                public void onResponse(Call<Wallet> call, Response<Wallet> response) {
-                    if (response.isSuccessful()) {
+                call.enqueue(new Callback<Wallet>() {
+                    @Override
+                    public void onResponse(Call<Wallet> call, Response<Wallet> response) {
                         Wallet wallet = response.body();
                         NumberFormat numberFormatComma = NumberFormat.getNumberInstance(Locale.getDefault());
                         String formattedNumberComma = numberFormatComma.format(Integer.parseInt(wallet.getMoney()));
@@ -222,17 +196,49 @@ public class HomeFragment extends Fragment {
                         loadDataTransaction(rootView, walletId, month, year);
                         loadDateTotal(rootView, walletId, month, year);
                         dismissAlertDialog(alertDialog);
-                    } else {
-                        Toast.makeText(getActivity(), "Lỗi", Toast.LENGTH_SHORT).show();
+
                     }
 
-                }
+                    @Override
+                    public void onFailure(Call<Wallet> call, Throwable throwable) {
 
-                @Override
-                public void onFailure(Call<Wallet> call, Throwable throwable) {
+                    }
+                });
+            } else {
+                Call<Wallet> call = ApiService.getInstance(getActivity()).getiApiService().getFirstWallet();
+                call.enqueue(new Callback<Wallet>() {
+                    @Override
+                    public void onResponse(Call<Wallet> call, Response<Wallet> response) {
+                        if (response.isSuccessful()) {
+                            Wallet wallet = response.body();
+                            NumberFormat numberFormatComma = NumberFormat.getNumberInstance(Locale.getDefault());
+                            String formattedNumberComma = numberFormatComma.format(Integer.parseInt(wallet.getMoney()));
+                            txtWalletName = rootView.findViewById(R.id.txtWalletName);
+                            txtWalletMoney = rootView.findViewById(R.id.moneyInWallet);
+                            txtWalletId = rootView.findViewById(R.id.txtWalletId);
+                            txtWalletMoney.setText(formattedNumberComma);
+                            txtWalletName.setText(wallet.getName());
+                            txtWalletId.setText(String.valueOf(wallet.getId()));
 
-                }
-            });
+                            long walletId = Long.parseLong(txtWalletId.getText().toString());
+                            loadDataTransaction(rootView, walletId, month, year);
+                            loadDateTotal(rootView, walletId, month, year);
+                            dismissAlertDialog(alertDialog);
+                        } else {
+                            Toast.makeText(getActivity(), "Lỗi", Toast.LENGTH_SHORT).show();
+                        }
+
+                    }
+
+                    @Override
+                    public void onFailure(Call<Wallet> call, Throwable throwable) {
+
+                    }
+                });
+            }
+        }
+        catch (Exception e){
+            Log.e("luan", e.getMessage());
         }
     }
 

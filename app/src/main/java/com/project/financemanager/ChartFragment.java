@@ -225,7 +225,25 @@ public class ChartFragment extends Fragment {
         txtTitleOutcome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(statisticOutcome.isEmpty()){
+                try {
+                    if(statisticOutcome.isEmpty()){
+                        Alerter.create(getActivity())
+                                .setTitle("Vui lòng thử lại sau!")
+                                .enableSwipeToDismiss()
+                                .setIcon(R.drawable.ic_baseline_info_24)
+                                .setBackgroundColorRes(R.color.orange)
+                                .setIconColorFilter(0)
+                                .setIconSize(R.dimen.icon_alert)
+                                .show();
+                    }
+                    else {
+                        Intent intent = new Intent(getActivity(), DetailStatisticActivity.class);
+                        intent.putExtra("detailList", (Serializable) statisticOutcome);
+                        intent.putExtra("type", "Chi tiêu");
+                        startActivity(intent);
+                    }
+                }
+                catch (Exception e){
                     Alerter.create(getActivity())
                             .setTitle("Vui lòng thử lại sau!")
                             .enableSwipeToDismiss()
@@ -234,19 +252,31 @@ public class ChartFragment extends Fragment {
                             .setIconColorFilter(0)
                             .setIconSize(R.dimen.icon_alert)
                             .show();
-                }
-                else {
-                    Intent intent = new Intent(getActivity(), DetailStatisticActivity.class);
-                    intent.putExtra("detailList", (Serializable) statisticOutcome);
-                    intent.putExtra("type", "Chi tiêu");
-                    startActivity(intent);
                 }
             }
         });
         txtTitleIncome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(statisticIncome.isEmpty()){
+                try {
+                    if(statisticIncome.isEmpty()){
+                        Alerter.create(getActivity())
+                                .setTitle("Vui lòng thử lại sau!")
+                                .enableSwipeToDismiss()
+                                .setIcon(R.drawable.ic_baseline_info_24)
+                                .setBackgroundColorRes(R.color.orange)
+                                .setIconColorFilter(0)
+                                .setIconSize(R.dimen.icon_alert)
+                                .show();
+                    }
+                    else {
+                        Intent intent = new Intent(getActivity(), DetailStatisticActivity.class);
+                        intent.putExtra("detailList", (Serializable) statisticIncome);
+                        intent.putExtra("type", "Thu nhập");
+                        startActivity(intent);
+                    }
+                }
+                catch (Exception e){
                     Alerter.create(getActivity())
                             .setTitle("Vui lòng thử lại sau!")
                             .enableSwipeToDismiss()
@@ -256,12 +286,7 @@ public class ChartFragment extends Fragment {
                             .setIconSize(R.dimen.icon_alert)
                             .show();
                 }
-                else {
-                    Intent intent = new Intent(getActivity(), DetailStatisticActivity.class);
-                    intent.putExtra("detailList", (Serializable) statisticIncome);
-                    intent.putExtra("type", "Thu nhập");
-                    startActivity(intent);
-                }
+
             }
         });
         return rootView;
