@@ -29,6 +29,8 @@ import com.project.financemanager.dtos.LoginResponse;
 import com.project.financemanager.dtos.UserLogin;
 import com.tapadoo.alerter.Alerter;
 
+import java.util.Objects;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -93,7 +95,7 @@ public class LoginActivity extends AppCompatActivity {
                 call.enqueue(new Callback<LoginResponse>() {
                     @Override
                     public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
-                        if (response.isSuccessful()){
+                        if (Objects.equals(response.body().getStatus(), "Successfully")){
                             sharedPreferences = getApplicationContext().getSharedPreferences("CHECK_TOKEN", getApplicationContext().MODE_PRIVATE);
                             SharedPreferences.Editor editor = sharedPreferences.edit();
                             editor.putString("token", "Bearer " + response.body().getToken());
@@ -103,15 +105,13 @@ public class LoginActivity extends AppCompatActivity {
                             startActivity(intent);
                             dismissAlertDialog(alertDialog);
                             finish();
-
-
                         }
                         else{
                             Alerter.create(LoginActivity.this)
-                                    .setTitle("Tài khoản mật khẩu không phù hợp!")
+                                    .setTitle(response.body().getMessage())
                                     .enableSwipeToDismiss()
                                     .setIcon(R.drawable.ic_baseline_info_24)
-                                    .setBackgroundColorRes(R.color.red)
+                                    .setBackgroundColorRes(R.color.red_white)
                                     .setIconColorFilter(0)
                                     .setIconSize(R.dimen.icon_alert)
                                     .show();

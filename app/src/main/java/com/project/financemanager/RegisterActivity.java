@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,6 +44,7 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText inputEmail;
     private EditText inputPassword;
     private EditText inputRetypePassword;
+    private ProgressBar loadingRegister;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +63,7 @@ public class RegisterActivity extends AppCompatActivity {
         txtErrorUsername = findViewById(R.id.txtErrorUsername);
         txtErrorEmail = findViewById(R.id.txtErrorEmail);
         txtErrorPassword = findViewById(R.id.txtErrorPassword);
-
+        loadingRegister = findViewById(R.id.loadingRegister);
         txtErrorRetypePassword = findViewById(R.id.txtErrorRetypePassword);
 
         btnLoginNow.setOnClickListener(new View.OnClickListener() {
@@ -128,16 +130,21 @@ public class RegisterActivity extends AppCompatActivity {
                     }
 
                     if (validateFullName && validateUsername && validateEmail && validatePassword && validateRetypePassword) {
+                        btnRegister.setVisibility(View.GONE);
+                        loadingRegister.setVisibility(View.VISIBLE);
                         UserDTO dataUser = new UserDTO(fullName,username,email,password,retypePassword,"2003-08-08T08:00:00");
                         Call<Void> call = ApiService.getInstance(getApplicationContext()).getiApiService().register(dataUser);
+
                         call.enqueue(new Callback<Void>() {
                             @Override
                             public void onResponse(Call<Void> call, Response<Void> response) {
                                 if (response.code() != 200) {
                                     if (response.code() == 400) {
                                         validateEmpty(new EditText(getApplicationContext()), "Username đã tồn tại!",txtErrorUsername);
+                                        btnRegister.setVisibility(View.VISIBLE);
+                                        loadingRegister.setVisibility(View.GONE);
                                     } else {
-                                        Toast.makeText(getApplicationContext(), "Error: Đăng ký không thành công!", Toast.LENGTH_LONG).show();
+                                        Toast.makeText(getApplicationContext(), "Có lỗi vui lòng thử lại sai!", Toast.LENGTH_LONG).show();
                                     }
                                 } else {
                                     Intent intent = new Intent(RegisterActivity.this,PrepareActivity.class);
