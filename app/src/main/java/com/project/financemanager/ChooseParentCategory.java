@@ -1,13 +1,21 @@
 package com.project.financemanager;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -26,6 +34,9 @@ public class ChooseParentCategory extends AppCompatActivity {
     private RecyclerView recyclerView;
     private TextView txtNotChoose;
     private ProgressBar progressBar;
+    private boolean isConnected;
+    private ConstraintLayout layoutDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,14 +44,24 @@ public class ChooseParentCategory extends AppCompatActivity {
         recyclerView = findViewById(R.id.rcvCategoryNotChild);
         txtNotChoose = findViewById(R.id.txtNotChoose);
         progressBar = findViewById(R.id.progressBarInChooseParent);
+        layoutDialog = findViewById(R.id.layoutDialogInNotConnection);
+
+        ConnectivityManager connectivityManager = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        isConnected = networkInfo != null && networkInfo.isConnected();
 
         Intent intent = getIntent();
         String type = intent.getStringExtra("type");
-        if(type.equals("1")){
-            callApiGetData("income");
+        if(isConnected){
+            if(type.equals("1")){
+                callApiGetData("income");
+            }
+            else{
+                callApiGetData("outcome");
+            }
         }
-        else{
-            callApiGetData("outcome");
+        else {
+            showAlertNotConnection();
         }
         txtNotChoose.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,5 +105,22 @@ public class ChooseParentCategory extends AppCompatActivity {
 
             }
         });
+    }
+    private void showAlertNotConnection() {
+        View view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.alert_no_connection, layoutDialog);
+        Button btnOk = view.findViewById(R.id.alertBtnNotConnection);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
+        builder.setView(view);
+        final AlertDialog alertDialog = builder.create();
+        btnOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+            }
+        });
+        if(alertDialog.getWindow() != null){
+            alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(0));
+        }
+        alertDialog.show();
     }
 }

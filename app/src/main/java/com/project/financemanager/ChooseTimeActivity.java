@@ -5,9 +5,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
@@ -15,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -31,7 +35,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class ChooseTimeActivity extends AppCompatActivity {
-    AlertDialog alertDialog;
+    private AlertDialog alertDialog;
     private ConstraintLayout layoutDialogLoading;
     private ImageView back;
     private TextView thisMonth;
@@ -40,6 +44,8 @@ public class ChooseTimeActivity extends AppCompatActivity {
     private TextView lastYear;
     private SharedPreferences sharedPreferences;
     private TextView allTime;
+    private ConstraintLayout layoutDialog;
+    private boolean isConnected;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,7 +58,12 @@ public class ChooseTimeActivity extends AppCompatActivity {
         lastYear = findViewById(R.id.lastYear);
         allTime = findViewById(R.id.allTime);
         layoutDialogLoading = findViewById(R.id.layoutDialogLoading);
+        layoutDialog = findViewById(R.id.layoutDialogInNotConnection);
+
         Animation blinkAnimation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.blink_animation);
+        ConnectivityManager connectivityManager = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        isConnected = networkInfo != null && networkInfo.isConnected();
 
         back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -105,18 +116,20 @@ public class ChooseTimeActivity extends AppCompatActivity {
     }
 
     private void callApiMonthAndYear(String title, int month, int year){
-        // Lấy id của ví dưới sharedPreferences
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        long idWallet = sharedPreferences.getLong("idWallet", 0);
+        if(isConnected){
+    //        alertDialog = showLoadingDialog(alertDialog);
+            // Lấy id của ví dưới sharedPreferences
+            sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+            long idWallet = sharedPreferences.getLong("idWallet", 0);
 
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putInt("month", month);
-        editor.putInt("year", year);
-        editor.putString("titleMonthAndYear", title);
-        editor.apply();
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putInt("month", month);
+            editor.putInt("year", year);
+            editor.putString("titleMonthAndYear", title);
+            editor.apply();
 
-        Call<List<TitleTime>> call = ApiService.getInstance(getApplicationContext()).getiApiService().getTransByMonthAndYear(month, year, idWallet);
-        call.enqueue(new Callback<List<TitleTime>>() {
+            Call<List<TitleTime>> call = ApiService.getInstance(getApplicationContext()).getiApiService().getTransByMonthAndYear(month, year, idWallet);
+            call.enqueue(new Callback<List<TitleTime>>() {
             @Override
             public void onResponse(Call<List<TitleTime>> call, Response<List<TitleTime>> response) {
                 List<TitleTime> titleTimeList = response.body();
@@ -135,6 +148,10 @@ public class ChooseTimeActivity extends AppCompatActivity {
 
             }
         });
+        }
+        else {
+            showAlertNotConnection();
+        }
     }
 
     private AlertDialog showLoadingDialog(AlertDialog alertDialog){
@@ -160,6 +177,23 @@ public class ChooseTimeActivity extends AppCompatActivity {
             public void run() {
                 alertDialog.dismiss();
             }
-        }, 1000);
+        }, 100);
+    }
+    private void showAlertNotConnection() {
+        View view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.alert_no_connection, layoutDialog);
+        Button btnOk = view.findViewById(R.id.alertBtnNotConnection);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
+        builder.setView(view);
+        final AlertDialog alertDialog = builder.create();
+        btnOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+            }
+        });
+        if(alertDialog.getWindow() != null){
+            alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(0));
+        }
+        alertDialog.show();
     }
 }

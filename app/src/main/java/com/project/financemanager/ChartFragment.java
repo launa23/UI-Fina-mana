@@ -1,10 +1,16 @@
 package com.project.financemanager;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
@@ -12,6 +18,7 @@ import androidx.viewpager.widget.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -56,7 +63,8 @@ public class ChartFragment extends Fragment {
     private List<StatisticByCategoryDTO> statisticIncome;
     private List<StatisticByCategoryDTO> statisticOutcome;
     private ProgressBar progressBarInPieOutcome;
-
+    private boolean isConnected;
+    private ConstraintLayout layoutDialog;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -67,6 +75,11 @@ public class ChartFragment extends Fragment {
         txtTitleOutcome = rootView.findViewById(R.id.txtTitleIncome);
         txtTitleIncome = rootView.findViewById(R.id.txtTitleOutcome);
         progressBarInPieOutcome = rootView.findViewById(R.id.progressBarInPieOutcome);
+        layoutDialog = rootView.findViewById(R.id.layoutDialogInNotConnection);
+
+        ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        isConnected = networkInfo != null && networkInfo.isConnected();
 
         ViewPagerAdapter adapter = new ViewPagerAdapter(getActivity().getSupportFragmentManager(), FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         adapter.addFragment(new StatisticByDayFragment(), "Theo ngày");
@@ -128,54 +141,55 @@ public class ChartFragment extends Fragment {
                 Color.parseColor("#9030EA")
         };
         NumberFormat numberFormat = NumberFormat.getNumberInstance(Locale.getDefault());
-        Call<List<StatisticByCategoryDTO>> call = ApiService.getInstance(getContext()).getiApiService().getStatisticByCategory(start, end, "incom");
-        call.enqueue(new Callback<List<StatisticByCategoryDTO>>() {
-            @Override
-            public void onResponse(Call<List<StatisticByCategoryDTO>> call, Response<List<StatisticByCategoryDTO>> response) {
-                List<StatisticByCategoryDTO> statistics = response.body();
-                statisticOutcome = response.body();
-                int totalOutcome = 0;
-                ArrayList<PieEntry> entries = new ArrayList<>();
-                for (StatisticByCategoryDTO statistic : statistics) {
-                    entries.add(new PieEntry(Float.parseFloat(statistic.getTotal()), statistic.getName()));
-                    totalOutcome += Integer.parseInt(statistic.getTotal());
+        if(isConnected){
+            Call<List<StatisticByCategoryDTO>> call = ApiService.getInstance(getContext()).getiApiService().getStatisticByCategory(start, end, "incom");
+            call.enqueue(new Callback<List<StatisticByCategoryDTO>>() {
+                @Override
+                public void onResponse(Call<List<StatisticByCategoryDTO>> call, Response<List<StatisticByCategoryDTO>> response) {
+                    List<StatisticByCategoryDTO> statistics = response.body();
+                    statisticOutcome = response.body();
+                    int totalOutcome = 0;
+                    ArrayList<PieEntry> entries = new ArrayList<>();
+                    for (StatisticByCategoryDTO statistic : statistics) {
+                        entries.add(new PieEntry(Float.parseFloat(statistic.getTotal()), statistic.getName()));
+                        totalOutcome += Integer.parseInt(statistic.getTotal());
+                    }
+                    PieDataSet dataSet = new PieDataSet(entries, null);
+                    dataSet.setColors(colorsI);
+                    dataSet.setValueTextSize(0f);
+                    dataSet.setSliceSpace(1f);
+    //                Legend legend = pieChartIncome.getLegend();
+    //                legend.setDrawInside(false);
+    //                legend.setWordWrapEnabled(true);
+    //                legend.setOrientation(Legend.LegendOrientation.HORIZONTAL);
+    //                legend.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
+    //                legend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
+                    pieChartOutcome.getDescription().setEnabled(false);
+                    pieChartOutcome.setTransparentCircleAlpha(0);
+                    pieChartOutcome.setHoleColor(Color.TRANSPARENT);
+
+                    pieChartOutcome.setCenterText(numberFormat.format((totalOutcome)) + " đ");
+                    pieChartOutcome.setCenterTextSize(16f);
+                    pieChartOutcome.setCenterTextTypeface(Typeface.DEFAULT_BOLD);
+                    pieChartOutcome.setCenterTextColor(Color.parseColor("#d43939"));
+
+                    PieData data = new PieData(dataSet);
+                    pieChartOutcome.setTransparentCircleAlpha(0);
+                    pieChartOutcome.getDescription().setEnabled(false);
+                    pieChartOutcome.setData(data);
+                    pieChartOutcome.setEntryLabelTextSize(8f);
+                    pieChartOutcome.invalidate();
+                    pieChartOutcome.setVisibility(View.VISIBLE);
                 }
-                PieDataSet dataSet = new PieDataSet(entries, null);
-                dataSet.setColors(colorsI);
-                dataSet.setValueTextSize(0f);
-                dataSet.setSliceSpace(1f);
-//                Legend legend = pieChartIncome.getLegend();
-//                legend.setDrawInside(false);
-//                legend.setWordWrapEnabled(true);
-//                legend.setOrientation(Legend.LegendOrientation.HORIZONTAL);
-//                legend.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
-//                legend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
-                pieChartOutcome.getDescription().setEnabled(false);
-                pieChartOutcome.setTransparentCircleAlpha(0);
-                pieChartOutcome.setHoleColor(Color.TRANSPARENT);
 
-                pieChartOutcome.setCenterText(numberFormat.format((totalOutcome)) + " đ");
-                pieChartOutcome.setCenterTextSize(16f);
-                pieChartOutcome.setCenterTextTypeface(Typeface.DEFAULT_BOLD);
-                pieChartOutcome.setCenterTextColor(Color.parseColor("#d43939"));
+                @Override
+                public void onFailure(Call<List<StatisticByCategoryDTO>> call, Throwable throwable) {
 
-                PieData data = new PieData(dataSet);
-                pieChartOutcome.setTransparentCircleAlpha(0);
-                pieChartOutcome.getDescription().setEnabled(false);
-                pieChartOutcome.setData(data);
-                pieChartOutcome.setEntryLabelTextSize(8f);
-                pieChartOutcome.invalidate();
-                pieChartOutcome.setVisibility(View.VISIBLE);
-            }
+                }
+            });
 
-            @Override
-            public void onFailure(Call<List<StatisticByCategoryDTO>> call, Throwable throwable) {
-
-            }
-        });
-
-        Call<List<StatisticByCategoryDTO>> call1 = ApiService.getInstance(getContext()).getiApiService().getStatisticByCategory(start, end, "income");
-        call1.enqueue(new Callback<List<StatisticByCategoryDTO>>() {
+            Call<List<StatisticByCategoryDTO>> call1 = ApiService.getInstance(getContext()).getiApiService().getStatisticByCategory(start, end, "income");
+            call1.enqueue(new Callback<List<StatisticByCategoryDTO>>() {
             @Override
             public void onResponse(Call<List<StatisticByCategoryDTO>> call, Response<List<StatisticByCategoryDTO>> response) {
                 List<StatisticByCategoryDTO> statistics = response.body();
@@ -220,7 +234,10 @@ public class ChartFragment extends Fragment {
 
             }
         });
-
+        }
+        else {
+            showAlertNotConnection();
+        }
 
         txtTitleOutcome.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -291,5 +308,21 @@ public class ChartFragment extends Fragment {
         });
         return rootView;
     }
-
+    private void showAlertNotConnection() {
+        View view = LayoutInflater.from(getContext()).inflate(R.layout.alert_no_connection, layoutDialog);
+        Button btnOk = view.findViewById(R.id.alertBtnNotConnection);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setView(view);
+        final AlertDialog alertDialog = builder.create();
+        btnOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+            }
+        });
+        if(alertDialog.getWindow() != null){
+            alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(0));
+        }
+        alertDialog.show();
+    }
 }

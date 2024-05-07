@@ -1,7 +1,10 @@
 package com.project.financemanager;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -36,11 +39,12 @@ import retrofit2.Response;
 public class OutcomeCategory extends Fragment {
     AlertDialog alertDialog;
     private RecyclerView rcvParentList;
-    private ConstraintLayout layoutDialogLoading;
+    private ConstraintLayout layoutDialogInNotConnection;
     private final String FLAG = "1";
     private ConstraintLayout layoutDialog;
     private ActivityResultLauncher<Intent> launcher;
     private ProgressBar progressBarInChooseCate;
+    private boolean isConnected;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -49,8 +53,13 @@ public class OutcomeCategory extends Fragment {
 
         rcvParentList = rootView.findViewById(R.id.rcvParentList);
         layoutDialog = rootView.findViewById(R.id.layoutDialog);
-        layoutDialogLoading = rootView.findViewById(R.id.layoutDialogLoading);
+        layoutDialogInNotConnection = rootView.findViewById(R.id.layoutDialogInNotConnection);
         progressBarInChooseCate = rootView.findViewById(R.id.progressBarInChooseCate);
+
+        ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        isConnected = networkInfo != null && networkInfo.isConnected();
+
         launcher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
@@ -87,10 +96,10 @@ public class OutcomeCategory extends Fragment {
         return rootView;
     }
     public void fillDataToCategoryList(){
-//        alertDialog = showLoadingDialog(alertDialog);
-        progressBarInChooseCate.setVisibility(View.VISIBLE);
-        Call<List<Category>> call = ApiService.getInstance(getContext()).getiApiService().getAllOutcomeCategories();
-        call.enqueue(new Callback<List<Category>>() {
+        if(isConnected){
+            progressBarInChooseCate.setVisibility(View.VISIBLE);
+            Call<List<Category>> call = ApiService.getInstance(getContext()).getiApiService().getAllOutcomeCategories();
+            call.enqueue(new Callback<List<Category>>() {
             @Override
             public void onResponse(Call<List<Category>> call, Response<List<Category>> response) {
                 List<Category> categoryList = response.body();
@@ -115,7 +124,6 @@ public class OutcomeCategory extends Fragment {
                     }
                 });
                 rcvParentList.setLayoutManager(new LinearLayoutManager(getActivity()));
-//                rcvParentList.setNestedScrollingEnabled(false);
                 rcvParentList.setHasFixedSize(true);
                 rcvParentList.setAdapter(parentOutcomeCategoryAdapter);
                 parentOutcomeCategoryAdapter.setRvItemClickListener(new RvItemClickListener<Category>() {
@@ -135,7 +143,6 @@ public class OutcomeCategory extends Fragment {
                     }
                 });
                 progressBarInChooseCate.setVisibility(View.GONE);
-//                dismissLoadingDialog(alertDialog);
             }
 
             @Override
@@ -143,6 +150,10 @@ public class OutcomeCategory extends Fragment {
 
             }
         });
+        }
+        else {
+            showAlertNotConnection();
+        }
     }
 
     private void showAlertDialog(){
@@ -163,29 +174,21 @@ public class OutcomeCategory extends Fragment {
         alertDialog.show();
     }
 
-    private AlertDialog showLoadingDialog(AlertDialog alertDialog){
-        View view = LayoutInflater.from(getContext()).inflate(R.layout.loading_progress_bar, layoutDialogLoading);
-
+    private void showAlertNotConnection() {
+        View view = LayoutInflater.from(getContext()).inflate(R.layout.alert_no_connection, layoutDialogInNotConnection);
+        Button btnOk = view.findViewById(R.id.alertBtnNotConnection);
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setView(view);
-        builder.setCancelable(false);
-        alertDialog = builder.create();
-
+        final AlertDialog alertDialog = builder.create();
+        btnOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+            }
+        });
         if(alertDialog.getWindow() != null){
             alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(0));
         }
         alertDialog.show();
-        return alertDialog;
-    }
-
-    private void dismissLoadingDialog(AlertDialog alertDialog) {
-
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                alertDialog.dismiss();
-            }
-        }, 1000);
     }
 }

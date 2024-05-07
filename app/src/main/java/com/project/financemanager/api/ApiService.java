@@ -6,6 +6,7 @@ import com.project.financemanager.dtos.LoginResponse;
 import com.project.financemanager.dtos.TitleTime;
 import com.project.financemanager.dtos.Total;
 import com.project.financemanager.dtos.UserLogin;
+import com.project.financemanager.exceptions.NoConnectivityException;
 import com.project.financemanager.models.Category;
 import com.project.financemanager.models.Transaction;
 import com.project.financemanager.models.User;
@@ -39,6 +40,7 @@ public class ApiService {
             Request request = chain.request();
             Request.Builder builder = request.newBuilder();
             builder.addHeader("Authorization", token);
+
             return chain.proceed(builder.build());
         };
 

@@ -1,10 +1,13 @@
 package com.project.financemanager;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -47,6 +50,7 @@ import com.tapadoo.alerter.Alerter;
 import java.io.IOException;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
@@ -80,6 +84,8 @@ public class HomeFragment extends Fragment {
     private TitleAdapter titleAdapter;
     private BarChart barChart;
     private RelativeLayout rltEmpty;
+    private ConstraintLayout layoutDialog;
+    private boolean isConnected;
     //sut
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -91,13 +97,23 @@ public class HomeFragment extends Fragment {
         chooseWallet = rootView.findViewById(R.id.chooseWallet);
         layoutDialogLoading = rootView.findViewById(R.id.layoutDialogLoading);
         rltEmpty = rootView.findViewById(R.id.rltEmpty);
+        layoutDialog = rootView.findViewById(R.id.layoutDialogInNotConnection);
+
 
         Animation blinkAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.blink_animation);
         //tus
         initResultLauncher(rootView);
         //sut
-        loadDataWallet(rootView);
+        ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        isConnected = networkInfo != null && networkInfo.isConnected();
 
+        if(isConnected){
+            loadDataWallet(rootView);
+        }
+        else {
+            showAlertNotConnection();
+        }
         barChart = rootView.findViewById(R.id.barChartInHome);
 
         ActivityResultLauncher<Intent> launcher = registerForActivityResult(
@@ -141,16 +157,20 @@ public class HomeFragment extends Fragment {
         chooseTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                chooseTime.startAnimation(blinkAnimation);
-                sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
-                long data = Long.parseLong(txtWalletId.getText().toString());
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putLong("idWallet", data);
-                editor.apply();
+                if(isConnected){
+                    chooseTime.startAnimation(blinkAnimation);
+                    sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+                    long data = Long.parseLong(txtWalletId.getText().toString());
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putLong("idWallet", data);
+                    editor.apply();
 
-                Intent intent = new Intent(v.getContext(), ChooseTimeActivity.class);
-                launcher.launch(intent);
-
+                    Intent intent = new Intent(v.getContext(), ChooseTimeActivity.class);
+                    launcher.launch(intent);
+                }
+                else {
+                    showAlertNotConnection();
+                }
             }
         });
 
@@ -169,11 +189,12 @@ public class HomeFragment extends Fragment {
     private void loadDataWallet(View rootView) {
         alertDialog = showAlertDialog(alertDialog);
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        Calendar calendar = Calendar.getInstance();
 
         long idWallet = sharedPreferences.getLong("idWallet", 0);
-        int month = sharedPreferences.getInt("month", 0);
-        int year = sharedPreferences.getInt("year", 0);
-        String titleMonthAndYear = sharedPreferences.getString("titleMonthAndYear", "Toàn bộ thời gian");
+        int month = sharedPreferences.getInt("month", calendar.get(Calendar.MONTH)+1);
+        int year = sharedPreferences.getInt("year", calendar.get(Calendar.YEAR));
+        String titleMonthAndYear = sharedPreferences.getString("titleMonthAndYear", "Tháng này");
         txtChoosenMonth.setText(titleMonthAndYear);
         try {
             if (idWallet != 0) {
@@ -238,7 +259,7 @@ public class HomeFragment extends Fragment {
             }
         }
         catch (Exception e){
-            Log.e("luan", e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -368,7 +389,23 @@ public class HomeFragment extends Fragment {
         alertDialog.show();
         return alertDialog;
     }
-
+    private void showAlertNotConnection() {
+        View view = LayoutInflater.from(getContext()).inflate(R.layout.alert_no_connection, layoutDialog);
+        Button btnOk = view.findViewById(R.id.alertBtnNotConnection);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setView(view);
+        final AlertDialog alertDialog = builder.create();
+        btnOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+            }
+        });
+        if(alertDialog.getWindow() != null){
+            alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(0));
+        }
+        alertDialog.show();
+    }
     private void dismissAlertDialog(AlertDialog alertDialog) {
 
         Handler handler = new Handler();

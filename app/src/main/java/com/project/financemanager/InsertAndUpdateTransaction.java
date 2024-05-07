@@ -11,9 +11,12 @@ import androidx.core.content.ContextCompat;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -73,9 +76,12 @@ public class InsertAndUpdateTransaction extends AppCompatActivity {
     private RelativeLayout btnSave;
     private RelativeLayout btnRemove;
     private OnBackPressedCallback backEvent;
-
     private String flag;
     private Transaction transCreate, transUpdate, myObject;
+//  connection
+    private ConstraintLayout layoutDialog;
+    private boolean isConnected;
+//  connection
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,6 +106,12 @@ public class InsertAndUpdateTransaction extends AppCompatActivity {
         relative2 = findViewById(R.id.relative2);
         txtCategoryIdInUpdate = findViewById(R.id.txtCategoryIdInUpdate);
         txtCategoryTypeInUpdate = findViewById(R.id.txtCategoryTypeInUpdate);
+// connection
+        layoutDialog = findViewById(R.id.layoutDialogInNotConnection);
+        ConnectivityManager connectivityManager = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        isConnected = networkInfo != null && networkInfo.isConnected();
+// connection
         autoCompleteTextView.setText(items[0]);
         arrayAdapter = new ArrayAdapter<String>(this, R.layout.list_item, items);
         autoCompleteTextView.setAdapter(arrayAdapter);
@@ -174,35 +186,36 @@ public class InsertAndUpdateTransaction extends AppCompatActivity {
                 try {
                     btnSave.startAnimation(blinkAnimation);
                     // xử lí amount
-                    String amount = (inputAmonut.getText().toString()).replaceAll("[,.]", "");
-                    amount = (amount.equals("")) ? "0" : amount;
-                    // xử lí descrip
-                    String description = inputDescription.getText().toString();
-                    // xử lí time transaction
-                    String[] timeArrCreate = ((txtDateInUpdate.getText().toString()).replaceAll("\\b(?:Hôm\\s+nay,\\s*|Hôm\\s+qua,\\s*|Ngày\\s+mai,\\s*)\\b", "")).split("/");
-                    String[] hourArrCreate = (txtHourInUpdate.getText().toString()).split(":");
+                    if(isConnected){
+                        String amount = (inputAmonut.getText().toString()).replaceAll("[,.]", "");
+                        amount = (amount.equals("")) ? "0" : amount;
+                        // xử lí descrip
+                        String description = inputDescription.getText().toString();
+                        // xử lí time transaction
+                        String[] timeArrCreate = ((txtDateInUpdate.getText().toString()).replaceAll("\\b(?:Hôm\\s+nay,\\s*|Hôm\\s+qua,\\s*|Ngày\\s+mai,\\s*)\\b", "")).split("/");
+                        String[] hourArrCreate = (txtHourInUpdate.getText().toString()).split(":");
 
-                    String monthCreate = (Integer.parseInt(timeArrCreate[1]) >= 10) ? timeArrCreate[1] : "0" + timeArrCreate[1];
-                    String dateCreate = (Integer.parseInt(timeArrCreate[0]) >= 10) ? timeArrCreate[0] : "0" + timeArrCreate[0];
-                    String hourCreate = (Integer.parseInt(hourArrCreate[0]) >= 10) ? hourArrCreate[0] : "0" + hourArrCreate[0];
-                    String minuteCreate = (Integer.parseInt(hourArrCreate[1]) >= 10) ? hourArrCreate[1] : "0" + hourArrCreate[1];
+                        String monthCreate = (Integer.parseInt(timeArrCreate[1]) >= 10) ? timeArrCreate[1] : "0" + timeArrCreate[1];
+                        String dateCreate = (Integer.parseInt(timeArrCreate[0]) >= 10) ? timeArrCreate[0] : "0" + timeArrCreate[0];
+                        String hourCreate = (Integer.parseInt(hourArrCreate[0]) >= 10) ? hourArrCreate[0] : "0" + hourArrCreate[0];
+                        String minuteCreate = (Integer.parseInt(hourArrCreate[1]) >= 10) ? hourArrCreate[1] : "0" + hourArrCreate[1];
 
-                    String time = timeArrCreate[2] + "-" + monthCreate + "-" + dateCreate + "T" + hourCreate + ":" + minuteCreate + ":00";
-                    //xử lí danh mục và loại ví
-                    String categoryID = (txtCategoryIdInUpdate.getText().toString());
-                    String walletID = txtIdWalletInUpdate.getText().toString();
+                        String time = timeArrCreate[2] + "-" + monthCreate + "-" + dateCreate + "T" + hourCreate + ":" + minuteCreate + ":00";
+                        //xử lí danh mục và loại ví
+                        String categoryID = (txtCategoryIdInUpdate.getText().toString());
+                        String walletID = txtIdWalletInUpdate.getText().toString();
 
-                    String typeTrans = ((autoCompleteTextView.getText().toString()).equals("Thu nhập")) ? "income" : "outcome";
-                    boolean validateCate = true;
-                    boolean validateWallet = true;
-                    if (categoryID.trim().equals("")){
-                        validateCate = validateEmpty(categoryID, "Bạn quên chọn danh mục kìa!");
-                    }
-                    else {
-                        validateWallet = validateEmpty(walletID, "Bạn quên chọn ví rồi!");
-                    }
+                        String typeTrans = ((autoCompleteTextView.getText().toString()).equals("Thu nhập")) ? "income" : "outcome";
+                        boolean validateCate = true;
+                        boolean validateWallet = true;
+                        if (categoryID.trim().equals("")){
+                            validateCate = validateEmpty(categoryID, "Bạn quên chọn danh mục kìa!");
+                        }
+                        else {
+                            validateWallet = validateEmpty(walletID, "Bạn quên chọn ví rồi!");
+                        }
 
-                    if (validateWallet && validateCate) {
+                        if (validateWallet && validateCate) {
                         Transaction dataTrans = new Transaction(amount, description, time, categoryID, walletID);
                         if (flag.equals("0")) {
                             Call<Transaction> call = ApiService.getInstance(getApplicationContext()).getiApiService().createTransaction(typeTrans, dataTrans);
@@ -230,8 +243,7 @@ public class InsertAndUpdateTransaction extends AppCompatActivity {
 
                                 @Override
                                 public void onFailure(Call<Transaction> call, Throwable t) {
-                                    Toast.makeText(getApplicationContext(), "An error has occured", Toast.LENGTH_LONG).show();
-                                    Log.e("error", t.getMessage());
+                                    showAlertNotConnection();
                                 }
                             });
 
@@ -255,11 +267,14 @@ public class InsertAndUpdateTransaction extends AppCompatActivity {
 
                                 @Override
                                 public void onFailure(Call<Transaction> call, Throwable t) {
-                                    Toast.makeText(getApplicationContext(), "An error has occured", Toast.LENGTH_LONG).show();
-                                    Log.e("error", t.getMessage());
+                                    showAlertNotConnection();
                                 }
                             });
                         }
+                    }
+                    }
+                    else {
+                        showAlertNotConnection();
                     }
                 } catch (Exception ex) {
                     ex.printStackTrace();
@@ -271,20 +286,25 @@ public class InsertAndUpdateTransaction extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 btnRemove.startAnimation(blinkAnimation);
-                if (flag.equals("1")) {
-                    try {
-                        showAlertConfirmDelDialog();
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
+                if(isConnected){
+                    if (flag.equals("1")) {
+                        try {
+                            showAlertConfirmDelDialog();
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
+                        }
+                    } else {
+                        try {
+                            clearInputTrans();
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
+                        }
                     }
-                } else {
-                    try {
-                        clearInputTrans();
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                    }
+                    //sut
                 }
-                //sut
+                else{
+                    showAlertNotConnection();
+                }
             }
 
         });
@@ -570,5 +590,22 @@ public class InsertAndUpdateTransaction extends AppCompatActivity {
             setResult(Activity.RESULT_OK, t);
             finish();
         }
+    }
+    private void showAlertNotConnection() {
+        View view = LayoutInflater.from(this).inflate(R.layout.alert_no_connection, layoutDialog);
+        Button btnOk = view.findViewById(R.id.alertBtnNotConnection);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setView(view);
+        final AlertDialog alertDialog = builder.create();
+        btnOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+            }
+        });
+        if(alertDialog.getWindow() != null){
+            alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(0));
+        }
+        alertDialog.show();
     }
 }
