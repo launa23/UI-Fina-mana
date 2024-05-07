@@ -27,7 +27,7 @@ import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
-public class ApiService{
+public class ApiService {
     private static ApiService instance;
     private IApiService iApiService;
     SharedPreferences sharedPreferences;
