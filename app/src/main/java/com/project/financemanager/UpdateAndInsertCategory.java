@@ -9,10 +9,13 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.lifecycle.LifecycleObserver;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -59,6 +62,8 @@ public class UpdateAndInsertCategory extends AppCompatActivity {
     private String flag;
     private Category category, categoryParent;
     private CategoryDTO cateCreate, cateUpdate;
+    private ConstraintLayout layoutDialog;
+    private boolean isConnected;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +83,12 @@ public class UpdateAndInsertCategory extends AppCompatActivity {
         txtNameIconCategory = findViewById(R.id.txtNameIconCategory);
         titleInUpdateCate = findViewById(R.id.titleInUpdateCate);
         typeCategory = findViewById(R.id.typeInUpdateCate);
+
+        layoutDialog = findViewById(R.id.layoutDialogInNotConnection);
+        ConnectivityManager connectivityManager = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        isConnected = networkInfo != null && networkInfo.isConnected();
+
         Animation blinkAnimation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.blink_animation);
 
         Intent iCategoryFrg = getIntent();
@@ -150,57 +161,23 @@ public class UpdateAndInsertCategory extends AppCompatActivity {
             public void onClick(View v) {
                 try {
                     btnSaveCate.startAnimation(blinkAnimation);
-                    //xu li ten icon
-                    String iconNameCate = txtNameIconCategory.getText().toString();
-                    //xu li ten danh muc
-                    String nameCate = inputNameCategory.getText().toString();
-                    // danh muc cha
-                    String parentCateId = txtIdParentCategory.getText().toString();
-                    parentCateId = parentCateId.equals("0") ? "" : parentCateId;
-                    // loai danh muc
-                    String typeCate = typeCategory.getText().toString();
-                    typeCate = typeCate.equals("1") ? "income" : "outcome";
-                    boolean validateNameCate = validateEmpty(nameCate, "Bạn chưa đặt tên cho danh mục!");
-                    boolean validateIconNameCate = validateEmpty(iconNameCate, "Hãy chọn icon cho danh mục nhé!");
-                    if (validateNameCate && validateIconNameCate) {
-                        CategoryDTO dataCate = new CategoryDTO(parentCateId, nameCate, iconNameCate);
-                        if (flag.equals("0")) {
-                            Call<CategoryDTO> call = ApiService.getInstance(getApplicationContext()).getiApiService().createCategory(typeCate, dataCate);
-                            call.enqueue(new Callback<CategoryDTO>() {
-                                @Override
-                                public void onResponse(Call<CategoryDTO> call, Response<CategoryDTO> response) {
-                                    if (response.code() != 200) {
-                                        if (response.code() == 400) {
-                                            validateEmpty("", "Tên danh mục đã tồn tại!");
-                                        } else {
-                                            Toast.makeText(getApplicationContext(), "Error: Thêm danh mục không thành công!", Toast.LENGTH_LONG).show();
-                                        }
-                                    } else {
-                                        Alerter.create(UpdateAndInsertCategory.this)
-                                                .setTitle("Thêm danh mục mới thành công!")
-                                                .enableSwipeToDismiss()
-                                                .setIcon(R.drawable.ic_baseline_check_circle_24)
-                                                .setBackgroundColorRes(R.color.green)
-                                                .setIconColorFilter(0)
-                                                .setIconSize(R.dimen.icon_alert)
-                                                .show();
-                                        cateCreate = response.body();
-                                        clearInputCate();
-                                    }
-                                }
-
-                                @Override
-                                public void onFailure(Call<CategoryDTO> call, Throwable t) {
-                                    Toast.makeText(getApplicationContext(), "An error has occured", Toast.LENGTH_LONG).show();
-                                    Log.e("error", t.getMessage());
-                                }
-                            });
-                        } else {
-                            int idCate = category.getId();
-                            if (parentCateId.equals(String.valueOf(idCate))) {
-                                validateEmpty("", "Bạn không thể chọn danh mục cha là chính nó!");
-                            } else {
-                                Call<CategoryDTO> call = ApiService.getInstance(getApplicationContext()).getiApiService().updateCategory(typeCate, idCate, dataCate);
+                    if (isConnected) {
+                        //xu li ten icon
+                        String iconNameCate = txtNameIconCategory.getText().toString();
+                        //xu li ten danh muc
+                        String nameCate = inputNameCategory.getText().toString();
+                        // danh muc cha
+                        String parentCateId = txtIdParentCategory.getText().toString();
+                        parentCateId = parentCateId.equals("0") ? "" : parentCateId;
+                        // loai danh muc
+                        String typeCate = typeCategory.getText().toString();
+                        typeCate = typeCate.equals("1") ? "income" : "outcome";
+                        boolean validateNameCate = validateEmpty(nameCate, "Bạn chưa đặt tên cho danh mục!");
+                        boolean validateIconNameCate = validateEmpty(iconNameCate, "Hãy chọn icon cho danh mục nhé!");
+                        if (validateNameCate && validateIconNameCate) {
+                            CategoryDTO dataCate = new CategoryDTO(parentCateId, nameCate, iconNameCate);
+                            if (flag.equals("0")) {
+                                Call<CategoryDTO> call = ApiService.getInstance(getApplicationContext()).getiApiService().createCategory(typeCate, dataCate);
                                 call.enqueue(new Callback<CategoryDTO>() {
                                     @Override
                                     public void onResponse(Call<CategoryDTO> call, Response<CategoryDTO> response) {
@@ -208,27 +185,63 @@ public class UpdateAndInsertCategory extends AppCompatActivity {
                                             if (response.code() == 400) {
                                                 validateEmpty("", "Tên danh mục đã tồn tại!");
                                             } else {
-                                                Toast.makeText(getApplicationContext(), "Error: Sửa danh mục không thành công!", Toast.LENGTH_LONG).show();
+                                                Toast.makeText(getApplicationContext(), "Error: Thêm danh mục không thành công!", Toast.LENGTH_LONG).show();
                                             }
                                         } else {
-                                            cateUpdate = response.body();
-                                            Intent t = new Intent();
-                                            t.putExtra("cateUpdate", cateUpdate);
-                                            t.putExtra("flagUD", 1);
-                                            setResult(RESULT_OK, t);
-                                            finish();
+                                            Alerter.create(UpdateAndInsertCategory.this)
+                                                    .setTitle("Thêm danh mục mới thành công!")
+                                                    .enableSwipeToDismiss()
+                                                    .setIcon(R.drawable.ic_baseline_check_circle_24)
+                                                    .setBackgroundColorRes(R.color.green)
+                                                    .setIconColorFilter(0)
+                                                    .setIconSize(R.dimen.icon_alert)
+                                                    .show();
+                                            cateCreate = response.body();
+                                            clearInputCate();
                                         }
                                     }
 
                                     @Override
                                     public void onFailure(Call<CategoryDTO> call, Throwable t) {
-                                        Toast.makeText(getApplicationContext(), "An error has occured", Toast.LENGTH_LONG).show();
-                                        Log.e("error", t.getMessage());
+                                        showAlertNotConnection();
                                     }
                                 });
-                            }
-                        }
+                            } else {
+                                int idCate = category.getId();
+                                if (parentCateId.equals(String.valueOf(idCate))) {
+                                    validateEmpty("", "Bạn không thể chọn danh mục cha là chính nó!");
+                                } else {
+                                    Call<CategoryDTO> call = ApiService.getInstance(getApplicationContext()).getiApiService().updateCategory(typeCate, idCate, dataCate);
+                                    call.enqueue(new Callback<CategoryDTO>() {
+                                        @Override
+                                        public void onResponse(Call<CategoryDTO> call, Response<CategoryDTO> response) {
+                                            if (response.code() != 200) {
+                                                if (response.code() == 400) {
+                                                    validateEmpty("", "Tên danh mục đã tồn tại!");
+                                                } else {
+                                                    Toast.makeText(getApplicationContext(), "Error: Sửa danh mục không thành công!", Toast.LENGTH_LONG).show();
+                                                }
+                                            } else {
+                                                cateUpdate = response.body();
+                                                Intent t = new Intent();
+                                                t.putExtra("cateUpdate", cateUpdate);
+                                                t.putExtra("flagUD", 1);
+                                                setResult(RESULT_OK, t);
+                                                finish();
+                                            }
+                                        }
 
+                                        @Override
+                                        public void onFailure(Call<CategoryDTO> call, Throwable t) {
+                                            showAlertNotConnection();
+                                        }
+                                    });
+                                }
+                            }
+
+                        }
+                    } else {
+                        showAlertNotConnection();
                     }
                 } catch (Exception ex) {
                     ex.printStackTrace();
@@ -346,29 +359,32 @@ public class UpdateAndInsertCategory extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 alertDialog.dismiss();
-                String typeCate = typeCategory.getText().toString().toLowerCase();
-                int idCate = category.getId();
-                Call<Void> call = ApiService.getInstance(getApplicationContext()).getiApiService().deleteCategory(typeCate, idCate);
-                call.enqueue(new Callback<Void>() {
-                    @Override
-                    public void onResponse(Call<Void> call, Response<Void> response) {
-                        if (response.code() != 200) {
-                            Toast.makeText(getApplicationContext(), "Error: Xóa khoản giao dịch không thành công!", Toast.LENGTH_LONG).show();
-                        } else {
-                            Intent t = new Intent();
-                            t.putExtra("cateDelete", category);
-                            t.putExtra("flagUD", 2);
-                            setResult(RESULT_OK, t);
-                            finish();
+                if (isConnected) {
+                    String typeCate = typeCategory.getText().toString().toLowerCase();
+                    int idCate = category.getId();
+                    Call<Void> call = ApiService.getInstance(getApplicationContext()).getiApiService().deleteCategory(typeCate, idCate);
+                    call.enqueue(new Callback<Void>() {
+                        @Override
+                        public void onResponse(Call<Void> call, Response<Void> response) {
+                            if (response.code() != 200) {
+                                Toast.makeText(getApplicationContext(), "Error: Xóa danh mục không thành công!", Toast.LENGTH_LONG).show();
+                            } else {
+                                Intent t = new Intent();
+                                t.putExtra("cateDelete", category);
+                                t.putExtra("flagUD", 2);
+                                setResult(RESULT_OK, t);
+                                finish();
+                            }
                         }
-                    }
 
-                    @Override
-                    public void onFailure(Call<Void> call, Throwable t) {
-                        Toast.makeText(getApplicationContext(), "An error has occured", Toast.LENGTH_LONG).show();
-                        Log.e("error", t.getMessage());
-                    }
-                });
+                        @Override
+                        public void onFailure(Call<Void> call, Throwable t) {
+                            showAlertNotConnection();
+                        }
+                    });
+                } else {
+                    showAlertNotConnection();
+                }
             }
         });
         btnCancel.setOnClickListener(new View.OnClickListener() {
@@ -392,6 +408,24 @@ public class UpdateAndInsertCategory extends AppCompatActivity {
             setResult(MainActivity.RESULT_OK, intent);
             finish();
         }
+    }
+
+    private void showAlertNotConnection() {
+        View view = LayoutInflater.from(this).inflate(R.layout.alert_no_connection, layoutDialog);
+        Button btnOk = view.findViewById(R.id.alertBtnNotConnection);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setView(view);
+        final AlertDialog alertDialog = builder.create();
+        btnOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+            }
+        });
+        if (alertDialog.getWindow() != null) {
+            alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(0));
+        }
+        alertDialog.show();
     }
 
 }

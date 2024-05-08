@@ -4,9 +4,12 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -33,6 +36,8 @@ public class PrepareActivity extends AppCompatActivity {
 
     private EditText inputAmountStart;
     private Button btnStartUsing;
+    private ConstraintLayout layoutDialog;
+    private boolean isConnected;
     private SharedPreferences sharedPreferences;
 
     private String username;
@@ -48,6 +53,11 @@ public class PrepareActivity extends AppCompatActivity {
         btnStartUsing = findViewById(R.id.btnStartUsing);
         inputAmountStart.addTextChangedListener(new NumberFormattingTextWatcher(inputAmountStart));
 
+        layoutDialog = findViewById(R.id.layoutDialogInNotConnection);
+        ConnectivityManager connectivityManager = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        isConnected = networkInfo != null && networkInfo.isConnected();
+
         try {
             Intent intent = getIntent();
             username = intent.getStringExtra("username");
@@ -60,52 +70,57 @@ public class PrepareActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 try {
-                    alertDialog = showAlertDialog(alertDialog);
-                    money = inputAmountStart.getText().toString().replaceAll("[,.]", "");
-                    money = (money.equals("")) ? "0" : money;
+                    if (isConnected) {
+                        alertDialog = showAlertDialog(alertDialog);
+                        money = inputAmountStart.getText().toString().replaceAll("[,.]", "");
+                        money = (money.equals("")) ? "0" : money;
 
-                    UserLogin userLogin = new UserLogin(username, password);
-                    Call<LoginResponse> call = ApiService.getInstance().getiApiService().login(userLogin);
-                    call.enqueue(new Callback<LoginResponse>() {
-                        @Override
-                        public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
-                            if (response.isSuccessful()) {
-                                sharedPreferences = getApplicationContext().getSharedPreferences("CHECK_TOKEN", getApplicationContext().MODE_PRIVATE);
-                                SharedPreferences.Editor editor = sharedPreferences.edit();
-                                editor.putString("token", "Bearer " + response.body().getToken());
-                                editor.apply();
+                        UserLogin userLogin = new UserLogin(username, password);
+                        Call<LoginResponse> call = ApiService.getInstance().getiApiService().login(userLogin);
+                        call.enqueue(new Callback<LoginResponse>() {
+                            @Override
+                            public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
+                                if (response.isSuccessful()) {
+                                    sharedPreferences = getApplicationContext().getSharedPreferences("CHECK_TOKEN", getApplicationContext().MODE_PRIVATE);
+                                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                                    editor.putString("token", "Bearer " + response.body().getToken());
+                                    editor.apply();
 
-                                //create first wallet
-                                WalletDTO dataWallet = new WalletDTO("Ví tiền mặt", "money", money);
-                                Call<WalletDTO> callWallet = ApiService.getInstance(getApplicationContext()).getiApiService().createFirstWallet(dataWallet);
-                                callWallet.enqueue(new Callback<WalletDTO>() {
-                                    @Override
-                                    public void onResponse(Call<WalletDTO> callWallet, Response<WalletDTO> response) {
-                                        if (response.code() != 200) {
-                                            Toast.makeText(getApplicationContext(), "Error: Tạo ví không thành công!", Toast.LENGTH_LONG).show();
-                                        } else {
-                                            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                                            startActivity(intent);
-                                            dismissAlertDialog(alertDialog);
-                                            finish();
+                                    //create first wallet
+                                    WalletDTO dataWallet = new WalletDTO("Ví tiền mặt", "money", money);
+                                    Call<WalletDTO> callWallet = ApiService.getInstance(getApplicationContext()).getiApiService().createFirstWallet(dataWallet);
+                                    callWallet.enqueue(new Callback<WalletDTO>() {
+                                        @Override
+                                        public void onResponse(Call<WalletDTO> callWallet, Response<WalletDTO> response) {
+                                            if (response.code() != 200) {
+                                                Toast.makeText(getApplicationContext(), "Error: Tạo ví không thành công!", Toast.LENGTH_LONG).show();
+                                            } else {
+                                                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                                                startActivity(intent);
+                                                dismissAlertDialog(alertDialog);
+                                                finish();
+                                            }
                                         }
-                                    }
 
-                                    @Override
-                                    public void onFailure(Call<WalletDTO> callWallet, Throwable t) {
-                                        Toast.makeText(getApplicationContext(), "An error has occured", Toast.LENGTH_LONG).show();
-                                    }
-                                });
+                                        @Override
+                                        public void onFailure(Call<WalletDTO> callWallet, Throwable t) {
+                                            showAlertNotConnection();
+                                        }
+                                    });
 
 
+                                }
                             }
-                        }
 
-                        @Override
-                        public void onFailure(Call<LoginResponse> call, Throwable throwable) {
-                            Toast.makeText(getApplicationContext(), "An error has occured", Toast.LENGTH_LONG).show();
-                        }
-                    });
+                            @Override
+                            public void onFailure(Call<LoginResponse> call, Throwable throwable) {
+                                showAlertNotConnection();
+                            }
+                        });
+
+                    } else {
+                        showAlertNotConnection();
+                    }
                 } catch (Exception ex) {
                     Toast.makeText(PrepareActivity.this, ex.getMessage(), Toast.LENGTH_SHORT).show();
                 }
@@ -139,5 +154,23 @@ public class PrepareActivity extends AppCompatActivity {
                 alertDialog.dismiss();
             }
         }, 100);
+    }
+
+    private void showAlertNotConnection() {
+        View view = LayoutInflater.from(this).inflate(R.layout.alert_no_connection, layoutDialog);
+        Button btnOk = view.findViewById(R.id.alertBtnNotConnection);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setView(view);
+        final AlertDialog alertDialog = builder.create();
+        btnOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+            }
+        });
+        if (alertDialog.getWindow() != null) {
+            alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(0));
+        }
+        alertDialog.show();
     }
 }

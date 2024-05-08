@@ -1,17 +1,25 @@
 package com.project.financemanager;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.ColorDrawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -33,6 +41,8 @@ public class WalletMainActivity extends AppCompatActivity {
     private WalletAdapter walletAdapter;
     private ActivityResultLauncher<Intent> launcherforAdd;
     private ActivityResultLauncher<Intent> launcherforEdit;
+    private ConstraintLayout layoutDialog;
+    private boolean isConnected;
     private int iPosition;
     private List<Wallet> walletList;
 
@@ -43,32 +53,40 @@ public class WalletMainActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.rcvWalletsMain);
         btnBackInWalletMain = findViewById(R.id.btnBackInWalletMain);
         btnAddInWalletMain = findViewById(R.id.btnAddInWalletMain);
+        layoutDialog = findViewById(R.id.layoutDialogInNotConnection);
+        ConnectivityManager connectivityManager = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        isConnected = networkInfo != null && networkInfo.isConnected();
         initResultLauncher();
-        Call<List<Wallet>> call = ApiService.getInstance(getApplicationContext()).getiApiService().getAllMyWallet();
-        call.enqueue(new Callback<List<Wallet>>() {
-            @Override
-            public void onResponse(Call<List<Wallet>> call, Response<List<Wallet>> response) {
-                walletList = response.body();
-                walletAdapter = new WalletAdapter(walletList, new WalletAdapter.HandleClick() {
-                    @Override
-                    public void onItemClick(int position) {
-                        Wallet wallet = walletList.get(position);
-                        iPosition = position;
-                        Intent i = new Intent(WalletMainActivity.this, InsertAndUpdateWallet.class);
-                        i.putExtra("wallet", wallet);
-                        i.putExtra("flag", "1");
-                        launcherforEdit.launch(i);
-                    }
-                });
-                recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-                recyclerView.setAdapter(walletAdapter);
-            }
+        if (isConnected) {
+            Call<List<Wallet>> call = ApiService.getInstance(getApplicationContext()).getiApiService().getAllMyWallet();
+            call.enqueue(new Callback<List<Wallet>>() {
+                @Override
+                public void onResponse(Call<List<Wallet>> call, Response<List<Wallet>> response) {
+                    walletList = response.body();
+                    walletAdapter = new WalletAdapter(walletList, new WalletAdapter.HandleClick() {
+                        @Override
+                        public void onItemClick(int position) {
+                            Wallet wallet = walletList.get(position);
+                            iPosition = position;
+                            Intent i = new Intent(WalletMainActivity.this, InsertAndUpdateWallet.class);
+                            i.putExtra("wallet", wallet);
+                            i.putExtra("flag", "1");
+                            launcherforEdit.launch(i);
+                        }
+                    });
+                    recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+                    recyclerView.setAdapter(walletAdapter);
+                }
 
-            @Override
-            public void onFailure(Call<List<Wallet>> call, Throwable throwable) {
-                Toast.makeText(getApplicationContext(), "An error has occured", Toast.LENGTH_LONG).show();
-            }
-        });
+                @Override
+                public void onFailure(Call<List<Wallet>> call, Throwable throwable) {
+                    showAlertNotConnection();
+                }
+            });
+        } else {
+            showAlertNotConnection();
+        }
 
         btnAddInWalletMain.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -143,5 +161,23 @@ public class WalletMainActivity extends AppCompatActivity {
         } catch (Exception ex) {
             Toast.makeText(getApplicationContext(), ex.getMessage(), Toast.LENGTH_LONG).show();
         }
+    }
+
+    private void showAlertNotConnection() {
+        View view = LayoutInflater.from(this).inflate(R.layout.alert_no_connection, layoutDialog);
+        Button btnOk = view.findViewById(R.id.alertBtnNotConnection);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setView(view);
+        final AlertDialog alertDialog = builder.create();
+        btnOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+            }
+        });
+        if (alertDialog.getWindow() != null) {
+            alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(0));
+        }
+        alertDialog.show();
     }
 }
