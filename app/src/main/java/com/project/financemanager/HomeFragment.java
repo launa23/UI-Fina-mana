@@ -27,6 +27,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -86,6 +87,8 @@ public class HomeFragment extends Fragment {
     private RelativeLayout rltEmpty;
     private ConstraintLayout layoutDialog;
     private boolean isConnected;
+    private ImageView hideOrView;
+    private TextView moneyUnit;
     //sut
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -98,7 +101,8 @@ public class HomeFragment extends Fragment {
         layoutDialogLoading = rootView.findViewById(R.id.layoutDialogLoading);
         rltEmpty = rootView.findViewById(R.id.rltEmpty);
         layoutDialog = rootView.findViewById(R.id.layoutDialogInNotConnection);
-
+        hideOrView = rootView.findViewById(R.id.imgHideOrViewInHome);
+        moneyUnit = rootView.findViewById(R.id.moneyUnitInHome);
 
         Animation blinkAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.blink_animation);
         //tus
@@ -107,6 +111,22 @@ public class HomeFragment extends Fragment {
         ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
         isConnected = networkInfo != null && networkInfo.isConnected();
+
+        hideOrView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(txtWalletMoney.getVisibility() == View.VISIBLE){
+                    hideOrView.setImageResource(R.mipmap.view);
+                    txtWalletMoney.setVisibility(View.GONE);
+                    moneyUnit.setVisibility(View.GONE);
+                }
+                else {
+                    hideOrView.setImageResource(R.mipmap.hide);
+                    txtWalletMoney.setVisibility(View.VISIBLE);
+                    moneyUnit.setVisibility(View.VISIBLE);
+                }
+            }
+        });
 
         if(isConnected){
             loadDataWallet(rootView);

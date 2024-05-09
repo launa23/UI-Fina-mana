@@ -25,6 +25,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -52,6 +53,7 @@ public class LoginActivity extends AppCompatActivity {
     private TextView txtErrorUsernameInLogin;
     private TextView txtErrorPasswordInLogin;
     private ConstraintLayout layoutDialog;
+    private ProgressBar progressBar;
     private boolean isConnected;
 
     @Override
@@ -67,6 +69,8 @@ public class LoginActivity extends AppCompatActivity {
         layoutDialogLoading = findViewById(R.id.layoutDialogLoading);
         btnRegisterInLogin = findViewById(R.id.btnRegisterInLogin);
         layoutDialog = findViewById(R.id.layoutDialogInNotConnection);
+        progressBar = findViewById(R.id.loadingLogin);
+
         ConnectivityManager connectivityManager = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
         isConnected = networkInfo != null && networkInfo.isConnected();
@@ -102,18 +106,20 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (isConnected) {
+
                     String username = inputUserNameInLogin.getText().toString();
                     String password = inputPasswordInLogin.getText().toString();
                     boolean validateUsername = validateEmpty(inputUserNameInLogin, "Không được để trống username!", txtErrorUsernameInLogin);
                     boolean validatePassword = validateEmpty(inputPasswordInLogin, "Không được để trống mật khẩu!", txtErrorPasswordInLogin);
                     if (validateUsername && validatePassword) {
-                        alertDialog = showAlertDialog(alertDialog);
+                        btnLogin.setVisibility(View.GONE);
+                        progressBar.setVisibility(View.VISIBLE);
                         UserLogin userLogin = new UserLogin(username, password);
                         Call<LoginResponse> call = ApiService.getInstance().getiApiService().login(userLogin);
                         call.enqueue(new Callback<LoginResponse>() {
                             @Override
                             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
-                                if (response.isSuccessful()) {
+                                if (response.isSuccessful() && response.body().getStatus().equals("Successfully")) {
                                     sharedPreferences = getApplicationContext().getSharedPreferences("CHECK_TOKEN", getApplicationContext().MODE_PRIVATE);
                                     SharedPreferences.Editor editor = sharedPreferences.edit();
                                     editor.putString("token", "Bearer " + response.body().getToken());
@@ -121,9 +127,10 @@ public class LoginActivity extends AppCompatActivity {
 
                                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                                     startActivity(intent);
-                                    dismissAlertDialog(alertDialog);
                                     finish();
                                 } else {
+                                    btnLogin.setVisibility(View.VISIBLE);
+                                    progressBar.setVisibility(View.GONE);
                                     Alerter.create(LoginActivity.this)
                                             .setTitle(response.body().getMessage())
                                             .enableSwipeToDismiss()
@@ -132,7 +139,6 @@ public class LoginActivity extends AppCompatActivity {
                                             .setIconColorFilter(0)
                                             .setIconSize(R.dimen.icon_alert)
                                             .show();
-                                    dismissAlertDialog(alertDialog);
                                 }
                             }
 
