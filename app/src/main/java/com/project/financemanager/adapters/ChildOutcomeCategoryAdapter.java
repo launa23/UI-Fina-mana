@@ -49,6 +49,12 @@ public class ChildOutcomeCategoryAdapter extends RecyclerView.Adapter<ChildOutco
         if (category.getCategoryOf().equals("User")){
             holder.iconLock.setVisibility(View.GONE);
         }
+        if ((position + 1) == childCategoryList.size()){
+            holder.imgLineOfCategoryOut.setImageResource(R.drawable.ic_line_2);
+        }
+        else {
+            holder.imgLineOfCategoryOut.setImageResource(R.drawable.ic_line_1);
+        }
     }
 
     @Override
@@ -61,12 +67,14 @@ public class ChildOutcomeCategoryAdapter extends RecyclerView.Adapter<ChildOutco
         private TextView txtNameChildCategory;
         private TextView txtChildCategoryOf;
         private ImageView iconLock;
+        private ImageView imgLineOfCategoryOut;
         public ChildCategoryViewHolder(@NonNull View itemView) {
             super(itemView);
             imgChildCategory = itemView.findViewById(R.id.imgChildCategoryInOutcome);
             txtNameChildCategory = itemView.findViewById(R.id.txtNameChildCategoryInOutcome);
             txtChildCategoryOf = itemView.findViewById(R.id.txtChildCategoryOf);
             iconLock = itemView.findViewById(R.id.iconLock2);
+            imgLineOfCategoryOut = itemView.findViewById(R.id.imgLineOfCategoryOut);
             itemView.setOnClickListener(v -> {
                 handleClickChildCategory.onItemClick(getAdapterPosition());
             });

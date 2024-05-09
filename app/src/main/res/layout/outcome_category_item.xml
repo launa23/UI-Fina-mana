@@ -17,14 +17,14 @@
         <ImageView
             android:id="@+id/imageView"
             android:layout_width="wrap_content"
-            android:layout_height="40dp"
+            android:layout_height="50dp"
             android:src="@drawable/xml_rectangle"
             />
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/imgParentCategoryInOutcome"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
             android:src="@drawable/books"
             android:layout_marginLeft="16dp"
             android:layout_toRightOf="@id/imageView"
@@ -63,7 +63,7 @@
         android:id="@+id/rcvChildCategoryList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="50dp"
+        android:layout_marginLeft="30dp"
         android:nestedScrollingEnabled="false"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

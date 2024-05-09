@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -36,6 +37,8 @@ public class ChooseParentCategory extends AppCompatActivity {
     private ProgressBar progressBar;
     private boolean isConnected;
     private ConstraintLayout layoutDialog;
+    private ImageView btnBackInChooseParent;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +48,14 @@ public class ChooseParentCategory extends AppCompatActivity {
         txtNotChoose = findViewById(R.id.txtNotChoose);
         progressBar = findViewById(R.id.progressBarInChooseParent);
         layoutDialog = findViewById(R.id.layoutDialogInNotConnection);
+        btnBackInChooseParent = findViewById(R.id.btnBackInChooseParent);
+
+        btnBackInChooseParent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
         ConnectivityManager connectivityManager = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();

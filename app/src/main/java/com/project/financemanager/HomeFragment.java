@@ -103,7 +103,9 @@ public class HomeFragment extends Fragment {
         layoutDialog = rootView.findViewById(R.id.layoutDialogInNotConnection);
         hideOrView = rootView.findViewById(R.id.imgHideOrViewInHome);
         moneyUnit = rootView.findViewById(R.id.moneyUnitInHome);
-
+        txtWalletName = rootView.findViewById(R.id.txtWalletName);
+        txtWalletMoney = rootView.findViewById(R.id.moneyInWallet);
+        txtWalletId = rootView.findViewById(R.id.txtWalletId);
         Animation blinkAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.blink_animation);
         //tus
         initResultLauncher(rootView);
@@ -115,13 +117,13 @@ public class HomeFragment extends Fragment {
         hideOrView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(txtWalletMoney.getVisibility() == View.VISIBLE){
-                    hideOrView.setImageResource(R.mipmap.view);
+                if(moneyUnit.getVisibility() == View.VISIBLE){
+                    hideOrView.setImageResource(R.mipmap.hide);
                     txtWalletMoney.setVisibility(View.GONE);
                     moneyUnit.setVisibility(View.GONE);
                 }
                 else {
-                    hideOrView.setImageResource(R.mipmap.hide);
+                    hideOrView.setImageResource(R.mipmap.view);
                     txtWalletMoney.setVisibility(View.VISIBLE);
                     moneyUnit.setVisibility(View.VISIBLE);
                 }
@@ -177,21 +179,28 @@ public class HomeFragment extends Fragment {
         chooseTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(isConnected){
-                    chooseTime.startAnimation(blinkAnimation);
-                    sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
-                    long data = Long.parseLong(txtWalletId.getText().toString());
-                    SharedPreferences.Editor editor = sharedPreferences.edit();
-                    editor.putLong("idWallet", data);
-                    editor.apply();
+                try {
+                    if(isConnected){
+                        chooseTime.startAnimation(blinkAnimation);
+                        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+                        long data = Long.parseLong(txtWalletId.getText().toString());
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putLong("idWallet", data);
+                        editor.apply();
 
-                    Intent intent = new Intent(v.getContext(), ChooseTimeActivity.class);
-                    launcher.launch(intent);
+                        Intent intent = new Intent(v.getContext(), ChooseTimeActivity.class);
+                        launcher.launch(intent);
+                    }
+                    else {
+                        showAlertNotConnection();
+                    }
                 }
-                else {
-                    showAlertNotConnection();
+                catch (Exception e){
+                    Toast.makeText(getActivity(), "Vui lòng thử lại sau!", Toast.LENGTH_SHORT).show();
                 }
+
             }
+
         });
 
         // Bắt sự kiện click chọn ví
@@ -226,9 +235,7 @@ public class HomeFragment extends Fragment {
                         Wallet wallet = response.body();
                         NumberFormat numberFormatComma = NumberFormat.getNumberInstance(Locale.getDefault());
                         String formattedNumberComma = numberFormatComma.format(Integer.parseInt(wallet.getMoney()));
-                        txtWalletName = rootView.findViewById(R.id.txtWalletName);
-                        txtWalletMoney = rootView.findViewById(R.id.moneyInWallet);
-                        txtWalletId = rootView.findViewById(R.id.txtWalletId);
+
                         txtWalletMoney.setText(formattedNumberComma);
                         txtWalletName.setText(wallet.getName());
                         txtWalletId.setText(String.valueOf(wallet.getId()));
@@ -284,26 +291,31 @@ public class HomeFragment extends Fragment {
     }
 
     private void loadDataTransaction(View rootView, long walletId, int month, int year) {
-        Call<List<TitleTime>> call = ApiService.getInstance(getContext()).getiApiService().getTransByMonthAndYear(month, year, walletId);
-        call.enqueue(new Callback<List<TitleTime>>() {
-            @Override
-            public void onResponse(Call<List<TitleTime>> call, Response<List<TitleTime>> response) {
-                titleTimeList = response.body();
-                if (titleTimeList.isEmpty()){
-                    rltEmpty.setVisibility(View.VISIBLE);
+        try {
+            Call<List<TitleTime>> call = ApiService.getInstance(getContext()).getiApiService().getTransByMonthAndYear(month, year, walletId);
+            call.enqueue(new Callback<List<TitleTime>>() {
+                @Override
+                public void onResponse(Call<List<TitleTime>> call, Response<List<TitleTime>> response) {
+                    titleTimeList = response.body();
+                    if (titleTimeList.isEmpty()){
+                        rltEmpty.setVisibility(View.VISIBLE);
+                    }
+                    else{
+                        rltEmpty.setVisibility(View.GONE);
+                    }
+                    loadRecyclerView(rootView, titleTimeList);
                 }
-                else{
-                    rltEmpty.setVisibility(View.GONE);
+
+                @Override
+                public void onFailure(Call<List<TitleTime>> call, Throwable throwable) {
+                    Toast.makeText(getActivity(), "Vui lòng thử lại", Toast.LENGTH_SHORT).show();
                 }
-                loadRecyclerView(rootView, titleTimeList);
-            }
+            });
+        }
+        catch (Exception e){
+            e.printStackTrace();
 
-            @Override
-            public void onFailure(Call<List<TitleTime>> call, Throwable throwable) {
-                Toast.makeText(getActivity(), "Thất bại", Toast.LENGTH_SHORT).show();
-
-            }
-        });
+        }
     }
 
     private void loadDateTotal(View rootView, long walletId, int month, int year) {

@@ -24,8 +24,6 @@ import android.view.Window;
 import android.widget.ImageView;
 
 import com.github.clans.fab.FloatingActionButton;
-import com.project.financemanager.broadcast.BroadcastAirplaneMode;
-import com.project.financemanager.broadcast.BroadcastWifi;
 import com.project.financemanager.databinding.ActivityMainBinding;
 import com.project.financemanager.dtos.CategoryDTO;
 import com.project.financemanager.models.Category;
@@ -36,8 +34,6 @@ public class MainActivity extends AppCompatActivity {
     ActivityMainBinding binding;
     //tus
     private ActivityResultLauncher<Intent> launcherforAdd;
-    private BroadcastWifi broadcastWifi;
-    private BroadcastAirplaneMode broadcastAirplaneMode;
 
     //sut
     @Override
@@ -47,14 +43,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         //wifi mode show
-        broadcastWifi = new BroadcastWifi();
-        IntentFilter filterWifi = new IntentFilter("android.net.wifi.WIFI_STATE_CHANGED");
-        registerReceiver(broadcastWifi, filterWifi);
 
-        //airplane mode show
-        broadcastAirplaneMode = new BroadcastAirplaneMode();
-        IntentFilter filterAirplane = new IntentFilter("android.intent.action.AIRPLANE_MODE");
-        registerReceiver(broadcastAirplaneMode, filterAirplane);
 
         replaceFragment(new HomeFragment());
         //tus
@@ -128,8 +117,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        unregisterReceiver(broadcastWifi);
-        unregisterReceiver(broadcastAirplaneMode);
+
     }
     private void replaceFragment(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
