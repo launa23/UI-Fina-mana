@@ -147,7 +147,7 @@ public class OutcomeCategory extends Fragment {
 
             @Override
             public void onFailure(Call<List<Category>> call, Throwable throwable) {
-
+                showAlertNotConnection();
             }
         });
         }

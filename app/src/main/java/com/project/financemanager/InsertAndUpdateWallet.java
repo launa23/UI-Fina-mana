@@ -1,9 +1,12 @@
 package com.project.financemanager;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -11,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -44,6 +48,8 @@ public class InsertAndUpdateWallet extends AppCompatActivity {
     private ImageView btnBackInUpdateWallet;
     private Wallet w, walletUpdate, walletCreate;
     private String flag, money;
+    private ConstraintLayout layoutDialog;
+    private boolean isConnected;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +64,12 @@ public class InsertAndUpdateWallet extends AppCompatActivity {
         inputAmountWallet.addTextChangedListener(new NumberFormattingTextWatcher(inputAmountWallet));
         inputNameWallet = findViewById(R.id.inputNameWallet);
         layoutConfirmDeleteWalletDialog = findViewById(R.id.layoutConfirmDeleteWalletDialog);
+
+        layoutDialog = findViewById(R.id.layoutDialogInNotConnection);
+        ConnectivityManager connectivityManager = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        isConnected = networkInfo != null && networkInfo.isConnected();
+
         Animation blinkAnimation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.blink_animation);
 
         int green = ContextCompat.getColor(getApplicationContext(), R.color.green);
@@ -83,79 +95,81 @@ public class InsertAndUpdateWallet extends AppCompatActivity {
             public void onClick(View v) {
                 buttonSaveWallet.startAnimation(blinkAnimation);
                 // xử lí amount
-                money = (inputAmountWallet.getText().toString()).replaceAll("[,.]", "");
-                money = (money.equals("")) ? "0" : money;
-                // xử lí wallet name
-                String nameWallet = inputNameWallet.getText().toString();
-                //validate
-                boolean validateNameWallet = validateEmpty(nameWallet, "Bạn quên đặt tên cho ví rồi!");
+                if (isConnected) {
+                    money = (inputAmountWallet.getText().toString()).replaceAll("[,.]", "");
+                    money = (money.equals("")) ? "0" : money;
+                    // xử lí wallet name
+                    String nameWallet = inputNameWallet.getText().toString();
+                    //validate
+                    boolean validateNameWallet = validateEmpty(nameWallet, "Bạn quên đặt tên cho ví rồi!");
 
-                if (validateNameWallet) {
-                    WalletDTO dataWallet = new WalletDTO(nameWallet, "money", money);
-                    if (flag.equals("1")) {
-                        //Lưu vào sqlite
-                        try {
-                            int idWallet = w.getId();
-                            Call<Wallet> call = ApiService.getInstance(getApplicationContext()).getiApiService().updateWallet(idWallet, dataWallet);
-                            call.enqueue(new Callback<Wallet>() {
-                                @Override
-                                public void onResponse(Call<Wallet> call, Response<Wallet> response) {
-                                    if (response.code() != 200) {
-                                        if (response.code() == 400) {
-                                            validateEmpty("", "Tên ví đã tồn tại!");
+                    if (validateNameWallet) {
+                        WalletDTO dataWallet = new WalletDTO(nameWallet, "money", money);
+                        if (flag.equals("1")) {
+                            try {
+                                int idWallet = w.getId();
+                                Call<Wallet> call = ApiService.getInstance(getApplicationContext()).getiApiService().updateWallet(idWallet, dataWallet);
+                                call.enqueue(new Callback<Wallet>() {
+                                    @Override
+                                    public void onResponse(Call<Wallet> call, Response<Wallet> response) {
+                                        if (response.code() != 200) {
+                                            if (response.code() == 400) {
+                                                validateEmpty("", "Tên ví đã tồn tại!");
+                                            } else {
+                                                Toast.makeText(getApplicationContext(), "Error: Sửa ví không thành công!", Toast.LENGTH_LONG).show();
+                                            }
                                         } else {
-                                            Toast.makeText(getApplicationContext(), "Error: Sửa ví không thành công!", Toast.LENGTH_LONG).show();
+                                            walletUpdate = response.body();
+                                            Intent t = new Intent();
+                                            t.putExtra("walletUpdate", walletUpdate);
+                                            t.putExtra("flagUD", 1);
+                                            setResult(RESULT_OK, t);
+                                            finish();
                                         }
-                                    } else {
-                                        walletUpdate = response.body();
-                                        Intent t = new Intent();
-                                        t.putExtra("walletUpdate", walletUpdate);
-                                        t.putExtra("flagUD", 1);
-                                        setResult(RESULT_OK, t);
-                                        finish();
                                     }
-                                }
 
-                                @Override
-                                public void onFailure(Call<Wallet> call, Throwable t) {
-                                    Toast.makeText(getApplicationContext(), "An error has occured", Toast.LENGTH_LONG).show();
-                                }
-                            });
-                        } catch (Exception ex) {
-                            Toast.makeText(getApplicationContext(), ex.getMessage(), Toast.LENGTH_LONG).show();
-                        }
-                    } else {
-                        try {
-                            Call<Wallet> call = ApiService.getInstance(getApplicationContext()).getiApiService().createWallet(dataWallet);
-                            call.enqueue(new Callback<Wallet>() {
-                                @Override
-                                public void onResponse(Call<Wallet> call, Response<Wallet> response) {
-                                    if (response.code() != 200) {
-                                        if (response.code() == 400) {
-                                            validateEmpty("", "Tên ví đã tồn tại!");
+                                    @Override
+                                    public void onFailure(Call<Wallet> call, Throwable t) {
+                                        showAlertNotConnection();
+                                    }
+                                });
+                            } catch (Exception ex) {
+                                Toast.makeText(getApplicationContext(), ex.getMessage(), Toast.LENGTH_LONG).show();
+                            }
+                        } else {
+                            try {
+                                Call<Wallet> call = ApiService.getInstance(getApplicationContext()).getiApiService().createWallet(dataWallet);
+                                call.enqueue(new Callback<Wallet>() {
+                                    @Override
+                                    public void onResponse(Call<Wallet> call, Response<Wallet> response) {
+                                        if (response.code() != 200) {
+                                            if (response.code() == 400) {
+                                                validateEmpty("", "Tên ví đã tồn tại!");
+                                            } else {
+                                                Toast.makeText(getApplicationContext(), "Error: Sửa ví không thành công!", Toast.LENGTH_LONG).show();
+                                            }
                                         } else {
-                                            Toast.makeText(getApplicationContext(), "Error: Sửa ví không thành công!", Toast.LENGTH_LONG).show();
+                                            walletCreate = response.body();
+                                            Intent t = new Intent();
+                                            t.putExtra("walletCreate", walletCreate);
+                                            setResult(RESULT_OK, t);
+                                            finish();
                                         }
-                                    } else {
-                                        walletCreate = response.body();
-                                        Intent t = new Intent();
-                                        t.putExtra("walletCreate", walletCreate);
-                                        setResult(RESULT_OK, t);
-                                        finish();
                                     }
-                                }
 
-                                @Override
-                                public void onFailure(Call<Wallet> call, Throwable t) {
-                                    Toast.makeText(getApplicationContext(), "An error has occured", Toast.LENGTH_LONG).show();
-                                }
-                            });
-                        } catch (Exception ex) {
-                            Toast.makeText(getApplicationContext(), ex.getMessage(), Toast.LENGTH_LONG).show();
+                                    @Override
+                                    public void onFailure(Call<Wallet> call, Throwable t) {
+                                        showAlertNotConnection();
+                                    }
+                                });
+                            } catch (Exception ex) {
+                                Toast.makeText(getApplicationContext(), ex.getMessage(), Toast.LENGTH_LONG).show();
+                            }
                         }
                     }
+                } else {
+                    showAlertNotConnection();
                 }
-
             }
         });
 
@@ -219,35 +233,63 @@ public class InsertAndUpdateWallet extends AppCompatActivity {
         btnOk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                alertDialog.dismiss();
-                int idWallet = w.getId();
-                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-                Call<Void> call = ApiService.getInstance(getApplicationContext()).getiApiService().deleteWallet(idWallet);
-                call.enqueue(new Callback<Void>() {
-                    @Override
-                    public void onResponse(Call<Void> call, Response<Void> response) {
-                        if (response.code() != 200) {
-                            Toast.makeText(getApplicationContext(), "Error: Xóa ví không thành công!", Toast.LENGTH_LONG).show();
-                        } else {
-                            SharedPreferences.Editor editor = sharedPreferences.edit();
-                            editor.remove("idWallet");
-                            editor.apply();
-                            Intent t = new Intent();
-                            t.putExtra("walletDelete", w);
-                            t.putExtra("flagUD", 2);
-                            setResult(RESULT_OK, t);
-                            finish();
-                        }
+                try {
+                    alertDialog.dismiss();
+                    if (isConnected) {
+                        int idWallet = w.getId();
+                        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                        Call<Void> call = ApiService.getInstance(getApplicationContext()).getiApiService().deleteWallet(idWallet);
+                        call.enqueue(new Callback<Void>() {
+                            @Override
+                            public void onResponse(Call<Void> call, Response<Void> response) {
+                                if (response.code() != 200) {
+                                    Toast.makeText(getApplicationContext(), "Error: Xóa ví không thành công!", Toast.LENGTH_LONG).show();
+                                } else {
+                                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                                    editor.remove("idWallet");
+                                    editor.apply();
+                                    Intent t = new Intent();
+                                    t.putExtra("walletDelete", w);
+                                    t.putExtra("flagUD", 2);
+                                    setResult(RESULT_OK, t);
+                                    finish();
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<Void> call, Throwable t) {
+                                showAlertNotConnection();
+                            }
+                        });
+
+                    } else {
+                        showAlertNotConnection();
                     }
 
-                    @Override
-                    public void onFailure(Call<Void> call, Throwable t) {
-                        Toast.makeText(getApplicationContext(), "An error has occured", Toast.LENGTH_LONG).show();
-                    }
-                });
+                } catch (Exception ex) {
+                    Toast.makeText(getApplicationContext(), ex.getMessage(), Toast.LENGTH_LONG).show();
+                }
             }
         });
         btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+            }
+        });
+        if (alertDialog.getWindow() != null) {
+            alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(0));
+        }
+        alertDialog.show();
+    }
+
+    private void showAlertNotConnection() {
+        View view = LayoutInflater.from(this).inflate(R.layout.alert_no_connection, layoutDialog);
+        Button btnOk = view.findViewById(R.id.alertBtnNotConnection);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setView(view);
+        final AlertDialog alertDialog = builder.create();
+        btnOk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 alertDialog.dismiss();

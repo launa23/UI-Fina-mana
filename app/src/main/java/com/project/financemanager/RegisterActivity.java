@@ -1,14 +1,21 @@
 package com.project.financemanager;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -45,6 +52,8 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText inputPassword;
     private EditText inputRetypePassword;
     private ProgressBar loadingRegister;
+    private ConstraintLayout layoutDialog;
+    private boolean isConnected;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +74,10 @@ public class RegisterActivity extends AppCompatActivity {
         txtErrorPassword = findViewById(R.id.txtErrorPassword);
         loadingRegister = findViewById(R.id.loadingRegister);
         txtErrorRetypePassword = findViewById(R.id.txtErrorRetypePassword);
-
+        layoutDialog = findViewById(R.id.layoutDialogInNotConnection);
+        ConnectivityManager connectivityManager = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        isConnected = networkInfo != null && networkInfo.isConnected();
         btnLoginNow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -109,25 +121,26 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 try {
-                    String fullName = inputFullName.getText().toString();
-                    String username = inputUsername.getText().toString();
-                    String email = inputEmail.getText().toString();
-                    String password = inputPassword.getText().toString();
-                    String retypePassword = inputRetypePassword.getText().toString();
+                    if (isConnected) {
+                        String fullName = inputFullName.getText().toString();
+                        String username = inputUsername.getText().toString();
+                        String email = inputEmail.getText().toString();
+                        String password = inputPassword.getText().toString();
+                        String retypePassword = inputRetypePassword.getText().toString();
 
-                    boolean validateFullName = validateEmpty(inputFullName, "Không được để trống họ và tên!", txtErrorFullName);
-                    boolean validateUsername = validateEmpty(inputUsername, "Không được để trống tên đăng nhập!", txtErrorUsername);
-                    boolean validateEmail = validateEmpty(inputEmail, "Không được để trống email!", txtErrorEmail);
-                    boolean validatePassword = validateEmpty(inputPassword, "Nhập mật khẩu!", txtErrorPassword);
-                    boolean validateRetypePassword = validateEmpty(inputRetypePassword, "Nhập lại mật khẩu!", txtErrorRetypePassword);
+                        boolean validateFullName = validateEmpty(inputFullName, "Không được để trống họ và tên!", txtErrorFullName);
+                        boolean validateUsername = validateEmpty(inputUsername, "Không được để trống tên đăng nhập!", txtErrorUsername);
+                        boolean validateEmail = validateEmpty(inputEmail, "Không được để trống email!", txtErrorEmail);
+                        boolean validatePassword = validateEmpty(inputPassword, "Nhập mật khẩu!", txtErrorPassword);
+                        boolean validateRetypePassword = validateEmpty(inputRetypePassword, "Nhập lại mật khẩu!", txtErrorRetypePassword);
 
-                    if (validateEmail) {
-                        validateEmail = validateFormatEmail(inputEmail, "Nhập đúng định dạng gmail (e.g: xxx@yyy.zzz.www)!", txtErrorEmail);
-                    }
+                        if (validateEmail) {
+                            validateEmail = validateFormatEmail(inputEmail, "Nhập đúng định dạng gmail (e.g: xxx@yyy.zzz.www)!", txtErrorEmail);
+                        }
 
-                    if (validateRetypePassword) {
-                        validateRetypePassword = validatePasswordMatched(inputPassword, inputRetypePassword, "Mật khẩu không khớp!", txtErrorRetypePassword);
-                    }
+                        if (validateRetypePassword) {
+                            validateRetypePassword = validatePasswordMatched(inputPassword, inputRetypePassword, "Mật khẩu không khớp!", txtErrorRetypePassword);
+                        }
 
                     if (validateFullName && validateUsername && validateEmail && validatePassword && validateRetypePassword) {
                         btnRegister.setVisibility(View.GONE);
@@ -155,11 +168,14 @@ public class RegisterActivity extends AppCompatActivity {
                                 }
                             }
 
-                            @Override
-                            public void onFailure(Call<Void> call, Throwable t) {
-                                Toast.makeText(getApplicationContext(), "An error has occured", Toast.LENGTH_LONG).show();
-                            }
-                        });
+                                @Override
+                                public void onFailure(Call<Void> call, Throwable t) {
+                                    showAlertNotConnection();
+                                }
+                            });
+                        }
+                    } else {
+                        showAlertNotConnection();
                     }
                 } catch (Exception ex) {
                     Toast.makeText(RegisterActivity.this, ex.getMessage(), Toast.LENGTH_SHORT).show();
@@ -192,7 +208,7 @@ public class RegisterActivity extends AppCompatActivity {
             txtError.setText(message);
             txtError.setVisibility(View.VISIBLE);
             edtRepPassword.setBackgroundResource(R.drawable.xml_input_error);
-        }else{
+        } else {
             isMatched = true;
             edtRepPassword.setBackgroundResource(R.drawable.xml_custom_input);
             txtError.setVisibility(View.GONE);
@@ -212,7 +228,7 @@ public class RegisterActivity extends AppCompatActivity {
             txtError.setText(message);
             txtError.setVisibility(View.VISIBLE);
             edtInput.setBackgroundResource(R.drawable.xml_input_error);
-        }else{
+        } else {
             isEmail = true;
             txtError.setVisibility(View.GONE);
             txtError.setText("");
@@ -242,6 +258,23 @@ public class RegisterActivity extends AppCompatActivity {
                 // Xử lý newText ở đây
             }
         });
+    }
 
+    private void showAlertNotConnection() {
+        View view = LayoutInflater.from(this).inflate(R.layout.alert_no_connection, layoutDialog);
+        Button btnOk = view.findViewById(R.id.alertBtnNotConnection);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setView(view);
+        final AlertDialog alertDialog = builder.create();
+        btnOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+            }
+        });
+        if (alertDialog.getWindow() != null) {
+            alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(0));
+        }
+        alertDialog.show();
     }
 }

@@ -78,7 +78,7 @@ public class InsertAndUpdateTransaction extends AppCompatActivity {
     private OnBackPressedCallback backEvent;
     private String flag;
     private Transaction transCreate, transUpdate, myObject;
-//  connection
+    //  connection
     private ConstraintLayout layoutDialog;
     private boolean isConnected;
 //  connection
@@ -176,7 +176,7 @@ public class InsertAndUpdateTransaction extends AppCompatActivity {
             public void onClick(View v) {
                 btnBackInUpdate.startAnimation(blinkAnimation);
                 //tus
-               backEventCustom();
+                backEventCustom();
             }
         });
 
@@ -186,7 +186,7 @@ public class InsertAndUpdateTransaction extends AppCompatActivity {
                 try {
                     btnSave.startAnimation(blinkAnimation);
                     // xử lí amount
-                    if(isConnected){
+                    if (isConnected) {
                         String amount = (inputAmonut.getText().toString()).replaceAll("[,.]", "");
                         amount = (amount.equals("")) ? "0" : amount;
                         // xử lí descrip
@@ -208,72 +208,69 @@ public class InsertAndUpdateTransaction extends AppCompatActivity {
                         String typeTrans = ((autoCompleteTextView.getText().toString()).equals("Thu nhập")) ? "income" : "outcome";
                         boolean validateCate = true;
                         boolean validateWallet = true;
-                        if (categoryID.trim().equals("")){
+                        if (categoryID.trim().equals("")) {
                             validateCate = validateEmpty(categoryID, "Bạn quên chọn danh mục kìa!");
-                        }
-                        else {
+                        } else {
                             validateWallet = validateEmpty(walletID, "Bạn quên chọn ví rồi!");
                         }
 
                         if (validateWallet && validateCate) {
-                        Transaction dataTrans = new Transaction(amount, description, time, categoryID, walletID);
-                        if (flag.equals("0")) {
-                            Call<Transaction> call = ApiService.getInstance(getApplicationContext()).getiApiService().createTransaction(typeTrans, dataTrans);
-                            call.enqueue(new Callback<Transaction>() {
-                                @Override
-                                public void onResponse(Call<Transaction> call, Response<Transaction> response) {
-                                    if (response.code() != 200) {
+                            Transaction dataTrans = new Transaction(amount, description, time, categoryID, walletID);
+                            if (flag.equals("0")) {
+                                Call<Transaction> call = ApiService.getInstance(getApplicationContext()).getiApiService().createTransaction(typeTrans, dataTrans);
+                                call.enqueue(new Callback<Transaction>() {
+                                    @Override
+                                    public void onResponse(Call<Transaction> call, Response<Transaction> response) {
+                                        if (response.code() != 200) {
 
-                                        Toast.makeText(getApplicationContext(), "Error: Thêm giao dịch không thành công!", Toast.LENGTH_LONG).show();
-                                    } else {
-                                        Alerter.create(InsertAndUpdateTransaction.this)
-                                                .setTitle("Thêm giao dịch mới thành công!")
-                                                .enableSwipeToDismiss()
-                                                .setIcon(R.drawable.ic_baseline_check_circle_24)
-                                                .setBackgroundColorRes(R.color.green)
-                                                .setIconColorFilter(0)
-                                                .setIconSize(R.dimen.icon_alert)
-                                                .show();
-                                        transCreate = response.body();
-                                        Log.d("Response", "onResponse: " + transCreate);
-                                        clearInputTrans();
-//                                        Toast.makeText(getApplicationContext(), "Thêm mới giao dịch thành công!!", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(getApplicationContext(), "Error: Thêm giao dịch không thành công!", Toast.LENGTH_LONG).show();
+                                        } else {
+                                            Alerter.create(InsertAndUpdateTransaction.this)
+                                                    .setTitle("Thêm giao dịch mới thành công!")
+                                                    .enableSwipeToDismiss()
+                                                    .setIcon(R.drawable.ic_baseline_check_circle_24)
+                                                    .setBackgroundColorRes(R.color.green)
+                                                    .setIconColorFilter(0)
+                                                    .setIconSize(R.dimen.icon_alert)
+                                                    .show();
+                                            transCreate = response.body();
+                                            Log.d("Response", "onResponse: " + transCreate);
+                                            clearInputTrans();
+                                        }
                                     }
-                                }
 
-                                @Override
-                                public void onFailure(Call<Transaction> call, Throwable t) {
-                                    showAlertNotConnection();
-                                }
-                            });
-
-                        } else {
-                            int idTrans = myObject.getId();
-                            Call<Transaction> call = ApiService.getInstance(getApplicationContext()).getiApiService().updateTransaction(typeTrans, idTrans, dataTrans);
-                            call.enqueue(new Callback<Transaction>() {
-                                @Override
-                                public void onResponse(Call<Transaction> call, Response<Transaction> response) {
-                                    if (response.code() != 200) {
-                                        Toast.makeText(getApplicationContext(), "Error: Sửa giao dịch không thành công!", Toast.LENGTH_LONG).show();
-                                    } else {
-                                        transUpdate = response.body();
-                                        Intent t = new Intent();
-                                        t.putExtra("transUpdate", transUpdate);
-                                        t.putExtra("flagUD", 1);
-                                        setResult(RESULT_OK, t);
-                                        finish();
+                                    @Override
+                                    public void onFailure(Call<Transaction> call, Throwable t) {
+                                        showAlertNotConnection();
                                     }
-                                }
+                                });
 
-                                @Override
-                                public void onFailure(Call<Transaction> call, Throwable t) {
-                                    showAlertNotConnection();
-                                }
-                            });
+                            } else {
+                                int idTrans = myObject.getId();
+                                Call<Transaction> call = ApiService.getInstance(getApplicationContext()).getiApiService().updateTransaction(typeTrans, idTrans, dataTrans);
+                                call.enqueue(new Callback<Transaction>() {
+                                    @Override
+                                    public void onResponse(Call<Transaction> call, Response<Transaction> response) {
+                                        if (response.code() != 200) {
+                                            Toast.makeText(getApplicationContext(), "Error: Sửa giao dịch không thành công!", Toast.LENGTH_LONG).show();
+                                        } else {
+                                            transUpdate = response.body();
+                                            Intent t = new Intent();
+                                            t.putExtra("transUpdate", transUpdate);
+                                            t.putExtra("flagUD", 1);
+                                            setResult(RESULT_OK, t);
+                                            finish();
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onFailure(Call<Transaction> call, Throwable t) {
+                                        showAlertNotConnection();
+                                    }
+                                });
+                            }
                         }
-                    }
-                    }
-                    else {
+                    } else {
                         showAlertNotConnection();
                     }
                 } catch (Exception ex) {
@@ -286,7 +283,7 @@ public class InsertAndUpdateTransaction extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 btnRemove.startAnimation(blinkAnimation);
-                if(isConnected){
+                if (isConnected) {
                     if (flag.equals("1")) {
                         try {
                             showAlertConfirmDelDialog();
@@ -301,8 +298,7 @@ public class InsertAndUpdateTransaction extends AppCompatActivity {
                         }
                     }
                     //sut
-                }
-                else{
+                } else {
                     showAlertNotConnection();
                 }
             }
@@ -545,29 +541,32 @@ public class InsertAndUpdateTransaction extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 alertDialog.dismiss();
-                String typeTrans = myObject.getType().toLowerCase();
-                int idTrans = myObject.getId();
-                Call<Void> call = ApiService.getInstance(getApplicationContext()).getiApiService().deleteTransaction(typeTrans, idTrans);
-                call.enqueue(new Callback<Void>() {
-                    @Override
-                    public void onResponse(Call<Void> call, Response<Void> response) {
-                        if (response.code() != 200) {
-                            Toast.makeText(getApplicationContext(), "Error: Xóa khoản giao dịch không thành công!", Toast.LENGTH_LONG).show();
-                        } else {
-                            Intent t = new Intent();
-                            t.putExtra("transDelete", myObject);
-                            t.putExtra("flagUD", 2);
-                            setResult(RESULT_OK, t);
-                            finish();
+                if (isConnected) {
+                    String typeTrans = myObject.getType().toLowerCase();
+                    int idTrans = myObject.getId();
+                    Call<Void> call = ApiService.getInstance(getApplicationContext()).getiApiService().deleteTransaction(typeTrans, idTrans);
+                    call.enqueue(new Callback<Void>() {
+                        @Override
+                        public void onResponse(Call<Void> call, Response<Void> response) {
+                            if (response.code() != 200) {
+                                Toast.makeText(getApplicationContext(), "Error: Xóa khoản giao dịch không thành công!", Toast.LENGTH_LONG).show();
+                            } else {
+                                Intent t = new Intent();
+                                t.putExtra("transDelete", myObject);
+                                t.putExtra("flagUD", 2);
+                                setResult(RESULT_OK, t);
+                                finish();
+                            }
                         }
-                    }
 
-                    @Override
-                    public void onFailure(Call<Void> call, Throwable t) {
-                        Toast.makeText(getApplicationContext(), "An error has occured", Toast.LENGTH_LONG).show();
-                        Log.e("error", t.getMessage());
-                    }
-                });
+                        @Override
+                        public void onFailure(Call<Void> call, Throwable t) {
+                            showAlertNotConnection();
+                        }
+                    });
+                } else {
+                    showAlertNotConnection();
+                }
             }
         });
         btnCancel.setOnClickListener(new View.OnClickListener() {
@@ -581,7 +580,8 @@ public class InsertAndUpdateTransaction extends AppCompatActivity {
         }
         alertDialog.show();
     }
-    private void backEventCustom(){
+
+    private void backEventCustom() {
         if (flag.equals("1")) {
             finish();
         } else {
@@ -591,6 +591,7 @@ public class InsertAndUpdateTransaction extends AppCompatActivity {
             finish();
         }
     }
+
     private void showAlertNotConnection() {
         View view = LayoutInflater.from(this).inflate(R.layout.alert_no_connection, layoutDialog);
         Button btnOk = view.findViewById(R.id.alertBtnNotConnection);
@@ -603,9 +604,11 @@ public class InsertAndUpdateTransaction extends AppCompatActivity {
                 alertDialog.dismiss();
             }
         });
-        if(alertDialog.getWindow() != null){
+        if (alertDialog.getWindow() != null) {
             alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(0));
         }
         alertDialog.show();
     }
+
+
 }
