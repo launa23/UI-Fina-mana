@@ -125,27 +125,6 @@ public class MainActivity extends AppCompatActivity {
         fragmentTransaction.replace(R.id.frame_layout, fragment);
         fragmentTransaction.commit();
     }
-//    private void showBottomDialog(){
-//            final Dialog dialog = new Dialog(this);
-//            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-//            dialog.setContentView(R.layout.bottomsheet_layout);
-//
-//        ImageView cancelBtn = dialog.findViewById(R.id.cancelButton);
-//
-//        cancelBtn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                dialog.dismiss();
-//            }
-//        });
-//        dialog.show();
-//        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-//        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-//        dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
-//        dialog.getWindow().setGravity(Gravity.BOTTOM);
-//    }
-
-    //tus
     private void initResultLauncher() {
         try {
             launcherforAdd = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
@@ -160,6 +139,4 @@ public class MainActivity extends AppCompatActivity {
             Log.e("initResultLauncher", ex.getMessage());
         }
     }
-    //sut
-
 }

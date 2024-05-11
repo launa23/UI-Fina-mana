@@ -53,7 +53,6 @@ public class AccountFragment extends Fragment {
                     Intent intent = new Intent(getActivity(), WalletMainActivity.class);
                     startActivity(intent);
                 } catch (Exception ex) {
-                    Toast.makeText(getActivity(), ex.getMessage(), Toast.LENGTH_LONG).show();
                 }
             }
         });

@@ -273,7 +273,6 @@ public class HomeFragment extends Fragment {
                             loadDateTotal(rootView, walletId, month, year);
                             dismissAlertDialog(alertDialog);
                         } else {
-                            Toast.makeText(getActivity(), "Lỗi", Toast.LENGTH_SHORT).show();
                         }
 
                     }

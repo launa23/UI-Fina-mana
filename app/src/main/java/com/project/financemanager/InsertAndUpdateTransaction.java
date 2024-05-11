@@ -222,8 +222,14 @@ public class InsertAndUpdateTransaction extends AppCompatActivity {
                                     @Override
                                     public void onResponse(Call<Transaction> call, Response<Transaction> response) {
                                         if (response.code() != 200) {
-
-                                            Toast.makeText(getApplicationContext(), "Error: Thêm giao dịch không thành công!", Toast.LENGTH_LONG).show();
+                                            Alerter.create(InsertAndUpdateTransaction.this)
+                                                    .setTitle("Danh mục hoặc ví không tồn tại!")
+                                                    .enableSwipeToDismiss()
+                                                    .setIcon(R.drawable.ic_baseline_info_24)
+                                                    .setBackgroundColorRes(R.color.orange)
+                                                    .setIconColorFilter(0)
+                                                    .setIconSize(R.dimen.icon_alert)
+                                                    .show();
                                         } else {
                                             Alerter.create(InsertAndUpdateTransaction.this)
                                                     .setTitle("Thêm giao dịch mới thành công!")
@@ -252,7 +258,14 @@ public class InsertAndUpdateTransaction extends AppCompatActivity {
                                     @Override
                                     public void onResponse(Call<Transaction> call, Response<Transaction> response) {
                                         if (response.code() != 200) {
-                                            Toast.makeText(getApplicationContext(), "Error: Sửa giao dịch không thành công!", Toast.LENGTH_LONG).show();
+                                            Alerter.create(InsertAndUpdateTransaction.this)
+                                                    .setTitle("Danh mục hoặc ví không tồn tại!")
+                                                    .enableSwipeToDismiss()
+                                                    .setIcon(R.drawable.ic_baseline_info_24)
+                                                    .setBackgroundColorRes(R.color.orange)
+                                                    .setIconColorFilter(0)
+                                                    .setIconSize(R.dimen.icon_alert)
+                                                    .show();
                                         } else {
                                             transUpdate = response.body();
                                             Intent t = new Intent();
@@ -549,7 +562,7 @@ public class InsertAndUpdateTransaction extends AppCompatActivity {
                         @Override
                         public void onResponse(Call<Void> call, Response<Void> response) {
                             if (response.code() != 200) {
-                                Toast.makeText(getApplicationContext(), "Error: Xóa khoản giao dịch không thành công!", Toast.LENGTH_LONG).show();
+                                Toast.makeText(getApplicationContext(), "Vui lòng thử lại!", Toast.LENGTH_LONG).show();
                             } else {
                                 Intent t = new Intent();
                                 t.putExtra("transDelete", myObject);

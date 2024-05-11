@@ -116,7 +116,7 @@ public class InsertAndUpdateWallet extends AppCompatActivity {
                                             if (response.code() == 400) {
                                                 validateEmpty("", "Tên ví đã tồn tại!");
                                             } else {
-                                                Toast.makeText(getApplicationContext(), "Error: Sửa ví không thành công!", Toast.LENGTH_LONG).show();
+                                                Toast.makeText(getApplicationContext(), "Vui lòng thử lại!", Toast.LENGTH_LONG).show();
                                             }
                                         } else {
                                             walletUpdate = response.body();
@@ -134,7 +134,7 @@ public class InsertAndUpdateWallet extends AppCompatActivity {
                                     }
                                 });
                             } catch (Exception ex) {
-                                Toast.makeText(getApplicationContext(), ex.getMessage(), Toast.LENGTH_LONG).show();
+                                Toast.makeText(getApplicationContext(), "Vui lòng thử lại sau!", Toast.LENGTH_LONG).show();
                             }
                         } else {
                             try {
@@ -146,7 +146,7 @@ public class InsertAndUpdateWallet extends AppCompatActivity {
                                             if (response.code() == 400) {
                                                 validateEmpty("", "Tên ví đã tồn tại!");
                                             } else {
-                                                Toast.makeText(getApplicationContext(), "Error: Sửa ví không thành công!", Toast.LENGTH_LONG).show();
+                                                Toast.makeText(getApplicationContext(), "Vui lòng thử lại sau!", Toast.LENGTH_LONG).show();
                                             }
                                         } else {
                                             walletCreate = response.body();
@@ -163,7 +163,7 @@ public class InsertAndUpdateWallet extends AppCompatActivity {
                                     }
                                 });
                             } catch (Exception ex) {
-                                Toast.makeText(getApplicationContext(), ex.getMessage(), Toast.LENGTH_LONG).show();
+                                Toast.makeText(getApplicationContext(), "Vui lòng thử lại sau!", Toast.LENGTH_LONG).show();
                             }
                         }
                     }
@@ -243,7 +243,7 @@ public class InsertAndUpdateWallet extends AppCompatActivity {
                             @Override
                             public void onResponse(Call<Void> call, Response<Void> response) {
                                 if (response.code() != 200) {
-                                    Toast.makeText(getApplicationContext(), "Error: Xóa ví không thành công!", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(getApplicationContext(), "Vui lòng thử lai sau!", Toast.LENGTH_LONG).show();
                                 } else {
                                     SharedPreferences.Editor editor = sharedPreferences.edit();
                                     editor.remove("idWallet");
@@ -267,7 +267,7 @@ public class InsertAndUpdateWallet extends AppCompatActivity {
                     }
 
                 } catch (Exception ex) {
-                    Toast.makeText(getApplicationContext(), ex.getMessage(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "Vui lòng thử lại sau!", Toast.LENGTH_LONG).show();
                 }
             }
         });
