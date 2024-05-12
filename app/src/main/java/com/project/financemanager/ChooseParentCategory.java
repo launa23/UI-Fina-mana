@@ -118,9 +118,9 @@ public class ChooseParentCategory extends AppCompatActivity {
         });
     }
     private void showAlertNotConnection() {
-        View view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.alert_no_connection, layoutDialog);
+        View view = LayoutInflater.from(this).inflate(R.layout.alert_no_connection, layoutDialog);
         Button btnOk = view.findViewById(R.id.alertBtnNotConnection);
-        AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setView(view);
         final AlertDialog alertDialog = builder.create();
         btnOk.setOnClickListener(new View.OnClickListener() {
