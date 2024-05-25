@@ -89,6 +89,8 @@ public class HomeFragment extends Fragment {
     private boolean isConnected;
     private ImageView hideOrView;
     private TextView moneyUnit;
+    private ImageView btnSearch;
+
     //sut
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -106,6 +108,7 @@ public class HomeFragment extends Fragment {
         txtWalletName = rootView.findViewById(R.id.txtWalletName);
         txtWalletMoney = rootView.findViewById(R.id.moneyInWallet);
         txtWalletId = rootView.findViewById(R.id.txtWalletId);
+        btnSearch = rootView.findViewById(R.id.btnSearch);
         Animation blinkAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.blink_animation);
         //tus
         initResultLauncher(rootView);
@@ -114,6 +117,22 @@ public class HomeFragment extends Fragment {
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
         isConnected = networkInfo != null && networkInfo.isConnected();
 
+        ActivityResultLauncher<Intent> launcherSearch = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == getActivity().RESULT_OK) {
+                        Intent data = result.getData();
+
+                    }
+                }
+        );
+        btnSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), SearchActivity.class);
+                launcherSearch.launch(intent);
+            }
+        });
         hideOrView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -395,6 +414,7 @@ public class HomeFragment extends Fragment {
         titleAdapter.setRvItemClickListener(new RvItemClickListener<Transaction>() {
             @Override
             public void onChildItemClick(int parentPosition, int childPosition, Transaction item) {
+                Animation blinkAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.blink_animation);
                 Intent intent = new Intent(getActivity(), InsertAndUpdateTransaction.class);
                 intent.putExtra("transaction", item);
                 //tus

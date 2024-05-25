@@ -98,8 +98,10 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
             moneyUnit = itemView.findViewById(R.id.moneyUnit);
             cateChildDesc = itemView.findViewById(R.id.cateChildDesc);
             imgLine = itemView.findViewById(R.id.imgLine);
+            Animation blinkAnimation = AnimationUtils.loadAnimation(activity, R.anim.blink_animation);
             itemView.setOnClickListener(v -> {
                 handleClick.onItemClick(getAdapterPosition());
+                itemView.startAnimation(blinkAnimation);
             });
         }
     }

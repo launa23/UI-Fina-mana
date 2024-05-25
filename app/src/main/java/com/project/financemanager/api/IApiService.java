@@ -34,7 +34,7 @@ import retrofit2.http.Query;
 
 public interface IApiService {
     Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
-    String BASE_URL = "http://192.168.1.12:8081/api/v1/";
+    String BASE_URL = "http://192.168.0.102:8081/api/v1/";
 
     @GET("transaction/monthandyear")
     Call<List<TitleTime>> getTransByMonthAndYear(@Query("month") int month, @Query("year") int year, @Query("walletId") long walletId);
@@ -64,6 +64,8 @@ public interface IApiService {
 
     @GET("categories/income")
     Call<List<Category>> getAllIncomeCategories();
+    @GET("transaction/all")
+    Call<List<Transaction>> getAllTransaction();
 
     @POST("user/login")
     Call<LoginResponse> login(@Body UserLogin userLogin);
