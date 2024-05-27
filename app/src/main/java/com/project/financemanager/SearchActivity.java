@@ -56,8 +56,7 @@ public class SearchActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.rcvResultSearch);
         inputSearch = findViewById(R.id.inputSearch);
         layoutDialog = findViewById(R.id.selectTimeAlert);
-        selectTimeBtn = findViewById(R.id.selectTimeBtn);
-        timeFromTo = findViewById(R.id.timeFromTo);
+
         txtEmpty = findViewById(R.id.txtEmpty);
         Call<List<Transaction>> call = ApiService.getInstance(getApplicationContext()).getiApiService().getAllTransaction();
         call.enqueue(new Callback<List<Transaction>>() {

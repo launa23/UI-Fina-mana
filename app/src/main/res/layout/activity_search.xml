@@ -51,35 +51,7 @@
         app:layout_constraintRight_toLeftOf="@id/titleInUpdateCate"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-    <RelativeLayout
-        android:id="@+id/selectTimeBtn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:gravity="center"
-        app:layout_constraintTop_toBottomOf="@id/toolbar"
-        app:layout_constraintStart_toStartOf="parent"
-        android:padding="12dp"
-        app:layout_constraintEnd_toEndOf="parent">
 
-        <TextView
-            android:id="@+id/txt3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Ngày: "
-            android:textSize="18sp"
-            android:textColor="@color/black"
-            />
-        <TextView
-            android:id="@+id/timeFromTo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="--/--/---- - --/--/----"
-            android:layout_toRightOf="@id/txt3"
-            android:textSize="18sp"
-            android:textColor="@color/black"/>
-
-    </RelativeLayout>
     <EditText
         android:id="@+id/inputSearch"
         android:layout_width="match_parent"
@@ -88,6 +60,7 @@
         android:paddingStart="12dp"
         android:maxLines="1"
         android:paddingEnd="12dp"
+        android:layout_marginTop="12dp"
         android:layout_marginEnd="10dp"
         android:hint="Nhập danh mục hoặc ghi chú..."
         android:background="@drawable/xml_custom_input"
@@ -97,7 +70,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/selectTimeBtn" />
+        app:layout_constraintTop_toBottomOf="@id/toolbar" />
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rcvResultSearch"
         android:layout_width="match_parent"

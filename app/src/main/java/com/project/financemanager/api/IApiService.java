@@ -38,6 +38,8 @@ public interface IApiService {
 
     @GET("transaction/monthandyear")
     Call<List<TitleTime>> getTransByMonthAndYear(@Query("month") int month, @Query("year") int year, @Query("walletId") long walletId);
+    @GET("transaction/getByDate")
+    Call<List<TitleTime>> getTransByDateStartAndEnd(@Query("start") String start, @Query("end") String end);
 
     @GET("wallet/{id}")
     Call<Wallet> getWalletById(@Path("id") long walletId);
