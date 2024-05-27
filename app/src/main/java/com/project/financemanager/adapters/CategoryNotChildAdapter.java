@@ -43,6 +43,7 @@ public class CategoryNotChildAdapter extends RecyclerView.Adapter<CategoryNotChi
         holder.txtNameChildCategoryInOutcome.setText(category.getName());
         int resourceId = activity.getResources().getIdentifier(category.getIcon(), "drawable", activity.getPackageName());
         holder.imgChildCategoryInOutcome.setImageResource(resourceId);
+        holder.imgLock.setVisibility(View.GONE);
     }
 
     @Override
@@ -53,10 +54,13 @@ public class CategoryNotChildAdapter extends RecyclerView.Adapter<CategoryNotChi
     class CategoryViewHolder extends RecyclerView.ViewHolder{
         private ImageView imgChildCategoryInOutcome;
         private TextView txtNameChildCategoryInOutcome;
+        //tus
+        private ImageView imgLock;
         public CategoryViewHolder(@NonNull View itemView) {
             super(itemView);
             imgChildCategoryInOutcome = itemView.findViewById(R.id.imgChildCategoryInOutcome);
             txtNameChildCategoryInOutcome = itemView.findViewById(R.id.txtNameChildCategoryInOutcome);
+            imgLock = itemView.findViewById(R.id.iconLock2);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

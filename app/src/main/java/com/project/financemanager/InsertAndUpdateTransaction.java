@@ -78,10 +78,8 @@ public class InsertAndUpdateTransaction extends AppCompatActivity {
     private OnBackPressedCallback backEvent;
     private String flag;
     private Transaction transCreate, transUpdate, myObject;
-    //  connection
     private ConstraintLayout layoutDialog;
     private boolean isConnected;
-//  connection
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,12 +104,10 @@ public class InsertAndUpdateTransaction extends AppCompatActivity {
         relative2 = findViewById(R.id.relative2);
         txtCategoryIdInUpdate = findViewById(R.id.txtCategoryIdInUpdate);
         txtCategoryTypeInUpdate = findViewById(R.id.txtCategoryTypeInUpdate);
-// connection
         layoutDialog = findViewById(R.id.layoutDialogInNotConnection);
         ConnectivityManager connectivityManager = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
         isConnected = networkInfo != null && networkInfo.isConnected();
-// connection
         autoCompleteTextView.setText(items[0]);
         arrayAdapter = new ArrayAdapter<String>(this, R.layout.list_item, items);
         autoCompleteTextView.setAdapter(arrayAdapter);
@@ -365,11 +361,13 @@ public class InsertAndUpdateTransaction extends AppCompatActivity {
                             arrayAdapter = new ArrayAdapter<String>(this, R.layout.list_item, items);
                             autoCompleteTextView.setAdapter(arrayAdapter);
                             inputAmonut.setTextColor(green);
+                            inputAmonut.setHintTextColor(green);
                         } else {
                             autoCompleteTextView.setText(items[0]);
                             arrayAdapter = new ArrayAdapter<String>(this, R.layout.list_item, items);
                             autoCompleteTextView.setAdapter(arrayAdapter);
                             inputAmonut.setTextColor(Color.RED);
+                            inputAmonut.setHintTextColor(Color.RED);
                         }
                         txtCategoryName.setTextColor(Color.BLACK);
                         int resourceId = this.getResources().getIdentifier(icon, "drawable", this.getPackageName());

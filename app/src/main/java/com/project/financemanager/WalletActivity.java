@@ -71,7 +71,6 @@ public class WalletActivity extends AppCompatActivity {
                             resultIntent.putExtra("nameWallet", wallet.getName());
                             setResult(Activity.RESULT_OK, resultIntent);
 
-                            Toast.makeText(getApplicationContext(), wallet.getName(), Toast.LENGTH_SHORT).show();
                             finish();
                         }
                     });

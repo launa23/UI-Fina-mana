@@ -63,7 +63,6 @@ public class OutcomeFragment extends Fragment {
                     ParentOutcomeCategoryAdapter parentOutcomeCategoryAdapter = new ParentOutcomeCategoryAdapter(categoryList, getActivity(), new ParentOutcomeCategoryAdapter.HandleClickParentCategory() {
                         @Override
                         public void onItemClick(int position) {
-                            Toast.makeText(getActivity().getApplicationContext(), categoryList.get(position).getName(), Toast.LENGTH_SHORT).show();
                             Intent resultIntent = new Intent();
                             resultIntent.putExtra("idCategory", categoryList.get(position).getId());
                             resultIntent.putExtra("nameCategory", categoryList.get(position).getName());
@@ -79,7 +78,6 @@ public class OutcomeFragment extends Fragment {
                     parentOutcomeCategoryAdapter.setRvItemClickListener(new RvItemClickListener<Category>() {
                         @Override
                         public void onChildItemClick(int parentPosition, int childPosition, Category item) {
-                            Toast.makeText(getActivity().getApplicationContext(), item.getName(), Toast.LENGTH_SHORT).show();
                             Intent resultIntent = new Intent();
                             resultIntent.putExtra("idCategory", item.getId());
                             resultIntent.putExtra("nameCategory", item.getName());

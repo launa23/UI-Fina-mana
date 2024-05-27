@@ -121,8 +121,10 @@ public class HomeFragment extends Fragment {
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     if (result.getResultCode() == getActivity().RESULT_OK) {
-                        Intent data = result.getData();
-
+                        int flag = result.getData().getIntExtra("flag", 0);
+                        if (flag == 1) {
+                            loadDataWallet(rootView);
+                        }
                     }
                 }
         );
@@ -136,12 +138,11 @@ public class HomeFragment extends Fragment {
         hideOrView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(moneyUnit.getVisibility() == View.VISIBLE){
+                if (moneyUnit.getVisibility() == View.VISIBLE) {
                     hideOrView.setImageResource(R.mipmap.hide);
                     txtWalletMoney.setVisibility(View.GONE);
                     moneyUnit.setVisibility(View.GONE);
-                }
-                else {
+                } else {
                     hideOrView.setImageResource(R.mipmap.view);
                     txtWalletMoney.setVisibility(View.VISIBLE);
                     moneyUnit.setVisibility(View.VISIBLE);
@@ -149,10 +150,9 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        if(isConnected){
+        if (isConnected) {
             loadDataWallet(rootView);
-        }
-        else {
+        } else {
             showAlertNotConnection();
         }
         barChart = rootView.findViewById(R.id.barChartInHome);
@@ -199,7 +199,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 try {
-                    if(isConnected){
+                    if (isConnected) {
                         chooseTime.startAnimation(blinkAnimation);
                         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
                         long data = Long.parseLong(txtWalletId.getText().toString());
@@ -209,12 +209,10 @@ public class HomeFragment extends Fragment {
 
                         Intent intent = new Intent(v.getContext(), ChooseTimeActivity.class);
                         launcher.launch(intent);
-                    }
-                    else {
+                    } else {
                         showAlertNotConnection();
                     }
-                }
-                catch (Exception e){
+                } catch (Exception e) {
                     Toast.makeText(getActivity(), "Vui lòng thử lại sau!", Toast.LENGTH_SHORT).show();
                 }
 
@@ -240,7 +238,7 @@ public class HomeFragment extends Fragment {
         Calendar calendar = Calendar.getInstance();
 
         long idWallet = sharedPreferences.getLong("idWallet", 0);
-        int month = sharedPreferences.getInt("month", calendar.get(Calendar.MONTH)+1);
+        int month = sharedPreferences.getInt("month", calendar.get(Calendar.MONTH) + 1);
         int year = sharedPreferences.getInt("year", calendar.get(Calendar.YEAR));
         String titleMonthAndYear = sharedPreferences.getString("titleMonthAndYear", "Tháng này");
         txtChoosenMonth.setText(titleMonthAndYear);
@@ -302,8 +300,7 @@ public class HomeFragment extends Fragment {
                     }
                 });
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -315,10 +312,9 @@ public class HomeFragment extends Fragment {
                 @Override
                 public void onResponse(Call<List<TitleTime>> call, Response<List<TitleTime>> response) {
                     titleTimeList = response.body();
-                    if (titleTimeList.isEmpty()){
+                    if (titleTimeList.isEmpty()) {
                         rltEmpty.setVisibility(View.VISIBLE);
-                    }
-                    else{
+                    } else {
                         rltEmpty.setVisibility(View.GONE);
                     }
                     loadRecyclerView(rootView, titleTimeList);
@@ -329,8 +325,7 @@ public class HomeFragment extends Fragment {
                     Toast.makeText(getActivity(), "Vui lòng thử lại", Toast.LENGTH_SHORT).show();
                 }
             });
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
 
         }
@@ -388,7 +383,7 @@ public class HomeFragment extends Fragment {
                 float barWidth = 3.0f;
 
                 xAxis.setAxisMinimum(0);
-                xAxis.setAxisMaximum(0+barChart.getBarData().getGroupWidth(groupSpace, barSpace)*2);
+                xAxis.setAxisMaximum(0 + barChart.getBarData().getGroupWidth(groupSpace, barSpace) * 2);
                 barData.setBarWidth(barWidth);
 
 
@@ -440,6 +435,7 @@ public class HomeFragment extends Fragment {
         alertDialog.show();
         return alertDialog;
     }
+
     private void showAlertNotConnection() {
         View view = LayoutInflater.from(getContext()).inflate(R.layout.alert_no_connection, layoutDialog);
         Button btnOk = view.findViewById(R.id.alertBtnNotConnection);
@@ -452,11 +448,12 @@ public class HomeFragment extends Fragment {
                 alertDialog.dismiss();
             }
         });
-        if(alertDialog.getWindow() != null){
+        if (alertDialog.getWindow() != null) {
             alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(0));
         }
         alertDialog.show();
     }
+
     private void dismissAlertDialog(AlertDialog alertDialog) {
 
         Handler handler = new Handler();
@@ -485,8 +482,7 @@ public class HomeFragment extends Fragment {
                                 .setIconSize(R.dimen.icon_alert)
                                 .show();
                         loadDataWallet(rootView);
-                    }
-                    else if(flagUD == 1){
+                    } else if (flagUD == 1) {
                         Alerter.create(getActivity())
                                 .setTitle("Sửa giao dịch thành công!")
                                 .enableSwipeToDismiss()
@@ -497,8 +493,7 @@ public class HomeFragment extends Fragment {
                                 .show();
                         loadDataWallet(rootView);
                     }
-                }
-                else {
+                } else {
                     Log.e("editTransaction", "failed");
                 }
             });
@@ -509,12 +504,13 @@ public class HomeFragment extends Fragment {
     }
     //sut
 
-    private ArrayList<BarEntry> dataValue1(){
+    private ArrayList<BarEntry> dataValue1() {
         ArrayList<BarEntry> data = new ArrayList<>();
         data.add(new BarEntry(1, totalIncome));
         return data;
     }
-    private ArrayList<BarEntry> dataValue2(){
+
+    private ArrayList<BarEntry> dataValue2() {
         ArrayList<BarEntry> data = new ArrayList<>();
         data.add(new BarEntry(1, totalOutcome));
         return data;
