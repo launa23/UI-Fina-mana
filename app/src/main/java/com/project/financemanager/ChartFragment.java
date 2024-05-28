@@ -158,7 +158,7 @@ public class ChartFragment extends Fragment {
                     dataSet.setColors(colorsI);
                     dataSet.setValueTextSize(0f);
                     dataSet.setSliceSpace(1f);
-                    Legend legend = pieChartIncome.getLegend();
+                    Legend legend = pieChartOutcome.getLegend();
                     legend.setDrawInside(false);
                     legend.setWordWrapEnabled(true);
                     legend.setOrientation(Legend.LegendOrientation.HORIZONTAL);

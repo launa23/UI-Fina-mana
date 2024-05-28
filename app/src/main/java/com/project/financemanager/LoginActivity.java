@@ -43,13 +43,13 @@ import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity {
     AlertDialog alertDialog;
-    private ConstraintLayout layoutDialogLoading;
+    private ConstraintLayout layoutDialogLoading, layoutDialogRepair;
     private SharedPreferences sharedPreferences;
     private ImageView imgHideOrView;
     private EditText inputPasswordInLogin;
     private Button btnLogin;
     private EditText inputUserNameInLogin;
-    private TextView btnRegisterInLogin;
+    private TextView btnRegisterInLogin, forgotPassword;
     private TextView txtErrorUsernameInLogin;
     private TextView txtErrorPasswordInLogin;
     private ConstraintLayout layoutDialog;
@@ -70,6 +70,8 @@ public class LoginActivity extends AppCompatActivity {
         btnRegisterInLogin = findViewById(R.id.btnRegisterInLogin);
         layoutDialog = findViewById(R.id.layoutDialogInNotConnection);
         progressBar = findViewById(R.id.loadingLogin);
+        layoutDialogRepair = findViewById(R.id.layoutDialogRepair);
+        forgotPassword = findViewById(R.id.forgotPassword);
 
         ConnectivityManager connectivityManager = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
@@ -100,6 +102,13 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
                 launcherRegister.launch(intent);
+            }
+        });
+
+        forgotPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showAlertDialog();
             }
         });
         btnLogin.setOnClickListener(new View.OnClickListener() {
@@ -235,6 +244,24 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
         if (alertDialog.getWindow() != null) {
+            alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(0));
+        }
+        alertDialog.show();
+    }
+
+    private void showAlertDialog(){
+        View view = LayoutInflater.from(this).inflate(R.layout.alert_repair_function, layoutDialogRepair);
+        Button btnOk = view.findViewById(R.id.alertBtnRepair);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setView(view);
+        final AlertDialog alertDialog = builder.create();
+        btnOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+            }
+        });
+        if(alertDialog.getWindow() != null){
             alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(0));
         }
         alertDialog.show();

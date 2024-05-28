@@ -348,9 +348,9 @@ public class HomeFragment extends Fragment {
                 amountTotalIncome = rootView.findViewById(R.id.amountTotalIncome);
                 amountTotalOutcome = rootView.findViewById(R.id.amountTotalOutcome);
                 amountTotal = rootView.findViewById(R.id.amountTotal);
-                amountTotalIncome.setText(formattedIncome);
-                amountTotalOutcome.setText(formattedOutcome);
-                amountTotal.setText(formattedTotal);
+                amountTotalIncome.setText(formattedIncome + " đ");
+                amountTotalOutcome.setText(formattedOutcome + " đ");
+                amountTotal.setText(formattedTotal + " đ");
                 // Biểu đồ
                 barChart.getXAxis().setDrawGridLines(false);
                 barChart.getAxisLeft().setDrawGridLines(false);
