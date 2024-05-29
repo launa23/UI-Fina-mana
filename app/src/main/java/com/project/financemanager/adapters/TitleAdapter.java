@@ -1,9 +1,13 @@
 package com.project.financemanager.adapters;
 
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -117,12 +121,33 @@ public class TitleAdapter extends RecyclerView.Adapter<TitleAdapter.TitleViewHol
         final private TextView txtDayTitle;
         final private TextView txtMonthAndYear;
         final private RecyclerView rcvTransactions;
+        private ImageView btnHideOrViewRv;
         public TitleViewHolder(@NonNull View itemView) {
             super(itemView);
             txtDateTitle = itemView.findViewById(R.id.dateOftitle);
             txtDayTitle = itemView.findViewById(R.id.dayOfTitle);
             txtMonthAndYear = itemView.findViewById(R.id.monthAndYear);
             rcvTransactions = itemView.findViewById(R.id.rcv_children);
+            btnHideOrViewRv = itemView.findViewById(R.id.btnHideOrViewRv);
+            btnHideOrViewRv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    float rotation = btnHideOrViewRv.getRotation();
+                    ObjectAnimator rotateAnimator = ObjectAnimator.ofFloat(btnHideOrViewRv, "rotation", rotation, rotation + 180f);
+                    rotateAnimator.setDuration(500);
+                    rotateAnimator.start();
+                    if(rcvTransactions.getVisibility() == View.VISIBLE){
+                        Animation slideUpAnimation = AnimationUtils.loadAnimation(activity, android.R.anim.fade_out);
+                        rcvTransactions.startAnimation(slideUpAnimation);
+                        rcvTransactions.setVisibility(View.GONE);
+                    }
+                    else if(rcvTransactions.getVisibility() == View.GONE){
+                        Animation slideUpAnimation = AnimationUtils.loadAnimation(activity, android.R.anim.fade_in);
+                        rcvTransactions.startAnimation(slideUpAnimation);
+                        rcvTransactions.setVisibility(View.VISIBLE);
+                    }
+                }
+            });
         }
     }
 }
